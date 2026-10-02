@@ -36,6 +36,12 @@ class idempotency_key_repository {
     /** @var string The record is for a request which has completed, and has a captured response. */
     public const STATE_COMPLETE = 'complete';
 
+    /**
+     * @var int Defense-in-depth limit on retained completed records per user, independent of the
+     *          24-hour response retention TTL.
+     */
+    public const MAX_COMPLETE_RECORDS_PER_USER = 200;
+
     /** @var string The database table used to store Idempotency Key records. */
     protected const TABLE = 'api_idempotency_keys';
 
@@ -177,5 +183,55 @@ class idempotency_key_repository {
         $this->db->delete_records_select(self::TABLE, 'timetoexpire < :before', ['before' => $before]);
 
         return $count;
+    }
+
+    /**
+     * Delete oldest completed records for users who exceed the per-user retention quota.
+     *
+     * Processing records are intentionally ignored: they are short-lived, self-heal via their
+     * own TTL, and deleting one while a request is still in-flight could orphan a later
+     * {@see self::mark_complete()} call.
+     *
+     * @param int|null $maxperuser Maximum number of completed records to retain per user.
+     *                             Defaults to {@see self::MAX_COMPLETE_RECORDS_PER_USER}.
+     * @return int The number of records deleted.
+     */
+    public function enforce_user_quotas(?int $maxperuser = null): int {
+        $maxperuser ??= self::MAX_COMPLETE_RECORDS_PER_USER;
+
+        $offendingusers = $this->db->get_records_sql(
+            "SELECT userid, COUNT(*) AS recordcount
+               FROM {" . self::TABLE . "}
+              WHERE state = :state
+           GROUP BY userid
+             HAVING COUNT(*) > :maxperuser",
+            [
+                'state' => self::STATE_COMPLETE,
+                'maxperuser' => $maxperuser,
+            ],
+        );
+
+        $deletedcount = 0;
+        foreach ($offendingusers as $offendinguser) {
+            $completerecords = $this->db->get_records(
+                self::TABLE,
+                [
+                    'userid' => $offendinguser->userid,
+                    'state' => self::STATE_COMPLETE,
+                ],
+                'timecreated ASC',
+                'id',
+            );
+            $idstodelete = array_slice(array_keys($completerecords), 0, count($completerecords) - $maxperuser);
+
+            if ($idstodelete === []) {
+                continue;
+            }
+
+            $this->db->delete_records_list(self::TABLE, 'id', $idstodelete);
+            $deletedcount += count($idstodelete);
+        }
+
+        return $deletedcount;
     }
 }

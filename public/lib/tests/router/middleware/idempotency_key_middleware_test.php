@@ -135,10 +135,127 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $DB->set_field('api_idempotency_keys', 'timetoexpire', 1);
 
         $task = \core\di::make(\core\task\api_idempotency_key_cleanup_task::class);
-        $this->expectOutputRegex('/Deleted 1 expired API Idempotency Key record\(s\)\./');
+        $this->expectOutputRegex(
+            '/Deleted 1 expired API Idempotency Key record\(s\)\..*' .
+            'Deleted 0 API Idempotency Key record\(s\) exceeding the per-user quota\./s',
+        );
         $task->execute();
 
         $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+    }
+
+    public function test_complete_record_quotas_are_enforced_per_user(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $repository = \core\di::get(\core\api\repository\idempotency_key_repository::class);
+        $maxrecords = \core\api\repository\idempotency_key_repository::MAX_COMPLETE_RECORDS_PER_USER;
+
+        $overquotauser = $this->getDataGenerator()->create_user();
+        $otheruser = $this->getDataGenerator()->create_user();
+        $now = time();
+        $expectedretainedkeyhashes = [];
+
+        for ($i = 1; $i <= $maxrecords + 5; $i++) {
+            $keyhash = hash('sha256', "over-quota-complete-{$i}");
+            $DB->insert_record('api_idempotency_keys', (object) [
+                'userid' => $overquotauser->id,
+                'keyhash' => $keyhash,
+                'requesthash' => hash('sha256', "over-quota-request-{$i}"),
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+                'statuscode' => 200,
+                'response' => "encrypted-response-{$i}",
+                'timecreated' => $now + $i,
+                'timemodified' => $now + $i,
+                'timetoexpire' => $now + 86400 + $i,
+            ]);
+
+            if ($i > 5) {
+                $expectedretainedkeyhashes[] = $keyhash;
+            }
+        }
+
+        $processingkeyhash = hash('sha256', 'over-quota-processing');
+        $DB->insert_record('api_idempotency_keys', (object) [
+            'userid' => $overquotauser->id,
+            'keyhash' => $processingkeyhash,
+            'requesthash' => hash('sha256', 'over-quota-processing-request'),
+            'state' => \core\api\repository\idempotency_key_repository::STATE_PROCESSING,
+            'statuscode' => null,
+            'response' => null,
+            'timecreated' => $now - 1000,
+            'timemodified' => $now - 1000,
+            'timetoexpire' => $now + 60,
+        ]);
+
+        $otheruserkeyhashes = [];
+        for ($i = 1; $i <= 3; $i++) {
+            $keyhash = hash('sha256', "other-user-complete-{$i}");
+            $otheruserkeyhashes[] = $keyhash;
+            $DB->insert_record('api_idempotency_keys', (object) [
+                'userid' => $otheruser->id,
+                'keyhash' => $keyhash,
+                'requesthash' => hash('sha256', "other-user-request-{$i}"),
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+                'statuscode' => 200,
+                'response' => "other-response-{$i}",
+                'timecreated' => $now + 1000 + $i,
+                'timemodified' => $now + 1000 + $i,
+                'timetoexpire' => $now + 86400 + 1000 + $i,
+            ]);
+        }
+
+        $deletedcount = $repository->enforce_user_quotas();
+
+        $this->assertEquals(5, $deletedcount);
+        $this->assertEquals(
+            $maxrecords,
+            $DB->count_records('api_idempotency_keys', [
+                'userid' => $overquotauser->id,
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+            ]),
+        );
+        $this->assertEquals(
+            1,
+            $DB->count_records('api_idempotency_keys', [
+                'userid' => $overquotauser->id,
+                'state' => \core\api\repository\idempotency_key_repository::STATE_PROCESSING,
+            ]),
+        );
+
+        $remainingrecords = $DB->get_records(
+            'api_idempotency_keys',
+            [
+                'userid' => $overquotauser->id,
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+            ],
+            'timecreated ASC',
+            'id, keyhash',
+        );
+        $remainingkeyhashes = array_map(
+            static fn(\stdClass $record): string => $record->keyhash,
+            array_values($remainingrecords),
+        );
+        $this->assertSame($expectedretainedkeyhashes, $remainingkeyhashes);
+        $this->assertNotFalse($DB->get_record('api_idempotency_keys', ['keyhash' => $processingkeyhash]));
+
+        $otheruserrecords = $DB->get_records(
+            'api_idempotency_keys',
+            [
+                'userid' => $otheruser->id,
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+            ],
+            'timecreated ASC',
+            'id, keyhash',
+        );
+        $this->assertSame(
+            $otheruserkeyhashes,
+            array_map(
+                static fn(\stdClass $record): string => $record->keyhash,
+                array_values($otheruserrecords),
+            ),
+        );
     }
 
     public function test_same_key_with_different_payload_is_rejected(): void {

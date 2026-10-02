@@ -19,7 +19,7 @@ namespace core\task;
 use core\api\repository\idempotency_key_repository;
 
 /**
- * Scheduled task to purge expired REST API Idempotency Key records.
+ * Scheduled task to purge expired REST API Idempotency Key records and enforce per-user quotas.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -29,7 +29,8 @@ class api_idempotency_key_cleanup_task extends scheduled_task {
     /**
      * Constructor for the API Idempotency Key cleanup task.
      *
-     * @param idempotency_key_repository $repository The repository used to purge expired records.
+     * @param idempotency_key_repository $repository The repository used to purge expired records
+     *                                               and enforce per-user quotas.
      */
     public function __construct(
         protected readonly idempotency_key_repository $repository,
@@ -44,6 +45,9 @@ class api_idempotency_key_cleanup_task extends scheduled_task {
     #[\Override]
     public function execute(): void {
         $deleted = $this->repository->delete_expired();
+        $quotaevicted = $this->repository->enforce_user_quotas();
+
         mtrace("Deleted {$deleted} expired API Idempotency Key record(s).");
+        mtrace("Deleted {$quotaevicted} API Idempotency Key record(s) exceeding the per-user quota.");
     }
 }
