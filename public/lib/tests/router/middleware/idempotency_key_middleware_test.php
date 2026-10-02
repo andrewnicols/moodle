@@ -118,6 +118,41 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $this->assertEquals('response-1', $decoded['body']);
     }
 
+    public function test_corrupt_captured_response_is_discarded_and_reprocessed(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->get_counting_handler(2);
+
+        $makerequest = static fn(): ServerRequest => (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key');
+
+        $first = $middleware->process($makerequest(), $handler);
+        $this->assertEquals('response-1', (string) $first->getBody());
+
+        // Simulate the stored response becoming undecryptable, e.g. because the site's
+        // encryption key has changed since it was captured.
+        $DB->set_field('api_idempotency_keys', 'response', 'not-valid-encrypted-data', []);
+
+        // The client retries with the same key and request. Rather than erroring, the corrupt
+        // record is discarded and the request is processed again as if it were new.
+        $second = $middleware->process($makerequest(), $handler);
+        $this->assertDebuggingCalled(
+            'Unable to decode a captured idempotency key response, discarding it: ' .
+            'Data does not match a supported encryption method',
+        );
+        $this->assertEquals('response-2', (string) $second->getBody());
+        $this->assertEquals('', $second->getHeaderLine('Idempotency-Replayed'));
+
+        // The corrupt record has been replaced by a fresh, valid, captured response.
+        $this->assertEquals(1, $DB->count_records('api_idempotency_keys'));
+        $record = $DB->get_record('api_idempotency_keys', []);
+        $decoded = \core\di::get(\core\api\repository\idempotency_key_repository::class)->decode_response($record);
+        $this->assertEquals('response-2', $decoded['body']);
+    }
+
     public function test_expired_records_are_purged_by_cleanup_task(): void {
         global $DB;
 
