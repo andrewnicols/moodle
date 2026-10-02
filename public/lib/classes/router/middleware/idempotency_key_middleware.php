@@ -20,6 +20,7 @@ use core\api\repository\idempotency_key_repository;
 use core\exception\api\idempotency\invalid_key_exception;
 use core\exception\api\idempotency\key_in_progress_exception;
 use core\exception\api\idempotency\key_mismatch_exception;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -105,7 +106,10 @@ class idempotency_key_middleware implements MiddlewareInterface {
             );
         }
 
-        $requesthash = $this->hash_request($request);
+        // Read the body now, to hash it.
+        [$body, $request] = $this->capture_body($request);
+
+        $requesthash = $this->hash_request($request, $body);
         $keyhash = $this->get_key_hash($request, $key);
 
         $existing = $this->repository->find_by_keyhash($keyhash);
@@ -141,10 +145,8 @@ class idempotency_key_middleware implements MiddlewareInterface {
             return $response;
         }
 
-        // Read the body now, to capture it, then rewind so it can still be read by whatever returns
-        // this response to the client.
-        $body = (string) $response->getBody();
-        $response->getBody()->rewind();
+        // Read the body now, to capture it.
+        [$body, $response] = $this->capture_body($response);
 
         $persisted = $this->repository->mark_complete(
             $record->id,
@@ -196,6 +198,32 @@ class idempotency_key_middleware implements MiddlewareInterface {
     }
 
     /**
+     * Read the full body of a PSR-7 message, returning it alongside a message guaranteed to still
+     * have a usable body afterwards.
+     *
+     * If the original stream is seekable, it is rewound in place at no extra memory cost. If it
+     * is not seekable (e.g. a lazily-generated or proxied stream), rewinding it would either
+     * throw or leave it exhausted for whatever reads the message next, so it is instead replaced
+     * with a fresh stream built from the bytes already read.
+     *
+     * @template T of MessageInterface
+     * @param T $message
+     * @return array{0: string, 1: T} The body content, and a message safe to pass on.
+     */
+    protected function capture_body(MessageInterface $message): array {
+        $stream = $message->getBody();
+        $body = (string) $stream;
+
+        if ($stream->isSeekable()) {
+            $stream->rewind();
+        } else {
+            $message = $message->withBody(\GuzzleHttp\Psr7\Utils::streamFor($body));
+        }
+
+        return [$body, $message];
+    }
+
+    /**
      * Calculate the hash to use for a given request and Idempotency-Key.
      *
      * The hash is scoped to the current user and route so that the same Idempotency-Key value can
@@ -221,12 +249,10 @@ class idempotency_key_middleware implements MiddlewareInterface {
      * Calculate a hash representing the content of a request, used to detect key reuse with a different payload.
      *
      * @param ServerRequestInterface $request
+     * @param string $body The already-read request body (see {@see self::process()}).
      * @return string
      */
-    protected function hash_request(ServerRequestInterface $request): string {
-        $body = (string) $request->getBody();
-        $request->getBody()->rewind();
-
+    protected function hash_request(ServerRequestInterface $request, string $body): string {
         // The query string is included because it can change the semantics of an otherwise
         // identical method+path+body request (e.g. filters, flags, pagination).
         return hash(

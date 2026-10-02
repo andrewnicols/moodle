@@ -286,6 +286,55 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
     }
 
+    public function test_non_seekable_request_body_is_handled_safely(): void {
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function (ServerRequestInterface $request): ResponseInterface {
+                // The handler must still be able to read the full body, even though the original
+                // stream it was given was not seekable.
+                $this->assertEquals('{"a":1}', (string) $request->getBody());
+
+                $response = new \GuzzleHttp\Psr7\Response(200);
+                $response->getBody()->write('ok');
+
+                return $response;
+            });
+
+        $body = new \GuzzleHttp\Psr7\NoSeekStream(\GuzzleHttp\Psr7\Utils::streamFor('{"a":1}'));
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withBody($body);
+
+        $response = $middleware->process($request, $handler);
+
+        $this->assertEquals('ok', (string) $response->getBody());
+    }
+
+    public function test_non_seekable_response_body_is_handled_safely(): void {
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function (ServerRequestInterface $request): ResponseInterface {
+                $body = new \GuzzleHttp\Psr7\NoSeekStream(\GuzzleHttp\Psr7\Utils::streamFor('response-body'));
+
+                return (new \GuzzleHttp\Psr7\Response(200))->withBody($body);
+            });
+
+        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $response = $middleware->process($request, $handler);
+
+        // The client must still receive the full body, even though the original stream it was
+        // given back was not seekable.
+        $this->assertEquals('response-body', (string) $response->getBody());
+    }
+
     public function test_same_key_with_different_payload_is_rejected(): void {
         $this->resetAfterTest();
 
