@@ -114,7 +114,13 @@ class idempotency_key_middleware implements MiddlewareInterface {
 
         $existing = $this->repository->find_by_keyhash($keyhash);
         if ($existing !== null) {
-            return $this->handle_existing_record($existing, $requesthash);
+            $response = $this->handle_existing_record($existing, $requesthash);
+            if ($response !== null) {
+                return $response;
+            }
+
+            // The existing record was corrupt and has been discarded (see
+            // handle_existing_record()). Fall through and treat this as a fresh request.
         }
 
         $userid = $request->getAttribute('user')->id ?? 0;
@@ -123,7 +129,14 @@ class idempotency_key_middleware implements MiddlewareInterface {
             // We lost a race with a concurrent request using the same key. Re-fetch and defer to it.
             $existing = $this->repository->find_by_keyhash($keyhash);
             if ($existing !== null) {
-                return $this->handle_existing_record($existing, $requesthash);
+                $response = $this->handle_existing_record($existing, $requesthash);
+                if ($response !== null) {
+                    return $response;
+                }
+
+                // Vanishingly unlikely: corrupt twice in a row. Fail safely rather than loop
+                // indefinitely or let the request through unprotected.
+                throw new key_in_progress_exception();
             }
 
             // Vanishingly unlikely (the concurrent record would have to be deleted between our two
@@ -178,9 +191,13 @@ class idempotency_key_middleware implements MiddlewareInterface {
      *
      * @param \stdClass $existing
      * @param string $requesthash The hash of the current request, to check for key reuse.
-     * @return ResponseInterface
+     * @return ResponseInterface|null The replayed response, or null if the captured response
+     *                                could not be decoded (e.g. the encryption key has since
+     *                                changed, or the stored data is corrupt). The caller should
+     *                                treat a null return as if no record existed: the corrupt
+     *                                record has already been deleted.
      */
-    protected function handle_existing_record(\stdClass $existing, string $requesthash): ResponseInterface {
+    protected function handle_existing_record(\stdClass $existing, string $requesthash): ?ResponseInterface {
         if ($existing->requesthash !== $requesthash) {
             // The same key has been reused with a different request. This is a client error:
             // Idempotency-Keys must only be reused for retries of the exact same request.
@@ -193,8 +210,24 @@ class idempotency_key_middleware implements MiddlewareInterface {
         }
 
         // We have a captured, completed, response for an identical request. Replay it.
-        return $this->create_response_from_record($existing)
-            ->withHeader('Idempotency-Replayed', 'true');
+        try {
+            $response = $this->create_response_from_record($existing);
+        } catch (\Throwable $exception) {
+            // The captured response could not be decrypted or decoded. This can happen if the
+            // site's encryption key has changed since it was stored (e.g. a database restored
+            // into an environment without the original dataroot/secret key), or if the stored
+            // data is otherwise corrupt. Fail open: forget the record and let the caller process
+            // the request as if it were new, rather than returning a hard error for what the
+            // client otherwise has no way to recover from until the record expires.
+            debugging(
+                'Unable to decode a captured idempotency key response, discarding it: ' . $exception->getMessage(),
+                DEBUG_NORMAL,
+            );
+            $this->repository->delete($existing->id);
+            return null;
+        }
+
+        return $response->withHeader('Idempotency-Replayed', 'true');
     }
 
     /**
