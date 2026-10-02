@@ -42,6 +42,14 @@ class idempotency_key_repository {
      */
     public const MAX_COMPLETE_RECORDS_PER_USER = 200;
 
+    /**
+     * @var int Maximum size, in bytes, of the gzip-compressed and encrypted payload that will be
+     *          persisted for a captured response. Responses larger than this are not persisted at
+     *          all: {@see self::mark_complete()} returns false, and the caller is expected to
+     *          forget the record rather than keep a completed record with no captured response.
+     */
+    public const MAX_ENCRYPTED_RESPONSE_BYTES = 5 * 1024 * 1024; // 5MB.
+
     /** @var string The database table used to store Idempotency Key records. */
     protected const TABLE = 'api_idempotency_keys';
 
@@ -114,11 +122,16 @@ class idempotency_key_repository {
     /**
      * Store the captured response against a record, marking it as complete.
      *
+     * The payload is gzip-compressed before being encrypted: compressing afterwards would achieve
+     * nothing, since encrypted ciphertext is high-entropy and does not compress.
+     *
      * @param int $id
      * @param int $statuscode
      * @param array $headers PSR-7 style headers, as returned by ResponseInterface::getHeaders().
      * @param string $body
      * @param int $ttlseconds How long to retain the captured response for.
+     * @return bool True if the response was persisted. False if it exceeded
+     *              {@see self::MAX_ENCRYPTED_RESPONSE_BYTES} and was not persisted.
      */
     public function mark_complete(
         int $id,
@@ -126,22 +139,33 @@ class idempotency_key_repository {
         array $headers,
         string $body,
         int $ttlseconds,
-    ): void {
+    ): bool {
         $now = $this->clock->time();
 
         $payload = json_encode([
             'headers' => $headers,
-            'body' => $body,
+            // Base64-encoded: the body may be arbitrary binary content (e.g. a file download),
+            // which is not guaranteed to be valid UTF-8 and so cannot be safely embedded in JSON
+            // as-is (json_encode() would otherwise silently fail on such content).
+            'body' => base64_encode($body),
         ]);
+
+        $encrypted = encryption::encrypt(gzencode($payload));
+
+        if (strlen($encrypted) > self::MAX_ENCRYPTED_RESPONSE_BYTES) {
+            return false;
+        }
 
         $this->db->update_record(self::TABLE, (object) [
             'id' => $id,
             'state' => self::STATE_COMPLETE,
             'statuscode' => $statuscode,
-            'response' => encryption::encrypt($payload),
+            'response' => $encrypted,
             'timemodified' => $now,
             'timetoexpire' => $now + $ttlseconds,
         ]);
+
+        return true;
     }
 
     /**
@@ -152,12 +176,12 @@ class idempotency_key_repository {
      * @return array{status: int, headers: array, body: string}
      */
     public function decode_response(\stdClass $record): array {
-        $payload = json_decode(encryption::decrypt($record->response), true);
+        $payload = json_decode(gzdecode(encryption::decrypt($record->response)), true);
 
         return [
             'status' => (int) $record->statuscode,
             'headers' => $payload['headers'],
-            'body' => $payload['body'],
+            'body' => base64_decode($payload['body']),
         ];
     }
 

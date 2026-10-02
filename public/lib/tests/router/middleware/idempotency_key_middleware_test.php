@@ -258,6 +258,34 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         );
     }
 
+    public function test_oversized_response_is_not_persisted(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+
+        // Incompressible, so the gzip-compressed and encrypted payload still exceeds the limit.
+        $largebody = random_bytes(6 * 1024 * 1024);
+
+        $handler = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function (ServerRequestInterface $request) use ($largebody): ResponseInterface {
+                $response = new \GuzzleHttp\Psr7\Response(200);
+                $response->getBody()->write($largebody);
+
+                return $response;
+            });
+
+        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $response = $middleware->process($request, $handler);
+
+        $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
+        $this->assertEquals($largebody, (string) $response->getBody());
+        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+    }
+
     public function test_same_key_with_different_payload_is_rejected(): void {
         $this->resetAfterTest();
 

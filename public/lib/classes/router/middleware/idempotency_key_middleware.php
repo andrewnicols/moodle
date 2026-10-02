@@ -42,7 +42,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  * created), so they are persisted in the database rather than MUC: cache stores are liable to be
  * purged at any time (e.g. by an administrator, or a store evicting under memory pressure)
  * without notice, which would otherwise silently defeat the replay protection this middleware is
- * meant to provide. Responses are encrypted at rest using {@see \core\encryption}.
+ * meant to provide. Responses are gzip-compressed and encrypted at rest using
+ * {@see \core\encryption}. Responses which are still too large after compression are not
+ * persisted at all (see {@see \core\api\repository\idempotency_key_repository::mark_complete()}).
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -144,13 +146,27 @@ class idempotency_key_middleware implements MiddlewareInterface {
         $body = (string) $response->getBody();
         $response->getBody()->rewind();
 
-        $this->repository->mark_complete(
+        $persisted = $this->repository->mark_complete(
             $record->id,
             $response->getStatusCode(),
             $response->getHeaders(),
             $body,
             self::COMPLETE_TTL_SECONDS,
         );
+
+        if (!$persisted) {
+            // The response was too large to persist for replay (see
+            // idempotency_key_repository::MAX_ENCRYPTED_RESPONSE_BYTES). Forget the key so the
+            // client can retry, and signal that idempotency protection did not apply to this call.
+            //
+            // Future improvement: if large captured responses turn out to be common enough to
+            // matter, we could store the (still encrypted) payload via the File Storage API
+            // instead of a DB text column, and raise or remove this limit. Not pursued here since
+            // it adds real complexity (file lifecycle/cleanup, no built-in encryption-at-rest) for
+            // what is expected to be a rare case.
+            $this->repository->delete($record->id);
+            return $response->withHeader('Idempotency-Status', 'Processing-Skipped');
+        }
 
         return $response;
     }
