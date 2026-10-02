@@ -171,8 +171,9 @@ class idempotency_key_middleware implements MiddlewareInterface {
 
         if (!$persisted) {
             // The response was too large to persist for replay (see
-            // idempotency_key_repository::MAX_ENCRYPTED_RESPONSE_BYTES). Forget the key so the
-            // client can retry, and signal that idempotency protection did not apply to this call.
+            // idempotency_key_repository::get_max_response_bytes(), configurable via the
+            // 'apiidempotencymaxresponsebytes' admin setting). Forget the key so the client can
+            // retry, and signal that idempotency protection did not apply to this call.
             //
             // Future improvement: if large captured responses turn out to be common enough to
             // matter, we could store the (still encrypted) payload via the File Storage API

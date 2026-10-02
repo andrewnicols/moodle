@@ -37,16 +37,19 @@ class idempotency_key_repository {
     public const STATE_COMPLETE = 'complete';
 
     /**
-     * @var int Defense-in-depth limit on retained completed records per user, independent of the
-     *          24-hour response retention TTL.
+     * @var int Default, and fallback, value for the 'apiidempotencymaxrecordsperuser' admin
+     *          setting: a defense-in-depth limit on retained completed records per user,
+     *          independent of the 24-hour response retention TTL.
      */
     public const MAX_COMPLETE_RECORDS_PER_USER = 200;
 
     /**
-     * @var int Maximum size, in bytes, of the gzip-compressed and encrypted payload that will be
-     *          persisted for a captured response. Responses larger than this are not persisted at
-     *          all: {@see self::mark_complete()} returns false, and the caller is expected to
-     *          forget the record rather than keep a completed record with no captured response.
+     * @var int Default, and fallback, value for the 'apiidempotencymaxresponsebytes' admin
+     *          setting: the maximum size, in bytes, of the gzip-compressed and encrypted payload
+     *          that will be persisted for a captured response. Responses larger than this are not
+     *          persisted at all: {@see self::mark_complete()} returns false, and the caller is
+     *          expected to forget the record rather than keep a completed record with no captured
+     *          response.
      */
     public const MAX_ENCRYPTED_RESPONSE_BYTES = 5 * 1024 * 1024; // 5MB.
 
@@ -63,6 +66,28 @@ class idempotency_key_repository {
         protected readonly \moodle_database $db,
         protected readonly \core\clock $clock,
     ) {
+    }
+
+    /**
+     * The configured maximum number of completed records retained per user.
+     *
+     * @return int
+     */
+    protected function get_max_records_per_user(): int {
+        $configured = get_config('core', 'apiidempotencymaxrecordsperuser');
+
+        return $configured !== false ? (int) $configured : self::MAX_COMPLETE_RECORDS_PER_USER;
+    }
+
+    /**
+     * The configured maximum size, in bytes, of a gzip-compressed and encrypted captured response.
+     *
+     * @return int
+     */
+    protected function get_max_response_bytes(): int {
+        $configured = get_config('core', 'apiidempotencymaxresponsebytes');
+
+        return $configured !== false ? (int) $configured : self::MAX_ENCRYPTED_RESPONSE_BYTES;
     }
 
     /**
@@ -131,7 +156,7 @@ class idempotency_key_repository {
      * @param string $body
      * @param int $ttlseconds How long to retain the captured response for.
      * @return bool True if the response was persisted. False if it exceeded
-     *              {@see self::MAX_ENCRYPTED_RESPONSE_BYTES} and was not persisted.
+     *              {@see self::get_max_response_bytes()} and was not persisted.
      */
     public function mark_complete(
         int $id,
@@ -152,7 +177,7 @@ class idempotency_key_repository {
 
         $encrypted = encryption::encrypt(gzencode($payload));
 
-        if (strlen($encrypted) > self::MAX_ENCRYPTED_RESPONSE_BYTES) {
+        if (strlen($encrypted) > $this->get_max_response_bytes()) {
             return false;
         }
 
@@ -217,11 +242,11 @@ class idempotency_key_repository {
      * {@see self::mark_complete()} call.
      *
      * @param int|null $maxperuser Maximum number of completed records to retain per user.
-     *                             Defaults to {@see self::MAX_COMPLETE_RECORDS_PER_USER}.
+     *                             Defaults to {@see self::get_max_records_per_user()}.
      * @return int The number of records deleted.
      */
     public function enforce_user_quotas(?int $maxperuser = null): int {
-        $maxperuser ??= self::MAX_COMPLETE_RECORDS_PER_USER;
+        $maxperuser ??= $this->get_max_records_per_user();
 
         $offendingusers = $this->db->get_records_sql(
             "SELECT userid, COUNT(*) AS recordcount

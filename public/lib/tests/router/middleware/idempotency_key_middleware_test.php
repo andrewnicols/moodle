@@ -293,6 +293,43 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         );
     }
 
+    public function test_complete_record_quota_is_configurable(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        set_config('apiidempotencymaxrecordsperuser', 3);
+
+        $repository = \core\di::get(\core\api\repository\idempotency_key_repository::class);
+        $user = $this->getDataGenerator()->create_user();
+        $now = time();
+
+        for ($i = 1; $i <= 5; $i++) {
+            $DB->insert_record('api_idempotency_keys', (object) [
+                'userid' => $user->id,
+                'keyhash' => hash('sha256', "configured-quota-{$i}"),
+                'requesthash' => hash('sha256', "configured-quota-request-{$i}"),
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+                'statuscode' => 200,
+                'response' => "encrypted-response-{$i}",
+                'timecreated' => $now + $i,
+                'timemodified' => $now + $i,
+                'timetoexpire' => $now + 86400 + $i,
+            ]);
+        }
+
+        $deletedcount = $repository->enforce_user_quotas();
+
+        $this->assertEquals(2, $deletedcount);
+        $this->assertEquals(
+            3,
+            $DB->count_records('api_idempotency_keys', [
+                'userid' => $user->id,
+                'state' => \core\api\repository\idempotency_key_repository::STATE_COMPLETE,
+            ]),
+        );
+    }
+
     public function test_oversized_response_is_not_persisted(): void {
         global $DB;
 
@@ -318,6 +355,33 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
         $this->assertEquals($largebody, (string) $response->getBody());
+        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+    }
+
+    public function test_oversized_response_threshold_is_configurable(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        // Lower the configured limit so that even a small response is considered oversized.
+        set_config('apiidempotencymaxresponsebytes', 10);
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+
+        $handler = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function (ServerRequestInterface $request): ResponseInterface {
+                $response = new \GuzzleHttp\Psr7\Response(200);
+                $response->getBody()->write('this response body is larger than 10 bytes');
+
+                return $response;
+            });
+
+        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $response = $middleware->process($request, $handler);
+
+        $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
         $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
     }
 
