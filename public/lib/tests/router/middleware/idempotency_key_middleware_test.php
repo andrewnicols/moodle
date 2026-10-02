@@ -54,6 +54,19 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         return $handler;
     }
 
+    /**
+     * Create and return an authenticated user for use with request attributes in these tests.
+     *
+     * Idempotency protection requires an authenticated user (see
+     * idempotency_key_middleware::process()), so most tests need one attached via
+     * ServerRequestInterface::withAttribute('user', ...) to exercise real idempotency behaviour.
+     *
+     * @return \stdClass
+     */
+    protected function get_authenticated_user(): \stdClass {
+        return $this->getDataGenerator()->create_user();
+    }
+
     public function test_requests_without_header_are_not_affected(): void {
         $this->resetAfterTest();
 
@@ -84,6 +97,7 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $request = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user())
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor('{"a":1}'));
 
         $first = $middleware->process($request, $handler);
@@ -105,6 +119,7 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $request = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user())
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor('{"secret":"sensitive-value"}'));
         $middleware->process($request, $handler);
 
@@ -126,8 +141,10 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $middleware = \core\di::get(idempotency_key_middleware::class);
         $handler = $this->get_counting_handler(2);
 
+        $user = $this->get_authenticated_user();
         $makerequest = static fn(): ServerRequest => (new ServerRequest('POST', '/example'))
-            ->withHeader('Idempotency-Key', 'my-key');
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user);
 
         $first = $middleware->process($makerequest(), $handler);
         $this->assertEquals('response-1', (string) $first->getBody());
@@ -161,7 +178,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $middleware = \core\di::get(idempotency_key_middleware::class);
         $handler = $this->get_counting_handler(1);
 
-        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
         $middleware->process($request, $handler);
 
         $this->assertEquals(1, $DB->count_records('api_idempotency_keys'));
@@ -350,7 +369,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
                 return $response;
             });
 
-        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
         $response = $middleware->process($request, $handler);
 
         $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
@@ -378,7 +399,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
                 return $response;
             });
 
-        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
         $response = $middleware->process($request, $handler);
 
         $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
@@ -406,6 +429,7 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $body = new \GuzzleHttp\Psr7\NoSeekStream(\GuzzleHttp\Psr7\Utils::streamFor('{"a":1}'));
         $request = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user())
             ->withBody($body);
 
         $response = $middleware->process($request, $handler);
@@ -426,7 +450,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
                 return (new \GuzzleHttp\Psr7\Response(200))->withBody($body);
             });
 
-        $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
         $response = $middleware->process($request, $handler);
 
         // The client must still receive the full body, even though the original stream it was
@@ -439,14 +465,17 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $middleware = \core\di::get(idempotency_key_middleware::class);
         $handler = $this->get_counting_handler(1);
+        $user = $this->get_authenticated_user();
 
         $first = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user)
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor('{"a":1}'));
         $middleware->process($first, $handler);
 
         $second = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user)
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor('{"a":2}'));
 
         $this->expectException(\core\exception\api\idempotency\key_mismatch_exception::class);
@@ -458,13 +487,16 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $middleware = \core\di::get(idempotency_key_middleware::class);
         $handler = $this->get_counting_handler(1);
+        $user = $this->get_authenticated_user();
 
         $first = (new ServerRequest('POST', '/example?dryrun=1'))
-            ->withHeader('Idempotency-Key', 'my-key');
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user);
         $middleware->process($first, $handler);
 
         $second = (new ServerRequest('POST', '/example?dryrun=0'))
-            ->withHeader('Idempotency-Key', 'my-key');
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user);
 
         $this->expectException(\core\exception\api\idempotency\key_mismatch_exception::class);
         $middleware->process($second, $handler);
@@ -490,9 +522,35 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $middleware = \core\di::get(idempotency_key_middleware::class);
         $handler = $this->get_counting_handler(2, 500);
 
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
+        $middleware->process($request, $handler);
+        $middleware->process($request, $handler);
+
+        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+    }
+
+    public function test_unauthenticated_request_bypasses_idempotency_protection(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->get_counting_handler(2);
+
+        // No 'user' attribute is attached to the request, simulating an anonymous caller.
         $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
-        $middleware->process($request, $handler);
-        $middleware->process($request, $handler);
+
+        $first = $middleware->process($request, $handler);
+        $this->assertEquals('response-1', (string) $first->getBody());
+        $this->assertEquals('Unauthenticated-Skipped', $first->getHeaderLine('Idempotency-Status'));
+
+        // A second request reusing the same key is processed again rather than replayed, since no
+        // record was ever persisted for the first (anonymous) call.
+        $second = $middleware->process($request, $handler);
+        $this->assertEquals('response-2', (string) $second->getBody());
+        $this->assertEquals('Unauthenticated-Skipped', $second->getHeaderLine('Idempotency-Status'));
 
         $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
     }

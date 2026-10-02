@@ -39,6 +39,13 @@ use Psr\Http\Server\RequestHandlerInterface;
  * cannot tell whether the original request succeeded) from accidentally duplicating the effect
  * of a non-idempotent operation (e.g. creating the same resource twice).
  *
+ * Idempotency protection requires an authenticated user (see {@see process()}): the key is scoped
+ * per-user, and anonymous requests have no way of being distinguished from one another, which
+ * would otherwise let unrelated anonymous clients collide on the same key value and have each
+ * other's captured responses replayed to them. Anonymous requests carrying the header are
+ * processed normally, without idempotency protection, and are flagged via an
+ * `Idempotency-Status: Unauthenticated-Skipped` response header.
+ *
  * Captured responses can contain sensitive data (e.g. the full content of whatever resource was
  * created), so they are persisted in the database rather than MUC: cache stores are liable to be
  * purged at any time (e.g. by an administrator, or a store evicting under memory pressure)
@@ -106,6 +113,21 @@ class idempotency_key_middleware implements MiddlewareInterface {
             );
         }
 
+        $userattribute = $request->getAttribute('user');
+        if ($userattribute === null || empty($userattribute->id)) {
+            // Idempotency protection requires an authenticated user: the key is scoped per-user
+            // (see get_key_hash()), and without that scoping, unrelated anonymous clients could
+            // collide on the same key value and have each other's captured responses replayed to
+            // them. Writes are not generally expected to be performed anonymously, so we fail open
+            // here (process the request as normal, without idempotency protection) rather than
+            // reject the request outright. This also means no 'processing' record is ever written
+            // to the database for anonymous callers, which would otherwise be an easy unauthenticated
+            // storage-amplification vector.
+            $response = $handler->handle($request);
+
+            return $response->withHeader('Idempotency-Status', 'Unauthenticated-Skipped');
+        }
+
         // Read the body now, to hash it.
         [$body, $request] = $this->capture_body($request);
 
@@ -123,7 +145,7 @@ class idempotency_key_middleware implements MiddlewareInterface {
             // handle_existing_record()). Fall through and treat this as a fresh request.
         }
 
-        $userid = $request->getAttribute('user')->id ?? 0;
+        $userid = (int) $userattribute->id;
         $record = $this->repository->begin_processing($keyhash, $requesthash, $userid, self::PROCESSING_TTL_SECONDS);
         if ($record === null) {
             // We lost a race with a concurrent request using the same key. Re-fetch and defer to it.
@@ -263,13 +285,15 @@ class idempotency_key_middleware implements MiddlewareInterface {
      * The hash is scoped to the current user and route so that the same Idempotency-Key value can
      * safely be reused by different users, or against different endpoints, without colliding.
      *
+     * Only called from {@see process()} once an authenticated user has already been confirmed to
+     * be present on the request, so the userid is never the anonymous fallback of 0.
+     *
      * @param ServerRequestInterface $request
      * @param string $key The raw Idempotency-Key supplied by the client.
      * @return string
      */
     protected function get_key_hash(ServerRequestInterface $request, string $key): string {
-        $user = $request->getAttribute('user');
-        $userid = $user->id ?? 0;
+        $userid = (int) $request->getAttribute('user')->id;
 
         return hash('sha256', implode('|', [
             $userid,
