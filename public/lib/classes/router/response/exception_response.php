@@ -163,7 +163,6 @@ abstract class exception_response extends \core\router\schema\response\response 
             'title' => static::get_response_description(),
             'detail' => $exception->getMessage(),
             'type' => 'about:blank',
-            'instance' => '',
         ];
 
         if ($exception instanceof \core\exception\moodle_exception && $exception->debuginfo !== null) {
