@@ -305,6 +305,23 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $middleware->process($second, $handler);
     }
 
+    public function test_same_key_with_different_query_string_is_rejected(): void {
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->get_counting_handler(1);
+
+        $first = (new ServerRequest('POST', '/example?dryrun=1'))
+            ->withHeader('Idempotency-Key', 'my-key');
+        $middleware->process($first, $handler);
+
+        $second = (new ServerRequest('POST', '/example?dryrun=0'))
+            ->withHeader('Idempotency-Key', 'my-key');
+
+        $this->expectException(\core\exception\api\idempotency\key_mismatch_exception::class);
+        $middleware->process($second, $handler);
+    }
+
     public function test_empty_key_is_rejected(): void {
         $this->resetAfterTest();
 
