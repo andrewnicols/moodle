@@ -227,7 +227,15 @@ class idempotency_key_middleware implements MiddlewareInterface {
         $body = (string) $request->getBody();
         $request->getBody()->rewind();
 
-        return hash('sha256', $request->getMethod() . "\0" . $request->getUri()->getPath() . "\0" . $body);
+        // The query string is included because it can change the semantics of an otherwise
+        // identical method+path+body request (e.g. filters, flags, pagination).
+        return hash(
+            'sha256',
+            $request->getMethod() . "\0" .
+            $request->getUri()->getPath() . "\0" .
+            $request->getUri()->getQuery() . "\0" .
+            $body,
+        );
     }
 
     /**
