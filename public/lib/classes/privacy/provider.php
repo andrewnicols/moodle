@@ -160,6 +160,14 @@ class provider implements
             'lastaccessip' => 'privacy:metadata:rest_api_tokens:lastaccessip',
         ], 'privacy:metadata:rest_api_tokens');
 
+        // The api_idempotency_keys table stores captured REST API responses, scoped to the user
+        // who made the original request, so that a retried request can be replayed rather than
+        // re-executed. Records are short-lived (a few hours at most) and are not considered to be
+        // user data in their own right, so are not exported or deleted on request.
+        $collection->add_database_table('api_idempotency_keys', [
+            'userid' => 'privacy:metadata:api_idempotency_keys:userid',
+        ], 'privacy:metadata:api_idempotency_keys');
+
         return $collection;
     }
 
