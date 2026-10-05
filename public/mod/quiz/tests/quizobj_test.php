@@ -36,8 +36,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/classes/question_helper_test_trait
  * @package    mod_quiz
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\quiz_settings
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\quiz_settings::class)]
 final class quizobj_test extends advanced_testcase {
     use question_helper_test_trait;
 

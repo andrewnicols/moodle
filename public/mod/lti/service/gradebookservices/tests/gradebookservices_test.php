@@ -25,8 +25,8 @@ use ltiservice_gradebookservices\local\service\gradebookservices;
  * @category   test
  * @copyright  2020 Claude Vervoort <claude.vervoort@cengage.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_lti\service\gradebookservices\local\gradebookservices
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_lti\service\gradebookservices\local\gradebookservices::class)]
 final class gradebookservices_test extends \advanced_testcase {
     /**
      * Load the necessary libs for the tests.
@@ -37,13 +37,6 @@ final class gradebookservices_test extends \advanced_testcase {
         parent::setUpBeforeClass();
     }
 
-    /**
-     * @covers ::instance_added
-     *
-     * Test saving a graded LTI with resource and tag info (as a result of
-     * content item selection) creates a gradebookservices record
-     * that can be retrieved using the gradebook service API.
-     */
     public function test_lti_add_coupled_lineitem(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -72,13 +65,6 @@ final class gradebookservices_test extends \advanced_testcase {
             $ltiinstance, $resourceid, $tag, $subreviewurl, $subreviewparams);
     }
 
-    /**
-     * @covers ::instance_added
-     *
-     * Test saving a graded LTI with resource and tag info (as a result of
-     * content item selection) creates a gradebookservices record
-     * that can be retrieved using the gradebook service API.
-     */
     public function test_lti_add_coupled_lineitem_default_subreview(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -101,12 +87,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assert_lineitems($course, $typeid, $ltiinstance->name, $ltiinstance, $resourceid, $tag, 'DEFAULT');
     }
 
-    /**
-     * @covers ::add_standalone_lineitem
-     *
-     * Test saving a standalone LTI lineitem with resource and tag info
-     * that can be retrieved using the gradebook service API.
-     */
     public function test_lti_add_standalone_lineitem(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -121,14 +101,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assert_lineitems($course, $typeid, "manualtest", null, $resourceid, $tag);
     }
 
-    /**
-     * @covers ::find_ltiservice_gradebookservice_for_lti
-     *
-     * Test line item URL is populated for coupled line item only
-     * if there is not another line item bound to the lti instance,
-     * since in that case there would be no rule to define which of
-     * the line items should be actually passed.
-     */
     public function test_get_launch_parameters_coupled(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -154,12 +126,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assertFalse(array_key_exists('$LineItem.url', $params));
     }
 
-    /**
-     * @covers ::override_endpoint
-     *
-     * Test Submission Review URL and custom parameter is applied when the
-     * launch is submission review.
-     */
     public function test_get_launch_parameters_coupled_subreview_override(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -182,12 +148,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assertEquals("color=blue\naction=review", $overrides[1]);
     }
 
-    /**
-     * @covers ::override_endpoint
-     *
-     * Test Submission Review URL and custom parameter is applied when the
-     * launch is submission review.
-     */
     public function test_get_launch_parameters_coupled_subreview_override_default(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -210,12 +170,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assertEquals("color=blue", $overrides[1]);
     }
 
-    /**
-     * @covers ::get_launch_parameters
-     *
-     * Test line item URL is populated for not coupled line item only
-     * if there is a single line item attached to that lti instance.
-     */
     public function test_get_launch_parameters_decoupled(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -245,11 +199,6 @@ final class gradebookservices_test extends \advanced_testcase {
         $this->assertFalse(array_key_exists('$LineItem.url', $params));
     }
 
-    /**
-     * @covers ::is_user_gradable_in_course
-     *
-     * Test if a user can be graded in a course.
-     */
     public function test_is_user_gradable_in_course(): void {
         $this->resetAfterTest();
 

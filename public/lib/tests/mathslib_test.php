@@ -321,13 +321,12 @@ final class mathslib_test extends \basic_testcase {
     /**
      * Tests the modulo operator.
      *
-     * @covers calc_formula::evaluate
-     * @dataProvider moduloOperatorData
      *
      * @param string $formula
      * @param array $values
      * @param int|float $expectedResult
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('moduloOperatorData')]
     public function shouldSupportModuloOperator($formula, $values, $expectedResult)
     {
         $formula = new calc_formula($formula);
@@ -340,7 +339,7 @@ final class mathslib_test extends \basic_testcase {
      *
      * @return array
      */
-    public function moduloOperatorData() {
+    public static function moduloOperatorData() {
         return array(
             array(
                 '=a%b', // 9%3 => 0
@@ -363,13 +362,12 @@ final class mathslib_test extends \basic_testcase {
     /**
      * Tests the double minus as plus.
      *
-     * @covers calc_formula::evaluate
-     * @dataProvider doubleMinusData
      *
      * @param string $formula
      * @param array $values
      * @param int|float $expectedResult
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('doubleMinusData')]
     public function shouldConsiderDoubleMinusAsPlus($formula, $values, $expectedResult)
     {
         $formula = new calc_formula($formula);
@@ -382,7 +380,7 @@ final class mathslib_test extends \basic_testcase {
      *
      * @return array
      */
-    public function doubleMinusData() {
+    public static function doubleMinusData() {
         return array(
             array(
                 '=a+b*c--d', // 1+2*3--4 => 1+6+4 => 11

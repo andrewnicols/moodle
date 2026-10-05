@@ -28,15 +28,10 @@ use ltiservice_gradebookservices\local\service\gradebookservices;
  * @category   test
  * @copyright  2022 Cengage Group <claude.vervoort@cengage.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_lti\service\gradebookservices\local\resources\lineitem
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_lti\service\gradebookservices\local\resources\lineitem::class)]
 final class lineitem_test extends \advanced_testcase {
 
-    /**
-     * @covers ::execute
-     *
-     * Test updating the line item with submission review.
-     */
     public function test_execute_put_nosubreview(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
@@ -76,11 +71,6 @@ final class lineitem_test extends \advanced_testcase {
         $this->assertEquals($resourceid.'modified', $responseitem->resourceId);
     }
 
-    /**
-     * @covers ::execute
-     *
-     * Test updating the line item with submission review.
-     */
     public function test_execute_put_withsubreview(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
@@ -127,11 +117,6 @@ final class lineitem_test extends \advanced_testcase {
         $this->assertEquals($subreviewurl.'modified', $responseitem->submissionReview->url);
     }
 
-    /**
-     * @covers ::execute
-     *
-     * Test updating the line item with submission review.
-     */
     public function test_execute_put_addsubreview(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
@@ -179,7 +164,6 @@ final class lineitem_test extends \advanced_testcase {
     /**
      * Test running a series of score updates, highlighting problems with the score posting logic.
      *
-     * @covers ::execute
      *
      * @return void
      */
