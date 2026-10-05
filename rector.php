@@ -31,7 +31,11 @@ if (!file_exists($ignorefile)) {
 require_once(__DIR__ . '/.rector/ignore.php');
 
 return RectorConfig::configure()
-    ->withParallel()
+    ->withParallel(
+        timeoutSeconds: 240,    // Increase timeout (default is 120)
+        maxNumberOfProcess: 16, // Reduce concurrent processes (default is 32)
+        jobSize: 10             // Reduce number of files per job chunk (default is 16)
+    )
     ->withBootstrapFiles([
         __DIR__ . '/.rector/bootstrap.php',
     ])
