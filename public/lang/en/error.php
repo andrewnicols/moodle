@@ -320,6 +320,7 @@ $string['hashpoolproblem'] = 'Incorrect pool file content {$a}.';
 $string['headersent'] = 'Headers already sent';
 $string['idempotencykeyinprogress'] = 'A request with this Idempotency-Key is already being processed.';
 $string['idempotencykeymismatch'] = 'The Idempotency-Key header has already been used with a different request.';
+$string['idempotencykeyresponsetoolarge'] = 'The response captured for this Idempotency-Key was too large to store, so this request cannot be safely replayed. Retry with a new Idempotency-Key.';
 $string['idnumbertaken'] = 'This ID number is already in use';
 $string['idnumbertoolong'] = 'ID number is too long';
 $string['imagealtrequired'] = 'An image must have a description, unless it is marked as decorative only.';

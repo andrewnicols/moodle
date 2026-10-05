@@ -355,6 +355,7 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $middleware = \core\di::get(idempotency_key_middleware::class);
+        $user = $this->get_authenticated_user();
 
         // Incompressible, so the gzip-compressed and encrypted payload still exceeds the limit.
         $largebody = random_bytes(6 * 1024 * 1024);
@@ -371,12 +372,22 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
 
         $request = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
-            ->withAttribute('user', $this->get_authenticated_user());
+            ->withAttribute('user', $user);
         $response = $middleware->process($request, $handler);
 
+        // The original caller still gets the full response as normal.
         $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
         $this->assertEquals($largebody, (string) $response->getBody());
-        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+
+        // A headers-only record is retained, flagged as oversized, rather than discarded.
+        $record = $DB->get_record('api_idempotency_keys', []);
+        $this->assertNotFalse($record);
+        $this->assertEquals(\core\api\repository\idempotency_key_repository::STATE_OVERSIZED, $record->state);
+        $this->assertNull($record->response);
+
+        // Any later request reusing the same key is rejected, since there is no captured body to replay.
+        $this->expectException(\core\exception\api\idempotency\response_too_large_exception::class);
+        $middleware->process($request, $this->get_counting_handler(0));
     }
 
     public function test_oversized_response_threshold_is_configurable(): void {
@@ -405,7 +416,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $response = $middleware->process($request, $handler);
 
         $this->assertEquals('Processing-Skipped', $response->getHeaderLine('Idempotency-Status'));
-        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+        $record = $DB->get_record('api_idempotency_keys', []);
+        $this->assertNotFalse($record);
+        $this->assertEquals(\core\api\repository\idempotency_key_repository::STATE_OVERSIZED, $record->state);
     }
 
     public function test_non_seekable_request_body_is_handled_safely(): void {
@@ -531,27 +544,22 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
     }
 
-    public function test_unauthenticated_request_bypasses_idempotency_protection(): void {
+    public function test_unauthenticated_request_is_rejected(): void {
         global $DB;
 
         $this->resetAfterTest();
 
         $middleware = \core\di::get(idempotency_key_middleware::class);
-        $handler = $this->get_counting_handler(2);
+        $handler = $this->get_counting_handler(0);
 
         // No 'user' attribute is attached to the request, simulating an anonymous caller.
         $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', 'my-key');
 
-        $first = $middleware->process($request, $handler);
-        $this->assertEquals('response-1', (string) $first->getBody());
-        $this->assertEquals('Unauthenticated-Skipped', $first->getHeaderLine('Idempotency-Status'));
-
-        // A second request reusing the same key is processed again rather than replayed, since no
-        // record was ever persisted for the first (anonymous) call.
-        $second = $middleware->process($request, $handler);
-        $this->assertEquals('response-2', (string) $second->getBody());
-        $this->assertEquals('Unauthenticated-Skipped', $second->getHeaderLine('Idempotency-Status'));
-
-        $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+        $this->expectException(\core\exception\api\idempotency\unauthenticated_key_exception::class);
+        try {
+            $middleware->process($request, $handler);
+        } finally {
+            $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+        }
     }
 }

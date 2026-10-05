@@ -20,6 +20,8 @@ use core\api\repository\idempotency_key_repository;
 use core\exception\api\idempotency\invalid_key_exception;
 use core\exception\api\idempotency\key_in_progress_exception;
 use core\exception\api\idempotency\key_mismatch_exception;
+use core\exception\api\idempotency\response_too_large_exception;
+use core\exception\api\idempotency\unauthenticated_key_exception;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,16 +45,22 @@ use Psr\Http\Server\RequestHandlerInterface;
  * per-user, and anonymous requests have no way of being distinguished from one another, which
  * would otherwise let unrelated anonymous clients collide on the same key value and have each
  * other's captured responses replayed to them. Anonymous requests carrying the header are
- * processed normally, without idempotency protection, and are flagged via an
- * `Idempotency-Status: Unauthenticated-Skipped` response header.
+ * rejected outright with a 400 Bad Request (see {@see \core\exception\api\idempotency\unauthenticated_key_exception}),
+ * rather than being processed without protection: writes are not generally expected to be
+ * performed anonymously, and this also mitigates an easy unauthenticated storage-amplification/DOS
+ * vector.
  *
  * Captured responses can contain sensitive data (e.g. the full content of whatever resource was
  * created), so they are persisted in the database rather than MUC: cache stores are liable to be
  * purged at any time (e.g. by an administrator, or a store evicting under memory pressure)
  * without notice, which would otherwise silently defeat the replay protection this middleware is
  * meant to provide. Responses are gzip-compressed and encrypted at rest using
- * {@see \core\encryption}. Responses which are still too large after compression are not
- * persisted at all (see {@see \core\api\repository\idempotency_key_repository::mark_complete()}).
+ * {@see \core\encryption}. Responses which are still too large after compression have their
+ * status code and headers retained (but not their body) and are flagged
+ * {@see \core\api\repository\idempotency_key_repository::STATE_OVERSIZED}: the original request
+ * still completes and returns its full response, but any later request reusing that key is
+ * rejected with 406 Not Acceptable, since the server has no captured body to replay (see
+ * {@see \core\api\repository\idempotency_key_repository::mark_complete()}).
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -118,14 +126,16 @@ class idempotency_key_middleware implements MiddlewareInterface {
             // Idempotency protection requires an authenticated user: the key is scoped per-user
             // (see get_key_hash()), and without that scoping, unrelated anonymous clients could
             // collide on the same key value and have each other's captured responses replayed to
-            // them. Writes are not generally expected to be performed anonymously, so we fail open
-            // here (process the request as normal, without idempotency protection) rather than
-            // reject the request outright. This also means no 'processing' record is ever written
-            // to the database for anonymous callers, which would otherwise be an easy unauthenticated
-            // storage-amplification vector.
-            $response = $handler->handle($request);
-
-            return $response->withHeader('Idempotency-Status', 'Unauthenticated-Skipped');
+            // them. Writes are not generally expected to be performed anonymously, so the request
+            // is rejected outright rather than silently processed without protection. This also
+            // means no 'processing' record is ever written to the database for anonymous callers,
+            // which would otherwise be an easy unauthenticated storage-amplification vector.
+            throw new unauthenticated_key_exception(
+                sprintf(
+                    'The %s header requires an authenticated request.',
+                    self::HEADER_NAME,
+                ),
+            );
         }
 
         // Read the body now, to hash it.
@@ -194,15 +204,18 @@ class idempotency_key_middleware implements MiddlewareInterface {
         if (!$persisted) {
             // The response was too large to persist for replay (see
             // idempotency_key_repository::get_max_response_bytes(), configurable via the
-            // 'apiidempotencymaxresponsebytes' admin setting). Forget the key so the client can
-            // retry, and signal that idempotency protection did not apply to this call.
+            // 'apiidempotencymaxresponsebytes' admin setting). The original caller still gets the
+            // full response as normal; the record is kept (status code and headers only, no body)
+            // flagged as idempotency_key_repository::STATE_OVERSIZED, so that any later request
+            // reusing this key is rejected with 406 rather than either replayed (impossible: there
+            // is no captured body) or silently reprocessed without protection (see
+            // handle_existing_record()).
             //
             // Future improvement: if large captured responses turn out to be common enough to
             // matter, we could store the (still encrypted) payload via the File Storage API
             // instead of a DB text column, and raise or remove this limit. Not pursued here since
             // it adds real complexity (file lifecycle/cleanup, no built-in encryption-at-rest) for
             // what is expected to be a rare case.
-            $this->repository->delete($record->id);
             return $response->withHeader('Idempotency-Status', 'Processing-Skipped');
         }
 
@@ -230,6 +243,12 @@ class idempotency_key_middleware implements MiddlewareInterface {
         if ($existing->state === idempotency_key_repository::STATE_PROCESSING) {
             // An earlier request with this key is still being processed (e.g. a concurrent retry).
             throw new key_in_progress_exception();
+        }
+
+        if ($existing->state === idempotency_key_repository::STATE_OVERSIZED) {
+            // The original response was too large to capture, so there is no body to replay.
+            // Reject rather than silently reprocess the request without idempotency protection.
+            throw new response_too_large_exception();
         }
 
         // We have a captured, completed, response for an identical request. Replay it.

@@ -37,6 +37,16 @@ class idempotency_key_repository {
     public const STATE_COMPLETE = 'complete';
 
     /**
+     * @var string The record is for a request which has completed, but whose response was too
+     *             large to capture for replay (see {@see self::get_max_response_bytes()}). The
+     *             status code and headers are still retained, but the body is not. Treated the
+     *             same as {@see self::STATE_COMPLETE} for quota and TTL purposes; a later request
+     *             reusing this key cannot be replayed and is rejected (see
+     *             {@see \core\router\middleware\idempotency_key_middleware::handle_existing_record()}).
+     */
+    public const STATE_OVERSIZED = 'oversized';
+
+    /**
      * @var int Default, and fallback, value for the 'apiidempotencymaxrecordsperuser' admin
      *          setting: a defense-in-depth limit on retained completed records per user,
      *          independent of the 24-hour response retention TTL.
@@ -46,10 +56,12 @@ class idempotency_key_repository {
     /**
      * @var int Default, and fallback, value for the 'apiidempotencymaxresponsebytes' admin
      *          setting: the maximum size, in bytes, of the gzip-compressed and encrypted payload
-     *          that will be persisted for a captured response. Responses larger than this are not
-     *          persisted at all: {@see self::mark_complete()} returns false, and the caller is
-     *          expected to forget the record rather than keep a completed record with no captured
-     *          response.
+     *          that will be persisted for a captured response. Responses larger than this have
+     *          their status code and headers persisted, flagged with
+     *          {@see self::STATE_OVERSIZED}, but not their body: {@see self::mark_complete()}
+     *          returns false, and the caller is expected to leave the record in place rather than
+     *          discard it, so a later replay attempt can be rejected rather than silently
+     *          reprocessed.
      */
     public const MAX_ENCRYPTED_RESPONSE_BYTES = 5 * 1024 * 1024; // 5MB.
 
@@ -155,8 +167,11 @@ class idempotency_key_repository {
      * @param array $headers PSR-7 style headers, as returned by ResponseInterface::getHeaders().
      * @param string $body
      * @param int $ttlseconds How long to retain the captured response for.
-     * @return bool True if the response was persisted. False if it exceeded
-     *              {@see self::get_max_response_bytes()} and was not persisted.
+     * @return bool True if the response body was persisted and can be replayed. False if it
+     *              exceeded {@see self::get_max_response_bytes()}: the record is still marked
+     *              complete (with status code and headers retained, flagged with
+     *              {@see self::STATE_OVERSIZED}) so that a later replay attempt can be rejected,
+     *              but no body is stored.
      */
     public function mark_complete(
         int $id,
@@ -178,6 +193,19 @@ class idempotency_key_repository {
         $encrypted = encryption::encrypt(gzencode($payload));
 
         if (strlen($encrypted) > $this->get_max_response_bytes()) {
+            // Too large to store the body. Persist a headers-only record, flagged as oversized,
+            // so a later request reusing this key can be rejected rather than either replayed
+            // (impossible: there is nothing to replay) or silently reprocessed (defeats the point
+            // of idempotency protection).
+            $this->db->update_record(self::TABLE, (object) [
+                'id' => $id,
+                'state' => self::STATE_OVERSIZED,
+                'statuscode' => $statuscode,
+                'response' => null,
+                'timemodified' => $now,
+                'timetoexpire' => $now + $ttlseconds,
+            ]);
+
             return false;
         }
 
@@ -239,7 +267,9 @@ class idempotency_key_repository {
      *
      * Processing records are intentionally ignored: they are short-lived, self-heal via their
      * own TTL, and deleting one while a request is still in-flight could orphan a later
-     * {@see self::mark_complete()} call.
+     * {@see self::mark_complete()} call. Oversized records ({@see self::STATE_OVERSIZED}) count
+     * towards the quota alongside complete records: they still occupy a `keyhash` slot and are
+     * otherwise indistinguishable from a complete record for retention purposes.
      *
      * @param int|null $maxperuser Maximum number of completed records to retain per user.
      *                             Defaults to {@see self::get_max_records_per_user()}.
@@ -248,26 +278,33 @@ class idempotency_key_repository {
     public function enforce_user_quotas(?int $maxperuser = null): int {
         $maxperuser ??= $this->get_max_records_per_user();
 
+        [$statesql, $stateparams] = $this->db->get_in_or_equal(
+            [self::STATE_COMPLETE, self::STATE_OVERSIZED],
+            SQL_PARAMS_NAMED,
+            'state',
+        );
+
         $offendingusers = $this->db->get_records_sql(
             "SELECT userid, COUNT(*) AS recordcount
                FROM {" . self::TABLE . "}
-              WHERE state = :state
+              WHERE state {$statesql}
            GROUP BY userid
              HAVING COUNT(*) > :maxperuser",
-            [
-                'state' => self::STATE_COMPLETE,
-                'maxperuser' => $maxperuser,
-            ],
+            array_merge($stateparams, ['maxperuser' => $maxperuser]),
         );
 
         $deletedcount = 0;
         foreach ($offendingusers as $offendinguser) {
-            $completerecords = $this->db->get_records(
+            [$userstatesql, $userstateparams] = $this->db->get_in_or_equal(
+                [self::STATE_COMPLETE, self::STATE_OVERSIZED],
+                SQL_PARAMS_NAMED,
+                'state',
+            );
+
+            $completerecords = $this->db->get_records_select(
                 self::TABLE,
-                [
-                    'userid' => $offendinguser->userid,
-                    'state' => self::STATE_COMPLETE,
-                ],
+                "userid = :userid AND state {$userstatesql}",
+                array_merge($userstateparams, ['userid' => $offendinguser->userid]),
                 'timecreated ASC',
                 'id',
             );
