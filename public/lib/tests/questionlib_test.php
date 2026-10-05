@@ -380,8 +380,8 @@ final class questionlib_test extends \advanced_testcase {
      * This function tests the question_category_delete_safe function.
      *
      * @param bool $coursedeletion If true, simulate calling question_category_delete_safe as part of deletion of the whole course.
-     * @dataProvider delete_category_parameters
      */
+    #[DataProvider('delete_category_parameters')]
     public function test_question_category_delete_safe(bool $coursedeletion): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -917,12 +917,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when passing a stdClass as parameter.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_stdClass($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -961,12 +961,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using question definition.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_definition($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1007,12 +1007,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using a real question id.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_id($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1053,12 +1053,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using a string as question id.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_string_id($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1099,12 +1099,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the question_has_capability_on function when using a moved question.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_moved_question($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1156,12 +1156,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the question_has_capability_on function when using a real question.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1409,10 +1409,10 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Test core_question_find_next_unused_idnumber in the case when there are no other questions.
      *
-     * @dataProvider find_next_unused_idnumber_cases
      * @param string|null $oldidnumber value to pass to core_question_find_next_unused_idnumber.
      * @param string|null $expectednewidnumber expected result.
      */
+    #[DataProvider('find_next_unused_idnumber_cases')]
     public function test_core_question_find_next_unused_idnumber(?string $oldidnumber, ?string $expectednewidnumber): void {
         $this->assertSame($expectednewidnumber, core_question_find_next_unused_idnumber($oldidnumber, 0));
     }

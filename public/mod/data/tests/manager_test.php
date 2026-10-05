@@ -30,6 +30,7 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_data\manager::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('reset_all_templates')]
 final class manager_test extends \advanced_testcase {
 
     /**
@@ -619,10 +620,8 @@ final class manager_test extends \advanced_testcase {
         $this->assertEquals(true, $result);
     }
 
-    /*
+    /**
      * Test reset_all_templates.
-     *
-     * @covers ::reset_all_templates
      */
     public function test_reset_all_templates(): void {
         global $DB;
