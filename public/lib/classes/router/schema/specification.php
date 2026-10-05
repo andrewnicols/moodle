@@ -18,8 +18,13 @@ namespace core\router\schema;
 
 use coding_exception;
 use core\oauth2\server\repository\scope_repository;
+use core\router\middleware\idempotency_key_middleware;
+use core\router\parameters\header_idempotency_key;
+use core\router\response\conflict_response;
 use core\router\response\invalid_parameter_response;
+use core\router\response\not_acceptable_response;
 use core\router\response\not_found_response;
+use core\router\response\unprocessable_entity_response;
 use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
@@ -111,6 +116,7 @@ class specification implements
         ];
 
         $this->generate_common_responses();
+        $this->generate_idempotency_documentation();
     }
 
     /**
@@ -140,6 +146,52 @@ class specification implements
 
             return $data;
         };
+        return $this;
+    }
+
+    /**
+     * Generate the callable which documents Idempotency-Key support.
+     *
+     * This is added centrally for every route whose method supports idempotency keys (see
+     * {@see idempotency_key_middleware::APPLICABLE_METHODS}), rather than needing to be declared
+     * on each route individually: the header is accepted, and the associated error responses can
+     * occur, generically for any such route (see {@see idempotency_key_middleware}).
+     *
+     * @return specification
+     */
+    protected function generate_idempotency_documentation(): self {
+        $header = new header_idempotency_key();
+        $inprogressresponse = new conflict_response();
+        $mismatchresponse = new unprocessable_entity_response();
+        $toolargeresponse = new not_acceptable_response();
+        $invalidresponse = new invalid_parameter_response();
+
+        $this->commonresponses[] = function (
+            route $route,
+            stdClass $data,
+        ) use (
+            $header,
+            $inprogressresponse,
+            $mismatchresponse,
+            $toolargeresponse,
+            $invalidresponse,
+        ): stdClass {
+            $methods = $route->get_methods(['GET']) ?? [];
+            if (!array_intersect($methods, idempotency_key_middleware::APPLICABLE_METHODS)) {
+                return $data;
+            }
+
+            $data->parameters[] = $header->get_openapi_schema($this);
+
+            foreach ([$invalidresponse, $inprogressresponse, $mismatchresponse, $toolargeresponse] as $response) {
+                if (!array_key_exists($response::get_exception_status_code(), $data->responses)) {
+                    $data->responses[$response::get_exception_status_code()] = $response->get_openapi_schema($this);
+                }
+            }
+
+            return $data;
+        };
+
         return $this;
     }
 

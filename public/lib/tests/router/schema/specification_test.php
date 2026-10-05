@@ -442,6 +442,76 @@ final class specification_test extends route_testcase {
         $this->assertTrue($requestschema->get->deprecated);
     }
 
+    /**
+     * Routes which support one or more of the idempotency middleware's applicable methods must have the
+     * Idempotency-Key header, and its related responses, documented automatically.
+     */
+    public function test_idempotency_documentation_added_for_applicable_methods(): void {
+        $spec = new specification();
+        $route = new route(
+            path: '/example/path',
+            method: ['POST'],
+        );
+
+        $spec->add_path(
+            'core',
+            $route,
+        );
+
+        $requestschema = $spec->get_openapi_schema_for_route(
+            route: $route,
+            component: '',
+            path: '/example/path',
+        );
+
+        $header = new \core\router\parameters\header_idempotency_key();
+        $headerrefs = array_map(
+            fn($param) => $param->{'$ref'} ?? null,
+            array_filter(
+                $requestschema->post->parameters,
+                fn($param) => property_exists($param, '$ref'),
+            ),
+        );
+        $this->assertContains($header->get_reference(), $headerrefs);
+
+        foreach ([400, 409, 422, 406] as $statuscode) {
+            $this->assertArrayHasKey((string) $statuscode, $requestschema->post->responses);
+        }
+    }
+
+    /**
+     * Routes which do not support any of the idempotency middleware's applicable methods must not have the
+     * Idempotency-Key header, or its related responses, documented.
+     */
+    public function test_idempotency_documentation_not_added_for_other_methods(): void {
+        $spec = new specification();
+        $route = new route(
+            path: '/example/path',
+            method: ['GET'],
+        );
+
+        $spec->add_path(
+            'core',
+            $route,
+        );
+
+        $requestschema = $spec->get_openapi_schema_for_route(
+            route: $route,
+            component: '',
+            path: '/example/path',
+        );
+
+        $header = new \core\router\parameters\header_idempotency_key();
+        $headerrefs = array_map(
+            fn($param) => $param->{'$ref'} ?? null,
+            array_filter(
+                $requestschema->get->parameters,
+                fn($param) => property_exists($param, '$ref'),
+            ),
+        );
+        $this->assertNotContains($header->get_reference(), $headerrefs);
+    }
+
     public function test_response(): void {
         $spec = new specification();
         $route = new route(
