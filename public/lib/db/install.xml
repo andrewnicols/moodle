@@ -5219,7 +5219,7 @@
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The user ID the key is scoped to. Not a foreign key as it may be 0 for an unauthenticated request."/>
         <FIELD NAME="keyhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="SHA-256 hash of the user, HTTP method, route path, and the client-supplied Idempotency-Key."/>
         <FIELD NAME="requesthash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="SHA-256 hash of the request method, path, and body, used to detect reuse of a key with a different request."/>
-        <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="processing" SEQUENCE="false" COMMENT="Either 'processing' while the original request is in flight, or 'complete' once a response has been captured."/>
+        <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="processing" SEQUENCE="false" COMMENT="'processing' while the original request is in flight, 'complete' once a response has been captured, or 'oversized' if the response was too large to capture (status code/headers only, no body)."/>
         <FIELD NAME="statuscode" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="The HTTP status code of the captured response."/>
         <FIELD NAME="response" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The encrypted, serialised HTTP response (status, headers, and body) captured for this key."/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
