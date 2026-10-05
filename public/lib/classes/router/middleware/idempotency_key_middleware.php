@@ -68,13 +68,13 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class idempotency_key_middleware implements MiddlewareInterface {
     /** @var string The name of the header used to supply the Idempotency Key. */
-    protected const HEADER_NAME = 'Idempotency-Key';
+    public const HEADER_NAME = 'Idempotency-Key';
 
     /** @var int The maximum length of a supplied key. */
-    protected const MAX_KEY_LENGTH = 255;
+    public const MAX_KEY_LENGTH = 255;
 
     /** @var string[] The list of HTTP methods for which idempotency keys are honoured. */
-    protected const APPLICABLE_METHODS = ['POST', 'PATCH', 'PUT', 'DELETE'];
+    public const APPLICABLE_METHODS = ['POST', 'PATCH', 'PUT', 'DELETE'];
 
     /**
      * @var int How long a 'processing' record is retained for if it is never completed (e.g.
