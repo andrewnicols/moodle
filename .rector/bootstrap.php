@@ -25,6 +25,14 @@ $CFG = (object) [
 
 require_once(__DIR__ . '/../public/lib/classes/component.php');
 ini_set('include_path', $CFG->libdir . '/pear' . PATH_SEPARATOR . ini_get('include_path'));
+
+// Component's autoloader only resolves classes under `<component>/tests/classes` and
+// `<component>/tests/behat` (e.g. component-specific test base classes/traits) when
+// PHPUNIT_TEST is truthy. Without this, Rector's reflection cannot resolve the class
+// hierarchy of test classes which extend such helper classes, so it silently fails to
+// recognise them as PHPUnit test classes and skips converting their annotations
+// (@covers, @dataProvider, etc.) to attributes.
+define('PHPUNIT_TEST', true);
 \core\component::register_autoloader();
 
 define('CACHE_DISABLE_ALL', false);
