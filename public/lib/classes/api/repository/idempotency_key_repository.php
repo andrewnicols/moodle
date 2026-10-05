@@ -71,11 +71,10 @@ class idempotency_key_repository {
     /**
      * Constructor for the Idempotency Key Repository.
      *
-     * @param \moodle_database $db The database connection.
      * @param \core\clock $clock The clock used for every timestamp this class writes.
-     */
+    */
     public function __construct(
-        protected readonly \moodle_database $db,
+        /** @var \core\clock $clock The clock used for every timestamp this class writes. */
         protected readonly \core\clock $clock,
     ) {
     }
@@ -109,7 +108,9 @@ class idempotency_key_repository {
      * @return \stdClass|null
      */
     public function find_by_keyhash(string $keyhash): ?\stdClass {
-        return $this->db->get_record(self::TABLE, ['keyhash' => $keyhash]) ?: null;
+        global $DB;
+
+        return $DB->get_record(self::TABLE, ['keyhash' => $keyhash]) ?: null;
     }
 
     /**
@@ -133,6 +134,8 @@ class idempotency_key_repository {
         int $userid,
         int $ttlseconds,
     ): ?\stdClass {
+        global $DB;
+
         $now = $this->clock->time();
 
         $record = (object) [
@@ -146,7 +149,7 @@ class idempotency_key_repository {
         ];
 
         try {
-            $record->id = $this->db->insert_record(self::TABLE, $record);
+            $record->id = $DB->insert_record(self::TABLE, $record);
         } catch (\dml_write_exception $e) {
             // Most likely cause: a concurrent request already inserted a row for this keyhash and
             // tripped the unique key. Let the caller re-fetch and handle the existing record.
@@ -180,6 +183,8 @@ class idempotency_key_repository {
         string $body,
         int $ttlseconds,
     ): bool {
+        global $DB;
+
         $now = $this->clock->time();
 
         $payload = json_encode([
@@ -197,7 +202,7 @@ class idempotency_key_repository {
             // so a later request reusing this key can be rejected rather than either replayed
             // (impossible: there is nothing to replay) or silently reprocessed (defeats the point
             // of idempotency protection).
-            $this->db->update_record(self::TABLE, (object) [
+            $DB->update_record(self::TABLE, (object) [
                 'id' => $id,
                 'state' => self::STATE_OVERSIZED,
                 'statuscode' => $statuscode,
@@ -209,7 +214,7 @@ class idempotency_key_repository {
             return false;
         }
 
-        $this->db->update_record(self::TABLE, (object) [
+        $DB->update_record(self::TABLE, (object) [
             'id' => $id,
             'state' => self::STATE_COMPLETE,
             'statuscode' => $statuscode,
@@ -244,7 +249,9 @@ class idempotency_key_repository {
      * @param int $id
      */
     public function delete(int $id): void {
-        $this->db->delete_records(self::TABLE, ['id' => $id]);
+        global $DB;
+
+        $DB->delete_records(self::TABLE, ['id' => $id]);
     }
 
     /**
@@ -254,10 +261,12 @@ class idempotency_key_repository {
      * @return int The number of records deleted.
      */
     public function delete_expired(?int $before = null): int {
+        global $DB;
+
         $before ??= $this->clock->time();
 
-        $count = $this->db->count_records_select(self::TABLE, 'timetoexpire < :before', ['before' => $before]);
-        $this->db->delete_records_select(self::TABLE, 'timetoexpire < :before', ['before' => $before]);
+        $count = $DB->count_records_select(self::TABLE, 'timetoexpire < :before', ['before' => $before]);
+        $DB->delete_records_select(self::TABLE, 'timetoexpire < :before', ['before' => $before]);
 
         return $count;
     }
@@ -276,15 +285,16 @@ class idempotency_key_repository {
      * @return int The number of records deleted.
      */
     public function enforce_user_quotas(?int $maxperuser = null): int {
-        $maxperuser ??= $this->get_max_records_per_user();
+        global $DB;
 
-        [$statesql, $stateparams] = $this->db->get_in_or_equal(
+        $maxperuser ??= $this->get_max_records_per_user();
+        [$statesql, $stateparams] = $DB->get_in_or_equal(
             [self::STATE_COMPLETE, self::STATE_OVERSIZED],
             SQL_PARAMS_NAMED,
             'state',
         );
 
-        $offendingusers = $this->db->get_records_sql(
+        $offendingusers = $DB->get_records_sql(
             "SELECT userid, COUNT(*) AS recordcount
                FROM {" . self::TABLE . "}
               WHERE state {$statesql}
@@ -295,13 +305,13 @@ class idempotency_key_repository {
 
         $deletedcount = 0;
         foreach ($offendingusers as $offendinguser) {
-            [$userstatesql, $userstateparams] = $this->db->get_in_or_equal(
+            [$userstatesql, $userstateparams] = $DB->get_in_or_equal(
                 [self::STATE_COMPLETE, self::STATE_OVERSIZED],
                 SQL_PARAMS_NAMED,
                 'state',
             );
 
-            $completerecords = $this->db->get_records_select(
+            $completerecords = $DB->get_records_select(
                 self::TABLE,
                 "userid = :userid AND state {$userstatesql}",
                 array_merge($userstateparams, ['userid' => $offendinguser->userid]),
@@ -314,7 +324,7 @@ class idempotency_key_repository {
                 continue;
             }
 
-            $this->db->delete_records_list(self::TABLE, 'id', $idstodelete);
+            $DB->delete_records_list(self::TABLE, 'id', $idstodelete);
             $deletedcount += count($idstodelete);
         }
 
