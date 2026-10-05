@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace core\exception\api\idempotency;
 
@@ -26,7 +26,7 @@ use core\router\response\conflict_response;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class key_in_progress_exception extends moodle_exception implements response_aware_exception {
     /**

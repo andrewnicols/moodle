@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace core\router\middleware;
 
@@ -64,7 +64,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class idempotency_key_middleware implements MiddlewareInterface {
     /** @var string The name of the header used to supply the Idempotency Key. */
