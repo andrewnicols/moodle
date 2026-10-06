@@ -23,18 +23,18 @@ use core\tests\router\route_testcase;
  *
  * @package    core
  * @category   test
- * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\route\api\strings
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(strings::class)]
 final class strings_test extends route_testcase {
     /**
      * Test fetching strings.
      *
-     * @dataProvider fetch_templates_provider
      * @param string $component
      * @param string $identifier
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fetch_templates_provider')]
     public function test_known_strings(
         string $component,
         string $identifier,
@@ -57,10 +57,10 @@ final class strings_test extends route_testcase {
     /**
      * Test fetching missing strings.
      *
-     * @dataProvider fetch_missing_strings_provider
      * @param string $component
      * @param string $identifier
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fetch_missing_strings_provider')]
     public function test_missing_strings(
         string $component,
         string $identifier,
