@@ -24,7 +24,7 @@ use core\router\schema\referenced_object;
  * A component path parameter.
  *
  * @package    core
- * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class path_cachekey extends \core\router\schema\parameters\path_parameter implements referenced_object {

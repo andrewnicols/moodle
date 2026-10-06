@@ -297,9 +297,6 @@ class template_controller {
         $this->print_add_button();
         $this->display_all_records();
 
-        // JS for Template management.
-        $PAGE->requires->js_call_amd('quizaccess_seb/managetemplates', 'setup');
-
         $this->footer();
     }
 
