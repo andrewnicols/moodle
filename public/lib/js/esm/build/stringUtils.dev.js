@@ -1,8 +1,6 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-import {
-  fetchMany
-} from "@moodle/lms/core/ajax";
+import Fetch from "@moodle/lms/core/fetch";
 import config from "./config";
 import { localStore } from "./Storage";
 const promiseCache = /* @__PURE__ */ new Map();
@@ -39,14 +37,7 @@ const getRequestedStrings = /* @__PURE__ */ __name((requests) => {
       continue;
     }
     const fetchPromise = new Promise((resolve, reject) => {
-      pendingFetches.push({
-        request: {
-          methodname: "core_get_string",
-          args: { stringid: key, stringparams: [], component, lang }
-        },
-        resolve,
-        reject
-      });
+      pendingFetches.push({ component, key, lang, resolve, reject });
     });
     promiseCache.set(cacheKey, fetchPromise);
     stringPromises[i] = fetchPromise.then((str) => {
@@ -59,24 +50,35 @@ const getRequestedStrings = /* @__PURE__ */ __name((requests) => {
     });
   }
   if (pendingFetches.length > 0) {
-    const ajaxRequests = pendingFetches.map((pf) => pf.request);
-    fetchMany(ajaxRequests, {
-      loginrequired: false,
-      nosessionupdate: true,
-      timeout: 0,
-      cachekey: config.langrev
-    }).then((results) => {
-      results.forEach((result, index) => {
-        pendingFetches[index].resolve(result);
-      });
-      return results;
-    }).catch((err) => {
-      pendingFetches.forEach((pf) => pf.reject(err));
+    const batcher = config.templaterev > 1 ? Fetch : Fetch.getBatcher();
+    pendingFetches.forEach(({ component, key, lang, resolve, reject }) => {
+      batcher.performGet(
+        "core",
+        `/strings/${lang}/${component}/${key}`,
+        { cachekey: config.templaterev }
+      ).then((response) => response.json()).then((response) => response.strings).then((strings) => resolve(strings[`${component}/${key}`])).catch((err) => reject(err));
     });
   }
   return stringPromises;
 }, "getRequestedStrings");
 const getStrings = /* @__PURE__ */ __name((requests) => Promise.all(getRequestedStrings(requests)), "getStrings");
+const getComponentStrings = /* @__PURE__ */ __name((component, lang = config.language) => Fetch.performGet(
+  "core",
+  `/strings/${lang}/${component}`,
+  { cachekey: config.templaterev }
+).then((response) => response.json()).then((response) => response.strings).then((strings) => {
+  return cacheStrings(
+    Object.entries(strings).map(([identifier, value]) => {
+      const match = identifier.match(/^(?<component>[^/]+)\/(?<stringid>[^/]+)$/);
+      return {
+        component: match?.groups?.component ?? component,
+        key: match?.groups?.stringid ?? identifier,
+        value,
+        lang
+      };
+    })
+  );
+}).catch(() => null), "getComponentStrings");
 const cacheStrings = /* @__PURE__ */ __name((strings) => {
   for (const { key, component = "core", value, lang = config.language } of strings) {
     const cacheKey = getCacheKey(key, component, lang);
@@ -108,6 +110,7 @@ const resetStringCache = /* @__PURE__ */ __name(() => {
 }, "resetStringCache");
 export {
   cacheStrings,
+  getComponentStrings,
   getRequestedStrings,
   getString,
   getStrings,

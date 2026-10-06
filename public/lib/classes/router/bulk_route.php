@@ -38,9 +38,9 @@ class bulk_route {
     /**
      * Handle a bulk request.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function handle(
         ServerRequestInterface $request,
@@ -59,9 +59,9 @@ class bulk_route {
     /**
      * Handle a multipart/mixed request.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     protected function handle_multipart_mixed_request(
         ServerRequestInterface $request,
@@ -145,7 +145,7 @@ class bulk_route {
      * Get a request from a part of a multipart/mixed request.
      *
      * @param string $requestpart
-     * @return \Psr\Http\Message\ServerRequestInterface
+     * @return ServerRequestInterface
      */
     public static function get_request_from_part(string $requestpart): ServerRequestInterface {
         // Each part is split into:
