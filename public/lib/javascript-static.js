@@ -926,6 +926,10 @@ function right_to_left() {
 }
 
 function openpopup(event, args) {
+    M.util.js_pending('core/lib/javascript-static:openpopup');
+    var resolvePending = function() {
+        M.util.js_complete('core/lib/javascript-static:openpopup');
+    };
 
     if (event) {
         if (event.preventDefault) {
@@ -960,6 +964,7 @@ function openpopup(event, args) {
     }
     var windowobj = window.open(fullurl,args.name,args.options);
     if (!windowobj) {
+        resolvePending();
         return true;
     }
 
@@ -990,6 +995,7 @@ function openpopup(event, args) {
     }
     windowobj.focus();
 
+    resolvePending();
     return false;
 }
 

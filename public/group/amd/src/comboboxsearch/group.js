@@ -186,7 +186,8 @@ export default class GroupSearch extends search_combobox {
      *
      * @param {MouseEvent} e The triggering event that we are working with.
      */
-    async clickHandler(e) {
+    clickHandler(e) {
+        const pendingPromise = new Pending('core_group/comboboxsearch/group:clickHandler');
         if (e.target.closest(this.selectors.clearSearch)) {
             e.stopPropagation();
             // Clear the entered search query in the search bar.
@@ -194,9 +195,11 @@ export default class GroupSearch extends search_combobox {
             this.setSearchTerms(this.searchInput.value);
             this.searchInput.focus();
             this.clearSearchButton.classList.add('d-none');
+
             // Display results.
-            await this.filterrenderpipe();
+            this.filterrenderpipe();
         }
+        pendingPromise.resolve();
     }
 
     /**
