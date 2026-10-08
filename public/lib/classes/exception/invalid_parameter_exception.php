@@ -16,6 +16,8 @@
 
 namespace core\exception;
 
+use core\router\response\invalid_parameter_response;
+
 /**
  * Exception indicating malformed parameter problem.
  * This exception is not supposed to be thrown when processing
@@ -27,7 +29,10 @@ namespace core\exception;
  * @copyright  2009 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class invalid_parameter_exception extends moodle_exception {
+class invalid_parameter_exception extends moodle_exception implements
+    response_aware_exception,
+    www_authenticate_aware_exception
+{
     /**
      * Constructor.
      *
@@ -35,6 +40,18 @@ class invalid_parameter_exception extends moodle_exception {
      */
     public function __construct($debuginfo = null) {
         parent::__construct('invalidparameter', 'debug', '', null, $debuginfo);
+    }
+
+    #[\Override]
+    public function get_response_classname(): string {
+        return invalid_parameter_response::class;
+    }
+
+    #[\Override]
+    #[Override]
+    public function get_www_authenticate_params(): array
+    {
+        return ['Basic realm="Moodle API", error="invalid_request"'];
     }
 }
 

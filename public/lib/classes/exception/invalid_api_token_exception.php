@@ -25,7 +25,8 @@ namespace core\exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class invalid_api_token_exception extends api_token_exception implements
-    response_aware_exception
+    response_aware_exception,
+    www_authenticate_aware_exception
 {
     /**
      * Constructor.
@@ -40,5 +41,12 @@ class invalid_api_token_exception extends api_token_exception implements
     #[\Override]
     public function get_response_classname(): string {
         return \core\router\response\unauthorized_api_response::class;
+    }
+
+    #[\Override]
+    public function get_www_authenticate_params(): array {
+        return [
+            'error="invalid_token"',
+        ];
     }
 }

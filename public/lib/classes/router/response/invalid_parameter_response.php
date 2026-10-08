@@ -20,13 +20,23 @@ namespace core\router\response;
  * A standard response for user preferences.
  *
  * @package    core
- * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class invalid_parameter_response extends exception_response {
+    use www_authenticate_header_trait;
+
     #[\Override]
     public static function get_exception_status_code(): int {
         return 400;
+    }
+
+    #[\Override]
+    protected static function get_additional_headers(\Exception $exception): array {
+        return array_merge(
+            parent::get_additional_headers($exception),
+            static::get_www_authenticate_header($exception, 'invalid_request'),
+        );
     }
 
     #[\Override]

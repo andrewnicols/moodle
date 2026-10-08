@@ -16,38 +16,38 @@
 
 namespace core\exception;
 
+use core\router\response\insufficient_scope_response;
+
 /**
- * Revoked API token exception.
+ * Insufficient Scope Exception.
  *
  * @package    core
- * @subpackage exception
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class revoked_api_token_exception extends api_token_exception implements
-    response_aware_exception,
-    www_authenticate_aware_exception
-
+class insufficient_scope_exception extends moodle_exception implements
+    response_aware_exception
 {
     /**
      * Constructor.
      *
-     * @param mixed $a Additional information
-     * @param string|null $debuginfo Information to aid the debugging process
+     * @param string $hint A human-readable hint describing which scope(s) are missing.
+     * @param array $scopesets The sets of scopes that are required.
      */
-    public function __construct($a = null, ?string $debuginfo = null) {
-        parent::__construct('revokedapitoken', 'error', $a, $debuginfo);
+    public function __construct(
+        /** @var string A human-readable hint describing which scope(s) are missing. */
+        public readonly string $hint,
+        /** @var array The sets of scopes that are required. */
+        public readonly array  $scopesets,
+    ) {
+        parent::__construct(
+            'insufficientscope',
+            'error',
+        );
     }
 
     #[\Override]
     public function get_response_classname(): string {
-        return \core\router\response\unauthorized_api_response::class;
-    }
-
-    #[\Override]
-    public function get_www_authenticate_params(): array {
-        return [
-            'error="invalid_token"',
-        ];
+        return insufficient_scope_response::class;
     }
 }

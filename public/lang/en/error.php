@@ -323,6 +323,7 @@ $string['importformatnotimplement'] = 'Sorry, importing this format is not yet i
 $string['incorrectext'] = 'File has an incorrect extension';
 $string['inplaceeditableerror'] = 'Error calling update processor';
 $string['installproblem'] = 'It is usually not possible to recover from errors triggered during installation, you may need to create a new database or use a different database prefix if you want to retry the installation.';
+$string['insufficientscope'] = 'Insufficient Scope';
 $string['internalauthpassworderror'] = 'Missing password or invalid password policy for internal authentication';
 $string['invalidaccess'] = 'This page was not accessed correctly';
 $string['invalidaccessparameter'] = 'Invalid access parameter';
