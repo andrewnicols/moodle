@@ -21,6 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 import search_combobox from 'core/comboboxsearch/search_combobox';
+import Pending from 'core/pending';
 import * as Repository from 'core_grades/searchwidget/repository';
 import {renderForPromise, replaceNodeContents} from 'core/templates';
 import {debounce} from 'core/utils';
@@ -215,6 +216,7 @@ export default class GradeItemSearch extends search_combobox {
      * @param {Event} e The change event.
      */
     changeHandler(e) {
+        new Pending('core/combosearchbox/grade:changeHandler');
         window.location = this.selectOneLink(e.target.value);
     }
 

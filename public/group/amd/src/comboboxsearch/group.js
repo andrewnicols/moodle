@@ -25,6 +25,7 @@ import {groupFetch} from 'core_group/comboboxsearch/repository';
 import {renderForPromise, replaceNodeContents} from 'core/templates';
 import {debounce} from 'core/utils';
 import Notification from 'core/notification';
+import Pending from 'core/pending';
 
 export default class GroupSearch extends search_combobox {
 
@@ -208,6 +209,7 @@ export default class GroupSearch extends search_combobox {
      * @param {Event} e The change event.
      */
     changeHandler(e) {
+        new Pending('core_group/comboboxsearch/group:changeHandler');
         window.location = this.selectOneLink(e.target.value);
     }
 
