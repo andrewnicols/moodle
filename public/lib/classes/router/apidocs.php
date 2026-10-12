@@ -152,11 +152,17 @@ class apidocs {
                 [$classinfo->getName(), $method->getName()],
             );
 
+            // Determine whether this route's handler supports Idempotency-Key handling.
+            $idempotencysupported = util::method_is_idempotency_supported(
+                [$classinfo->getName(), $method->getName()],
+            );
+
             // Add this path to the OpenAPI specification.
             $api->add_path(
                 component: $component,
                 route: $routeattribute,
                 scopesets: $scopesets,
+                idempotencysupported: $idempotencysupported,
             );
         }
 

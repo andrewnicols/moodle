@@ -512,6 +512,47 @@ final class specification_test extends route_testcase {
         $this->assertNotContains($header->get_reference(), $headerrefs);
     }
 
+    /**
+     * Routes whose handler has explicitly opted out of Idempotency-Key support (see
+     * {@see \core\router\middleware\idempotency_unsupported}) must not have the Idempotency-Key
+     * header, or its related responses, documented, even though the HTTP method would otherwise
+     * be applicable.
+     */
+    public function test_idempotency_documentation_not_added_when_unsupported(): void {
+        $spec = new specification();
+        $route = new route(
+            path: '/example/path',
+            method: ['POST'],
+        );
+
+        $spec->add_path(
+            'core',
+            $route,
+            idempotencysupported: false,
+        );
+
+        $requestschema = $spec->get_openapi_schema_for_route(
+            route: $route,
+            component: '',
+            path: '/example/path',
+            idempotencysupported: false,
+        );
+
+        $header = new \core\router\parameters\header_idempotency_key();
+        $headerrefs = array_map(
+            fn($param) => $param->{'$ref'} ?? null,
+            array_filter(
+                $requestschema->post->parameters,
+                fn($param) => property_exists($param, '$ref'),
+            ),
+        );
+        $this->assertNotContains($header->get_reference(), $headerrefs);
+
+        foreach ([400, 409, 422, 406] as $statuscode) {
+            $this->assertArrayNotHasKey((string) $statuscode, $requestschema->post->responses);
+        }
+    }
+
     public function test_response(): void {
         $spec = new specification();
         $route = new route(

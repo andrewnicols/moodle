@@ -157,6 +157,10 @@ class specification implements
      * on each route individually: the header is accepted, and the associated error responses can
      * occur, generically for any such route (see {@see idempotency_key_middleware}).
      *
+     * Routes whose handler is marked with {@see \core\router\middleware\idempotency_unsupported}
+     * are excluded, since the middleware itself rejects the header there (see
+     * {@see \core\router\util::method_is_idempotency_supported()}).
+     *
      * @return specification
      */
     protected function generate_idempotency_documentation(): self {
@@ -169,6 +173,7 @@ class specification implements
         $this->commonresponses[] = function (
             route $route,
             stdClass $data,
+            bool $idempotencysupported = true,
         ) use (
             $header,
             $inprogressresponse,
@@ -176,6 +181,10 @@ class specification implements
             $toolargeresponse,
             $invalidresponse,
         ): stdClass {
+            if (!$idempotencysupported) {
+                return $data;
+            }
+
             $methods = $route->get_methods(['GET']) ?? [];
             if (!array_intersect($methods, idempotency_key_middleware::APPLICABLE_METHODS)) {
                 return $data;
@@ -336,12 +345,15 @@ class specification implements
      * @param string $component The Moodle component
      * @param route $route The route which handles this request
      * @param \core\router\scope\scopeset[] $scopesets,
+     * @param bool $idempotencysupported Whether this route's handler supports Idempotency-Key handling
+     *             (see {@see \core\router\util::method_is_idempotency_supported()}).
      * @return specification
      */
     public function add_path(
         string $component,
         route $route,
         array $scopesets = [],
+        bool $idempotencysupported = true,
     ): self {
         // Compile the final path, complete with component prefix.
         $path = "/";
@@ -351,7 +363,7 @@ class specification implements
         // Helper to add the path to the specification.
         // Note: We use this helper because OpenAPI does not support optional parameters.
         // Therefore we must handle that in Moodle, adding path variants with and without each optional parameter.
-        $addpath = function (string $path) use ($route, $component, $scopesets) {
+        $addpath = function (string $path) use ($route, $component, $scopesets, $idempotencysupported) {
             $path = str_replace(
                 [
                     // Remove the optional parameters delimiters from the path.
@@ -373,6 +385,7 @@ class specification implements
                 component: $component,
                 path: $path,
                 scopesets: $scopesets,
+                idempotencysupported: $idempotencysupported,
             );
 
             if (!property_exists($this->data->paths, $path)) {
@@ -535,6 +548,8 @@ class specification implements
      * @param string $component
      * @param string $path
      * @param \core\router\scope\scopeset[] $scopesets
+     * @param bool $idempotencysupported Whether this route's handler supports Idempotency-Key handling
+     *             (see {@see \core\router\util::method_is_idempotency_supported()}).
      * @return stdClass
      */
     public function get_openapi_schema_for_route(
@@ -542,6 +557,7 @@ class specification implements
         string $component,
         string $path,
         array $scopesets = [],
+        bool $idempotencysupported = true,
     ): stdClass {
         $data = (object) [
             'description' => $route->description,
@@ -601,7 +617,7 @@ class specification implements
         }
 
         foreach ($this->get_common_request_responses() as $callable) {
-            $data = $callable($route, $data);
+            $data = $callable($route, $data, $idempotencysupported);
         }
 
         $methoddata = [];
