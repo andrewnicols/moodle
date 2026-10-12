@@ -16,6 +16,7 @@
 
 namespace core\router\middleware;
 
+use core\tests\router\route_testcase;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(idempotency_key_middleware::class)]
-final class idempotency_key_middleware_test extends \advanced_testcase {
+final class idempotency_key_middleware_test extends route_testcase {
     /**
      * Create a handler which returns a fresh response with a unique body each time it is called.
      *
@@ -561,5 +562,129 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         } finally {
             $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
         }
+    }
+
+    /**
+     * A request carrying the Idempotency-Key header for a route marked with the idempotency_unsupported
+     * attribute is rejected outright, rather than being silently ignored or processed as idempotent.
+     */
+    public function test_route_marked_idempotency_unsupported_is_rejected(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $user = $this->get_authenticated_user();
+
+        $app = $this->get_simple_app();
+        $app->post(
+            '/method/path',
+            [\core\fixtures\route_with_scopes::class, 'method_with_idempotency_unsupported'],
+        );
+        $app->add(\core\di::get(idempotency_key_middleware::class));
+        $app->addRoutingMiddleware();
+
+        $request = (new ServerRequest('POST', '/method/path'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user);
+
+        $this->expectException(\core\exception\api\idempotency\idempotency_unsupported_exception::class);
+        try {
+            $app->handle($request);
+        } finally {
+            $this->assertEquals(0, $DB->count_records('api_idempotency_keys'));
+        }
+    }
+
+    /**
+     * A request for a route marked with the idempotency_unsupported attribute is processed normally when it
+     * does not carry the Idempotency-Key header at all.
+     */
+    public function test_route_marked_idempotency_unsupported_without_header_is_unaffected(): void {
+        $this->resetAfterTest();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $user = $this->get_authenticated_user();
+
+        $app = $this->get_simple_app();
+        $app->post(
+            '/method/path',
+            [\core\fixtures\route_with_scopes::class, 'method_with_idempotency_unsupported'],
+        );
+        $app->add(\core\di::get(idempotency_key_middleware::class));
+        $app->addRoutingMiddleware();
+
+        $request = (new ServerRequest('POST', '/method/path'))
+            ->withAttribute('user', $user);
+
+        $response = $app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * Sensitive response headers (e.g. Set-Cookie) are stripped before a response is persisted, so a replayed
+     * response never exposes them, even though the original response carried one.
+     */
+    public function test_sensitive_response_headers_are_not_persisted(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function (ServerRequestInterface $request): ResponseInterface {
+                $response = new \GuzzleHttp\Psr7\Response(200, [
+                    'Set-Cookie' => 'sessionid=secret',
+                    'X-Example' => 'keep-me',
+                ]);
+                $response->getBody()->write('response-1');
+
+                return $response;
+            });
+
+        $request = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $this->get_authenticated_user());
+        $middleware->process($request, $handler);
+
+        $record = $DB->get_record('api_idempotency_keys', []);
+        $decoded = \core\di::get(\core\api\repository\idempotency_key_repository::class)->decode_response($record);
+
+        $this->assertArrayNotHasKey('Set-Cookie', $decoded['headers']);
+        $this->assertArrayNotHasKey('set-cookie', $decoded['headers']);
+        $this->assertArrayHasKey('X-Example', $decoded['headers']);
+    }
+
+    /**
+     * Two requests from the same user, for the same key/method/path/body, but made with different granted
+     * scopes (i.e. different tokens), are treated as distinct requests rather than replaying each other's
+     * captured response: a response captured while authorized with one scope set must never be replayed to a
+     * request authorized with a different scope set, since the handler's behaviour may legitimately differ.
+     */
+    public function test_requests_with_different_granted_scopes_are_not_replayed(): void {
+        $this->resetAfterTest();
+
+        $middleware = \core\di::get(idempotency_key_middleware::class);
+        $handler = $this->get_counting_handler(2);
+        $user = $this->get_authenticated_user();
+
+        $first = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user)
+            ->withAttribute(\core\router\scope\scopeset::GRANTED_SCOPES, ['scope:read']);
+        $firstresponse = $middleware->process($first, $handler);
+        $this->assertEquals('response-1', (string) $firstresponse->getBody());
+
+        $second = (new ServerRequest('POST', '/example'))
+            ->withHeader('Idempotency-Key', 'my-key')
+            ->withAttribute('user', $user)
+            ->withAttribute(\core\router\scope\scopeset::GRANTED_SCOPES, ['scope:read', 'scope:write']);
+        $secondresponse = $middleware->process($second, $handler);
+
+        // A different (broader) scope set means this is treated as a fresh request, not a replay.
+        $this->assertEquals('response-2', (string) $secondresponse->getBody());
+        $this->assertEquals('', $secondresponse->getHeaderLine('Idempotency-Replayed'));
     }
 }

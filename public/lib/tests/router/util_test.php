@@ -325,6 +325,79 @@ final class util_test extends route_testcase {
     }
 
     /**
+     * A method with no idempotency_unsupported attribute is treated as supporting Idempotency Keys.
+     */
+    public function test_method_is_idempotency_unsupported_false(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $this->assertFalse(util::method_is_idempotency_unsupported(
+            [\core\fixtures\route_with_scopes::class, 'method_with_no_scope_attributes'],
+        ));
+    }
+
+    /**
+     * A method explicitly marked with the idempotency_unsupported attribute is reported as such.
+     */
+    public function test_method_is_idempotency_unsupported_true(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $this->assertTrue(util::method_is_idempotency_unsupported(
+            [\core\fixtures\route_with_scopes::class, 'method_with_idempotency_unsupported'],
+        ));
+    }
+
+    /**
+     * A callable which cannot be resolved to a class method is treated as supporting Idempotency Keys,
+     * rather than causing an error.
+     */
+    public function test_method_is_idempotency_unsupported_not_array_callable(): void {
+        $this->assertFalse(util::method_is_idempotency_unsupported(fn () => null));
+    }
+
+    /**
+     * When a request has not yet been routed by Slim (for example, when a middleware's process() method is
+     * called directly in a unit test), request_is_idempotency_unsupported() safely returns false rather than
+     * throwing, since RouteContext::fromRequest() cannot be used before routing has completed.
+     */
+    public function test_request_is_idempotency_unsupported_without_routing(): void {
+        $request = new ServerRequest('GET', '/test');
+
+        $this->assertFalse(util::request_is_idempotency_unsupported($request));
+    }
+
+    /**
+     * When a request has been routed to a method without the idempotency_unsupported attribute,
+     * request_is_idempotency_unsupported() returns false.
+     */
+    public function test_request_is_idempotency_unsupported_false(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $app = $this->get_simple_app();
+        $app->addRoutingMiddleware();
+        $app->get('/method/path', [\core\fixtures\route_with_scopes::class, 'method_with_no_scope_attributes']);
+
+        $request = $this->route_request($app, new ServerRequest('GET', '/method/path'));
+
+        $this->assertFalse(util::request_is_idempotency_unsupported($request));
+    }
+
+    /**
+     * When a request has been routed to a method with the idempotency_unsupported attribute,
+     * request_is_idempotency_unsupported() returns true.
+     */
+    public function test_request_is_idempotency_unsupported_true(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $app = $this->get_simple_app();
+        $app->addRoutingMiddleware();
+        $app->get('/method/path', [\core\fixtures\route_with_scopes::class, 'method_with_idempotency_unsupported']);
+
+        $request = $this->route_request($app, new ServerRequest('GET', '/method/path'));
+
+        $this->assertTrue(util::request_is_idempotency_unsupported($request));
+    }
+
+    /**
      * When a request already has the scopeset attribute set (for example, by the
      * moodle_scope_attribute_middleware), that value is used without requiring Slim routing to have occurred.
      */

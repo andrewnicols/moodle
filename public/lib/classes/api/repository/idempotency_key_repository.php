@@ -65,6 +65,21 @@ class idempotency_key_repository {
      */
     public const MAX_ENCRYPTED_RESPONSE_BYTES = 5 * 1024 * 1024; // 5MB.
 
+    /**
+     * @var string[] Lower-cased response header names which must never be persisted, even
+     *               encrypted, because they may themselves carry a secret (e.g. a session
+     *               identifier, or credential for a downstream system). Stripped from the
+     *               captured response in {@see self::mark_complete()} before it is stored; a
+     *               replayed response will therefore never include them, regardless of whether
+     *               the original response did.
+     */
+    protected const SENSITIVE_RESPONSE_HEADERS = [
+        'authorization',
+        'proxy-authorization',
+        'set-cookie',
+        'www-authenticate',
+    ];
+
     /** @var string The database table used to store Idempotency Key records. */
     protected const TABLE = 'api_idempotency_keys';
 
@@ -188,7 +203,7 @@ class idempotency_key_repository {
         $now = $this->clock->time();
 
         $payload = json_encode([
-            'headers' => $headers,
+            'headers' => self::remove_sensitive_headers($headers),
             // Base64-encoded: the body may be arbitrary binary content (e.g. a file download),
             // which is not guaranteed to be valid UTF-8 and so cannot be safely embedded in JSON
             // as-is (json_encode() would otherwise silently fail on such content).
@@ -224,6 +239,22 @@ class idempotency_key_repository {
         ]);
 
         return true;
+    }
+
+    /**
+     * Remove any header which must never be persisted (see {@see self::SENSITIVE_RESPONSE_HEADERS}).
+     *
+     * @param array $headers PSR-7 style headers, as returned by ResponseInterface::getHeaders().
+     * @return array The headers, with any sensitive entries removed.
+     */
+    protected static function remove_sensitive_headers(array $headers): array {
+        foreach (array_keys($headers) as $name) {
+            if (in_array(strtolower($name), self::SENSITIVE_RESPONSE_HEADERS, true)) {
+                unset($headers[$name]);
+            }
+        }
+
+        return $headers;
     }
 
     /**

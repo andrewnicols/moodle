@@ -16,6 +16,7 @@
 
 namespace core\fixtures;
 
+use core\router\middleware\idempotency_unsupported;
 use core\router\scope\scopeset;
 use core\router\scope\unscoped_resource;
 use GuzzleHttp\Psr7\Response;
@@ -53,6 +54,16 @@ class route_with_scopes {
      * @return Response
      */
     public function method_with_no_scope_definition(): Response {
+        return new Response(200, [], 'test');
+    }
+
+    /**
+     * A method explicitly declared as not supporting Idempotency Keys.
+     *
+     * @return Response
+     */
+    #[idempotency_unsupported]
+    public function method_with_idempotency_unsupported(): Response {
         return new Response(200, [], 'test');
     }
 

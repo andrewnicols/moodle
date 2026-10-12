@@ -17,11 +17,14 @@
 namespace core\router\middleware;
 
 use core\api\repository\idempotency_key_repository;
+use core\exception\api\idempotency\idempotency_unsupported_exception;
 use core\exception\api\idempotency\invalid_key_exception;
 use core\exception\api\idempotency\key_in_progress_exception;
 use core\exception\api\idempotency\key_mismatch_exception;
 use core\exception\api\idempotency\response_too_large_exception;
 use core\exception\api\idempotency\unauthenticated_key_exception;
+use core\router\scope\scopeset;
+use core\router\util;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,6 +64,17 @@ use Psr\Http\Server\RequestHandlerInterface;
  * still completes and returns its full response, but any later request reusing that key is
  * rejected with 406 Not Acceptable, since the server has no captured body to replay (see
  * {@see \core\api\repository\idempotency_key_repository::mark_complete()}).
+ *
+ * Some response headers (e.g. `Set-Cookie`, `Authorization`) must never be persisted at all, even
+ * encrypted, since they may themselves carry a secret; these are stripped before storage (see
+ * {@see \core\api\repository\idempotency_key_repository::mark_complete()}).
+ *
+ * A small number of endpoints return sensitive data which must never be captured for replay under
+ * any circumstances (e.g. an endpoint which mints a new Personal Access Token). These can opt out
+ * of idempotency support entirely with the {@see idempotency_unsupported} attribute: a request
+ * carrying the header for such a route is rejected outright with a 400 Bad Request (see
+ * {@see \core\exception\api\idempotency\idempotency_unsupported_exception}), rather than silently
+ * ignoring the header.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -108,6 +122,20 @@ class idempotency_key_middleware implements MiddlewareInterface {
         if (!$request->hasHeader(self::HEADER_NAME)) {
             // Idempotency support is opt-in. Clients which do not send the header get the legacy behaviour.
             return $handler->handle($request);
+        }
+
+        if (util::request_is_idempotency_unsupported($request)) {
+            // This route has explicitly opted out of idempotency support (see
+            // idempotency_unsupported), e.g. because its response may contain sensitive data
+            // (such as a freshly-minted token) which must never be persisted, even encrypted.
+            // Reject outright rather than silently ignoring the header: a client relying on it
+            // for duplicate-request protection should be told plainly that it is not available.
+            throw new idempotency_unsupported_exception(
+                sprintf(
+                    'This endpoint does not support the %s header.',
+                    self::HEADER_NAME,
+                ),
+            );
         }
 
         $key = trim($request->getHeaderLine(self::HEADER_NAME));
@@ -304,6 +332,19 @@ class idempotency_key_middleware implements MiddlewareInterface {
      * The hash is scoped to the current user and route so that the same Idempotency-Key value can
      * safely be reused by different users, or against different endpoints, without colliding.
      *
+     * It is also scoped to the set of OAuth2/API-token scopes granted to the current request (see
+     * {@see scopeset::GRANTED_SCOPES}), rather than only the user. A single user may hold more
+     * than one API token, each with a different set of granted scopes (e.g. a narrowly-scoped
+     * read-only token, alongside a broader read-write one); without this, a request made with a
+     * narrowly-scoped token could incorrectly be served a response that was originally generated
+     * under a more broadly-scoped token, for any endpoint whose behaviour varies by granted scope
+     * rather than being rejected outright by a route-level scope requirement. The scope
+     * *identifiers* are used here, not the raw Authorization header value itself: the latter is a
+     * live secret that provides no benefit being hashed here (its value is already covered by the
+     * user/scope identity it grants access to), and would otherwise mean a routine token
+     * rotation/refresh - which may happen to coincide with a client's retry - would needlessly
+     * invalidate replay protection for an otherwise-identical retried request.
+     *
      * Only called from {@see process()} once an authenticated user has already been confirmed to
      * be present on the request, so the userid is never the anonymous fallback of 0.
      *
@@ -314,8 +355,15 @@ class idempotency_key_middleware implements MiddlewareInterface {
     protected function get_key_hash(ServerRequestInterface $request, string $key): string {
         $userid = (int) $request->getAttribute('user')->id;
 
+        // Granted scopes are not present on every request (e.g. cookie/session-authenticated
+        // requests do not carry a scoped API token at all), so default to an empty list. Sorting
+        // ensures the hash is stable regardless of the order scopes happen to be listed in.
+        $scopes = $request->getAttribute(scopeset::GRANTED_SCOPES, []);
+        sort($scopes);
+
         return hash('sha256', implode('|', [
             $userid,
+            implode(',', $scopes),
             strtoupper($request->getMethod()),
             $request->getUri()->getPath(),
             $key,

@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use core\router\middleware\idempotency_unsupported;
 use core\router\scope\scopeset;
 use core\router\scope\unscoped_resource;
 use core\url;
@@ -341,6 +342,52 @@ class util {
 
         // This should not be encountered - the route should always be set.
         return []; // @codeCoverageIgnore
+    }
+
+    /**
+     * Determine whether the specified method has explicitly opted out of Idempotency-Key support
+     * (see {@see idempotency_unsupported}).
+     *
+     * @param callable|array|string $callable
+     * @return bool
+     */
+    public static function method_is_idempotency_unsupported(callable|array|string $callable): bool {
+        $methodinfo = self::get_reflected_method_from_callable($callable);
+        if (!$methodinfo) {
+            // The callable could not be resolved to a class method (for example, a Closure route
+            // handler). There is nothing to inspect for the attribute.
+            return false;
+        }
+
+        return count($methodinfo->getAttributes(idempotency_unsupported::class)) > 0;
+    }
+
+    /**
+     * Determine whether the route handling the specified request has explicitly opted out of
+     * Idempotency-Key support (see {@see idempotency_unsupported}).
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
+    public static function request_is_idempotency_unsupported(ServerRequestInterface $request): bool {
+        try {
+            $context = RouteContext::fromRequest($request);
+        } catch (\RuntimeException $e) {
+            // Routing has not been completed on this request (for example, a middleware invoked
+            // directly in a unit test, without the request ever passing through Slim's routing
+            // middleware). This can never happen in production, since this is only ever called
+            // from middleware added to the API route group, which only runs after routing has
+            // completed. Fail safe by assuming idempotency support is not excluded, rather than
+            // raising an error for what is ultimately just a missing test fixture.
+            return false;
+        }
+
+        if ($slimroute = $context->getRoute()) {
+            return self::method_is_idempotency_unsupported($slimroute->getCallable());
+        }
+
+        // This should not be encountered - the route should always be set.
+        return false; // @codeCoverageIgnore
     }
 
     /**
