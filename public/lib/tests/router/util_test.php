@@ -327,21 +327,21 @@ final class util_test extends route_testcase {
     /**
      * A method with no idempotency_unsupported attribute is treated as supporting Idempotency Keys.
      */
-    public function test_method_is_idempotency_unsupported_false(): void {
+    public function test_method_is_idempotency_supported_true(): void {
         self::load_fixture('core', 'router/route_with_scopes.php');
 
-        $this->assertFalse(util::method_is_idempotency_unsupported(
+        $this->assertTrue(util::method_is_idempotency_supported(
             [\core\fixtures\route_with_scopes::class, 'method_with_no_scope_attributes'],
         ));
     }
 
     /**
-     * A method explicitly marked with the idempotency_unsupported attribute is reported as such.
+     * A method explicitly marked with the idempotency_unsupported attribute is reported as not supporting it.
      */
-    public function test_method_is_idempotency_unsupported_true(): void {
+    public function test_method_is_idempotency_supported_false(): void {
         self::load_fixture('core', 'router/route_with_scopes.php');
 
-        $this->assertTrue(util::method_is_idempotency_unsupported(
+        $this->assertFalse(util::method_is_idempotency_supported(
             [\core\fixtures\route_with_scopes::class, 'method_with_idempotency_unsupported'],
         ));
     }
@@ -350,26 +350,26 @@ final class util_test extends route_testcase {
      * A callable which cannot be resolved to a class method is treated as supporting Idempotency Keys,
      * rather than causing an error.
      */
-    public function test_method_is_idempotency_unsupported_not_array_callable(): void {
-        $this->assertFalse(util::method_is_idempotency_unsupported(fn () => null));
+    public function test_method_is_idempotency_supported_not_array_callable(): void {
+        $this->assertTrue(util::method_is_idempotency_supported(fn () => null));
     }
 
     /**
      * When a request has not yet been routed by Slim (for example, when a middleware's process() method is
-     * called directly in a unit test), request_is_idempotency_unsupported() safely returns false rather than
+     * called directly in a unit test), request_is_idempotency_supported() safely returns true rather than
      * throwing, since RouteContext::fromRequest() cannot be used before routing has completed.
      */
-    public function test_request_is_idempotency_unsupported_without_routing(): void {
+    public function test_request_is_idempotency_supported_without_routing(): void {
         $request = new ServerRequest('GET', '/test');
 
-        $this->assertFalse(util::request_is_idempotency_unsupported($request));
+        $this->assertTrue(util::request_is_idempotency_supported($request));
     }
 
     /**
      * When a request has been routed to a method without the idempotency_unsupported attribute,
-     * request_is_idempotency_unsupported() returns false.
+     * request_is_idempotency_supported() returns true.
      */
-    public function test_request_is_idempotency_unsupported_false(): void {
+    public function test_request_is_idempotency_supported_true(): void {
         self::load_fixture('core', 'router/route_with_scopes.php');
 
         $app = $this->get_simple_app();
@@ -378,14 +378,14 @@ final class util_test extends route_testcase {
 
         $request = $this->route_request($app, new ServerRequest('GET', '/method/path'));
 
-        $this->assertFalse(util::request_is_idempotency_unsupported($request));
+        $this->assertTrue(util::request_is_idempotency_supported($request));
     }
 
     /**
      * When a request has been routed to a method with the idempotency_unsupported attribute,
-     * request_is_idempotency_unsupported() returns true.
+     * request_is_idempotency_supported() returns false.
      */
-    public function test_request_is_idempotency_unsupported_true(): void {
+    public function test_request_is_idempotency_supported_false(): void {
         self::load_fixture('core', 'router/route_with_scopes.php');
 
         $app = $this->get_simple_app();
@@ -394,7 +394,7 @@ final class util_test extends route_testcase {
 
         $request = $this->route_request($app, new ServerRequest('GET', '/method/path'));
 
-        $this->assertTrue(util::request_is_idempotency_unsupported($request));
+        $this->assertFalse(util::request_is_idempotency_supported($request));
     }
 
     /**

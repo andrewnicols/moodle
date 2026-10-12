@@ -345,31 +345,31 @@ class util {
     }
 
     /**
-     * Determine whether the specified method has explicitly opted out of Idempotency-Key support
-     * (see {@see idempotency_unsupported}).
+     * Determine whether the specified method supports Idempotency-Key handling, i.e. it has not
+     * explicitly opted out (see {@see idempotency_unsupported}).
      *
      * @param callable|array|string $callable
      * @return bool
      */
-    public static function method_is_idempotency_unsupported(callable|array|string $callable): bool {
+    public static function method_is_idempotency_supported(callable|array|string $callable): bool {
         $methodinfo = self::get_reflected_method_from_callable($callable);
         if (!$methodinfo) {
             // The callable could not be resolved to a class method (for example, a Closure route
             // handler). There is nothing to inspect for the attribute.
-            return false;
+            return true;
         }
 
-        return count($methodinfo->getAttributes(idempotency_unsupported::class)) > 0;
+        return count($methodinfo->getAttributes(idempotency_unsupported::class)) === 0;
     }
 
     /**
-     * Determine whether the route handling the specified request has explicitly opted out of
-     * Idempotency-Key support (see {@see idempotency_unsupported}).
+     * Determine whether the route handling the specified request supports Idempotency-Key
+     * handling, i.e. it has not explicitly opted out (see {@see idempotency_unsupported}).
      *
      * @param ServerRequestInterface $request
      * @return bool
      */
-    public static function request_is_idempotency_unsupported(ServerRequestInterface $request): bool {
+    public static function request_is_idempotency_supported(ServerRequestInterface $request): bool {
         try {
             $context = RouteContext::fromRequest($request);
         } catch (\RuntimeException $e) {
@@ -377,17 +377,17 @@ class util {
             // directly in a unit test, without the request ever passing through Slim's routing
             // middleware). This can never happen in production, since this is only ever called
             // from middleware added to the API route group, which only runs after routing has
-            // completed. Fail safe by assuming idempotency support is not excluded, rather than
-            // raising an error for what is ultimately just a missing test fixture.
-            return false;
+            // completed. Fail safe by assuming idempotency is supported, rather than raising an
+            // error for what is ultimately just a missing test fixture.
+            return true;
         }
 
         if ($slimroute = $context->getRoute()) {
-            return self::method_is_idempotency_unsupported($slimroute->getCallable());
+            return self::method_is_idempotency_supported($slimroute->getCallable());
         }
 
         // This should not be encountered - the route should always be set.
-        return false; // @codeCoverageIgnore
+        return true; // @codeCoverageIgnore
     }
 
     /**

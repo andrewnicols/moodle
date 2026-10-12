@@ -124,7 +124,7 @@ class idempotency_key_middleware implements MiddlewareInterface {
             return $handler->handle($request);
         }
 
-        if (util::request_is_idempotency_unsupported($request)) {
+        if (!util::request_is_idempotency_supported($request)) {
             // This route has explicitly opted out of idempotency support (see
             // idempotency_unsupported), e.g. because its response may contain sensitive data
             // (such as a freshly-minted token) which must never be persisted, even encrypted.
