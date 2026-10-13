@@ -577,7 +577,7 @@ class component {
         // Always keep moodle_exception in place.
         $keyclasses = [
             \core\exception\moodle_exception::class,
-            \core\router\schema\response\content\problem_json_media_type::class,
+            \core\router\schema\response\collection_response::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {

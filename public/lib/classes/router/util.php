@@ -436,43 +436,22 @@ class util {
         \ReflectionClass $classinfo,
         \ReflectionMethod $methodinfo,
     ): ?route {
-        $instantiator = function (array $attributes) {
-            global $CFG;
-            try {
-                return $attributes ? $attributes[0]->newInstance() : null;
-            // @codeCoverageIgnoreStart
-            } catch (\Throwable $e) {
-                // The route attribute could not be instantiated.
-                // When debugging, this is useful to know.
-                // When not, log to error_log.
-                if (!$CFG->debugdisplay) {
-                    debugging('Could not instantiate route attribute: ' . $e->getMessage());
-                    return null;
-                }
-
-                default_exception_handler($e);
+        global $CFG;
+        try {
+            return route::from_reflection($classinfo, $methodinfo);
+        // @codeCoverageIgnoreStart
+        } catch (\Throwable $e) {
+            // The route attribute could not be instantiated.
+            // When debugging, this is useful to know.
+            // When not, log to error_log.
+            if (!$CFG->debugdisplay) {
+                debugging('Could not instantiate route attribute: ' . $e->getMessage());
+                return null;
             }
-            // @codeCoverageIgnoreEnd
-        };
 
-        $methodattributes = $methodinfo->getAttributes(route::class);
-        $methodroute = $instantiator($methodattributes);
-
-        if (!$methodroute) {
-            // No route found.
-            return null;
+            default_exception_handler($e);
         }
-
-        $classattributes = $classinfo->getAttributes(route::class);
-        if ($classattributes) {
-            $classinstance = $instantiator($classattributes);
-            if ($classinstance) {
-                // The class has a #route attribute.
-                $methodroute->set_parent($classinstance);
-            }
-        }
-
-        return $methodroute;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
