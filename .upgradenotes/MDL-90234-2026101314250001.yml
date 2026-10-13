@@ -1,0 +1,10 @@
+issueNumber: MDL-90234
+notes:
+  core:
+    - message: >
+        Routes can now opt in to standard pagination which meets the requirements of the REST API Style Guide by using the new `\core\router\schema\collection` attribute.
+
+        Routes which declare the collection attribute automatically have the `page`, `pagesize` and `sort` query parameters added to their route descriptions and processing.
+
+        Such routes should return a valid collection response which includes `items` and `pagination` envelope using `\core\router\schema\response\collection_response`.
+      type: improved

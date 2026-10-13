@@ -17,6 +17,7 @@
 namespace core\router;
 
 use core\exception\coding_exception;
+use core\router\schema\collection;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
 use core\router\schema\request_body;
@@ -33,6 +34,9 @@ use Attribute;
 class route {
     /** @var string[] The list of HTTP Methods */
     protected null|array $method = null;
+
+    /** @var collection|null Pagination configuration, if this is a collection route */
+    public ?collection $collection = null;
 
     /**
      * The parent route, if relevant.
@@ -179,6 +183,69 @@ class route {
     }
 
     /**
+     * Set the pagination configuration for this route.
+     *
+     * @param collection|null $collection
+     * @return self
+     */
+    public function set_collection(?collection $collection): self {
+        $this->collection = $collection;
+        return $this;
+    }
+
+    /**
+     * Create the route for a method from its attributes, including any sibling attributes such as #[collection].
+     *
+     * This is the single place in which routes are instantiated from reflection, and so the single place in which
+     * sibling attributes are attached to the route.
+     *
+     * Sibling attributes are optional extras. If one cannot be instantiated (for example because it relates to a
+     * class which does not exist in this version of Moodle) it is ignored.
+     *
+     * If $collectsiblings is false, sibling attributes will not be collected.
+     * If data is cached care should be taken to ensure that all uses are consistent with the $collectsiblings setting.
+     *
+     * @param \ReflectionClass $classinfo The class containing the method
+     * @param \ReflectionMethod $methodinfo The method
+     * @param bool $collectsiblings Whether to collect sibling attributes
+     * @return null|route The route, or null if the method has no route attribute
+     */
+    public static function from_reflection(
+        \ReflectionClass $classinfo,
+        \ReflectionMethod $methodinfo,
+        bool $collectsiblings = true,
+    ): ?route {
+        // Each method can only have a single route attribute.
+        $routeattributes = $methodinfo->getAttributes(self::class, \ReflectionAttribute::IS_INSTANCEOF);
+        if (empty($routeattributes)) {
+            return null;
+        }
+
+        // Get the instance.
+        $methodroute = $routeattributes[0]->newInstance();
+
+        // Collect sibling attributes.
+        if ($collectsiblings) {
+            $collectionattributes = $methodinfo->getAttributes(collection::class);
+            if ($collectionattributes) {
+                try {
+                    $methodroute->set_collection($collectionattributes[0]->newInstance());
+                } catch (\Error) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                    // The attribute class does not exist in this version of Moodle.
+                }
+            }
+        }
+
+        // Set the parent route if the class has one.
+        $classattributes = $classinfo->getAttributes(self::class);
+        if ($classattributes) {
+            $methodroute->set_parent($classattributes[0]->newInstance());
+        }
+
+        return $methodroute;
+    }
+
+    /**
      * Get the fully-qualified path for this route relative to root.
      *
      * This includes the path of any parent route.
@@ -273,6 +340,13 @@ class route {
         }
         foreach ($this->queryparams as $parameter) {
             $parameters[$parameter->get_name()] = $parameter;
+        }
+
+        // The collection parameters take precedence over any supplied by the route. This allows a plugin which
+        // supports versions of Moodle without #[collection] to supply its own equivalents, which are replaced here
+        // when the attribute is supported.
+        if ($this->collection) {
+            $parameters = array_merge($parameters, $this->collection->get_query_parameters());
         }
 
         return $parameters;
