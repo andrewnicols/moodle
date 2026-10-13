@@ -1,0 +1,10 @@
+issueNumber: AE-215
+notes:
+  core:
+    - message: >
+        Routes can now opt in to standard pagination using the new
+        `\core\router\schema\collection` attribute. Collection routes accept
+        `page`, `pagesize` and `sort` query parameters, validated
+        automatically, and return an `items` and `pagination` envelope using
+        `\core\router\schema\response\collection_response`.
+      type: improved
