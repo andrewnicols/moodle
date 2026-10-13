@@ -45,8 +45,13 @@ class mustache_user_date_helper {
         $timestamp = trim($timestamp);
         $format = trim($format);
 
-        $timestamp = $helper->render($timestamp);
-        $format = $helper->render($format);
+        // Plain text needs no rendering, which avoids a lambda template lookup.
+        if (str_contains($timestamp, '{{')) {
+            $timestamp = $helper->render($timestamp);
+        }
+        if (str_contains($format, '{{')) {
+            $format = $helper->render($format);
+        }
 
         return userdate($timestamp, $format);
     }

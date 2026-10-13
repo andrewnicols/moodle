@@ -62,7 +62,8 @@ class mustache_string_helper {
             $rawjson = $helper->render($next);
             $a = json_decode((string) $rawjson);
         } else {
-            $a = (string) $helper->render($next);
+            // Plain text needs no rendering, which avoids a lambda template lookup.
+            $a = str_contains($next, '{{') ? (string) $helper->render($next) : $next;
         }
         return get_string($key, $component, $a);
     }

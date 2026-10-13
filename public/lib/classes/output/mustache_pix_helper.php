@@ -51,15 +51,15 @@ class mustache_pix_helper {
     public function pix($text, LambdaHelper $helper) {
         // Split the text into an array of variables.
         $key = strtok($text, ",");
-        $key = trim((string) $helper->render($key));
+        $key = trim($this->render_if_tagged((string) $key, $helper));
         $component = strtok(",");
-        $component = trim((string) $helper->render($component));
+        $component = trim($this->render_if_tagged((string) $component, $helper));
         if (!$component) {
             $component = '';
         }
         $text = strtok("");
         // Allow mustache tags in the last argument.
-        $text = trim((string) $helper->render($text));
+        $text = trim($this->render_if_tagged((string) $text, $helper));
         // The $text has come from a template, so HTML special
         // chars have been escaped. However, render_pix_icon
         // assumes the alt arrives with no escaping. So we need
@@ -67,5 +67,19 @@ class mustache_pix_helper {
         $text = htmlspecialchars_decode($text, ENT_COMPAT);
 
         return trim($this->renderer->pix_icon($key, $text, $component));
+    }
+
+    /**
+     * Render the given text only if it contains Mustache tags; plain text is returned unchanged.
+     *
+     * @param string $text
+     * @param LambdaHelper $helper
+     * @return string
+     */
+    private function render_if_tagged(string $text, LambdaHelper $helper): string {
+        if (!str_contains($text, '{{')) {
+            return $text;
+        }
+        return (string) $helper->render($text);
     }
 }
