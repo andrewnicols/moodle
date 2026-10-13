@@ -24,10 +24,13 @@ use core\router\response\conflict_response;
 use core\router\response\invalid_parameter_response;
 use core\router\response\not_acceptable_response;
 use core\router\response\not_found_response;
+use core\router\response\not_modified_response;
+use core\router\response\precondition_failed_response;
 use core\router\response\unprocessable_entity_response;
 use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
+use core\router\schema\parameters\header_object;
 use core\router\schema\response\response;
 use core\router\util;
 use core\url;
@@ -117,6 +120,73 @@ class specification implements
 
         $this->generate_common_responses();
         $this->generate_idempotency_documentation();
+        $this->generate_conditional_request_documentation();
+    }
+
+    /**
+     * Generate the callable which documents ETag support.
+     *
+     * This is added centrally for every route marked with {@see etag}.
+     *
+     * @return specification
+     */
+    protected function generate_conditional_request_documentation(): self {
+        $ifmatch = new header_object(
+            name: 'If-Match',
+            type: \core\param::RAW,
+            required: false,
+            description: implode(' ', [
+                'An optional ETag, as previously returned by this resource.',
+                'If supplied, the change is only applied if it matches the current ETag of the resource,',
+                'otherwise the request fails with a 412 Precondition Failed response.',
+                'If omitted, the change is applied unconditionally.',
+            ]),
+        );
+        $ifnonematch = new header_object(
+            name: 'If-None-Match',
+            type: \core\param::RAW,
+            required: false,
+            description: implode(' ', [
+                'An optional ETag, as previously returned by this resource.',
+                'If it matches the current ETag, an empty 304 Not Modified response is returned.',
+            ]),
+        );
+        $preconditionfailed = new precondition_failed_response();
+        $notmodified = new not_modified_response();
+
+        $this->commonresponses[] = function (
+            route $route,
+            stdClass $data,
+        ) use (
+            $ifmatch,
+            $ifnonematch,
+            $preconditionfailed,
+            $notmodified,
+        ): stdClass {
+            if (!$route->etag) {
+                return $data;
+            }
+
+            $methods = $route->get_methods(['GET']) ?? [];
+            if (array_intersect($methods, ['GET', 'HEAD'])) {
+                $data->parameters[] = $ifnonematch->get_openapi_schema($this);
+                $response = $notmodified;
+            } else {
+                $data->parameters[] = $ifmatch->get_openapi_schema($this);
+                $data->description = rtrim((string) $data->description)
+                    . "\n\nIf an `If-Match` header is supplied, the change is only applied if it matches the current `ETag`"
+                    . " of the resource, otherwise the request fails with a 412 Precondition Failed response.";
+                $response = $preconditionfailed;
+            }
+
+            if (!array_key_exists($response->get_status_code(), $data->responses)) {
+                $data->responses[$response->get_status_code()] = $response->get_openapi_schema($this);
+            }
+
+            return $data;
+        };
+
+        return $this;
     }
 
     /**

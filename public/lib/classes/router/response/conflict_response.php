@@ -28,9 +28,4 @@ class conflict_response extends exception_response {
     public static function get_exception_status_code(): int {
         return 409;
     }
-
-    #[\Override]
-    protected static function get_response_description(): string {
-        return 'Conflict';
-    }
 }

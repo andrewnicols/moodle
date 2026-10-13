@@ -1,0 +1,12 @@
+issueNumber: AE-215
+notes:
+  core:
+    - message: >
+        Routes can now opt in to conditional requests using the new
+        `\core\router\schema\etag` attribute. Routes using `#[etag]` support
+        the `ETag`, `If-None-Match` (304 Not Modified) and `If-Match`
+        (412 Precondition Failed) headers via
+        `\core\router\conditional_request`. The new `not_modified_response`
+        and `precondition_failed_response` classes, and the related headers,
+        are documented in the OpenAPI specification automatically.
+      type: improved
