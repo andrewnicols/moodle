@@ -138,24 +138,7 @@ abstract class abstract_route_loader {
         \ReflectionClass $classinfo,
         \ReflectionMethod $methodinfo,
     ): ?route {
-        // Fetch the route attribute from the method.
-        // Each method can only have a single route attribute.
-        $routeattributes = $methodinfo->getAttributes(route::class, \ReflectionAttribute::IS_INSTANCEOF);
-        if (empty($routeattributes)) {
-            return null;
-        }
-
-        // Get the instance.
-        $methodroute = $routeattributes[0]->newInstance();
-
-        // Set the parent route if the class has one.
-        $classattributes = $classinfo->getAttributes(route::class);
-        if ($classattributes) {
-            // The class has a #route attribute.
-            $methodroute->set_parent($classattributes[0]->newInstance());
-        }
-
-        return $methodroute;
+        return route::from_reflection($classinfo, $methodinfo);
     }
 
     /**
