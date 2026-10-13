@@ -30,6 +30,9 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class openapi_base {
+    /** @var string Suffix which distinguishes a customised instance from the default component of the same class */
+    private string $referencesuffix = '';
+
     /**
      * Base constructor which does nothing.
      *
@@ -56,7 +59,7 @@ abstract class openapi_base {
         return static::get_reference_for_class(
             classname: get_class($this),
             qualify: $qualify,
-        );
+        ) . $this->referencesuffix;
     }
 
     /**
@@ -73,6 +76,15 @@ abstract class openapi_base {
     ): ?stdClass {
         if (is_a($this, referenced_object::class)) {
             // This class is a referenced object, so we need to add it to the specification.
+            // Instances can be customised (for example, by renaming a parameter). The default instance keeps
+            // the plain class-based name; any customised instance gets a variant name derived from its content,
+            // so names do not depend on the order in which instances are encountered.
+            $this->referencesuffix = '';
+            $description = json_encode($this->get_openapi_description(api: $api, path: $path));
+            if ($description !== $this->get_default_description($api, $path)) {
+                $this->referencesuffix = '--' . substr(sha1($description), 0, 8);
+            }
+
             if (!$api->is_reference_defined($this->get_reference())) {
                 $api->add_component($this);
             }
@@ -86,6 +98,34 @@ abstract class openapi_base {
             api: $api,
             path: $path,
         );
+    }
+
+    /**
+     * Get the JSON-encoded description of a default instance of this class.
+     *
+     * Classes which cannot be constructed without arguments have no default, and are never given a variant name.
+     *
+     * @param specification $api
+     * @param null|string $path
+     * @return null|string
+     */
+    private function get_default_description(specification $api, ?string $path): ?string {
+        static $cache;
+        $cache ??= new \WeakMap();
+        $classname = get_class($this);
+
+        $descriptions = $cache[$api] ?? [];
+        if (!array_key_exists($classname, $descriptions)) {
+            try {
+                $default = new $classname();
+                $descriptions[$classname] = json_encode($default->get_openapi_description(api: $api, path: $path));
+            } catch (\Throwable) {
+                $descriptions[$classname] = null;
+            }
+            $cache[$api] = $descriptions;
+        }
+
+        return $descriptions[$classname] ?? json_encode($this->get_openapi_description(api: $api, path: $path));
     }
 
     /**
