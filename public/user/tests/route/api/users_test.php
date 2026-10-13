@@ -17,6 +17,7 @@
 namespace core_user\route\api;
 
 use core\tests\router\route_testcase;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -32,6 +33,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(\core_user\local\user_representation::class)]
 #[CoversClass(\core_user\route\responses\user_collection_response::class)]
 #[CoversClass(\core_user\route\responses\user_response::class)]
+#[CoversClass(\core_user\local\user_updater::class)]
 final class users_test extends route_testcase {
     public function test_required_scopes(): void {
         $this->assert_route_required_scopes(
@@ -261,5 +263,136 @@ final class users_test extends route_testcase {
 
         $response = $this->process_api_request('GET', '/users/99999999');
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
+     * Send a PATCH request.
+     *
+     * @param string $path
+     * @param array $body
+     * @param array $headers
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    private function patch(string $path, array $body, array $headers = []): \Psr\Http\Message\ResponseInterface {
+        return $this->process_api_request(
+            'PATCH',
+            $path,
+            headers: ['HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json'] + $headers,
+            body: Utils::streamFor(json_encode($body)),
+        );
+    }
+
+    public function test_update_user_required_scopes(): void {
+        $this->assert_route_required_scopes(
+            [['core_user:user:update:self']],
+            [users::class, 'update_user'],
+        );
+    }
+
+    public function test_update_user_as_admin(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+
+        $user = $this->getDataGenerator()->create_user(['firstname' => 'Old', 'email' => 'old@example.com']);
+        $this->setAdminUser();
+
+        $response = $this->patch("/users/{$user->id}", [
+            'firstName' => 'New',
+            'email' => 'new@example.com',
+            'timeZone' => 'Australia/Perth',
+            'suspended' => true,
+        ]);
+        $this->assert_valid_response($response);
+        $payload = $this->decode_response($response, true);
+
+        $this->assertEquals('New', $payload['firstName']);
+        $this->assertEquals('new@example.com', $payload['email']);
+        $this->assertTrue((bool) $payload['suspended']);
+        $this->assertNotEmpty($response->getHeaderLine('ETag'));
+
+        $record = \core\user::get_user($user->id);
+        $this->assertEquals('New', $record->firstname);
+        $this->assertEquals('Australia/Perth', $record->timezone);
+        $this->assertEquals(1, $record->suspended);
+    }
+
+    public function test_update_self_profile_fields_only(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $response = $this->patch('/users/current', ['lastName' => 'Renamed']);
+        $this->assert_valid_response($response);
+        $this->assertEquals('Renamed', \core\user::get_user($user->id)->lastname);
+
+        // Email requires moodle/user:update.
+        $response = $this->patch('/users/current', ['email' => 'x@example.com']);
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public function test_update_other_user_forbidden(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $teacher = $generator->create_and_enrol($course, 'editingteacher');
+        $student = $generator->create_and_enrol($course, 'student');
+        $this->setUser($teacher);
+
+        // Visible but not updatable.
+        $response = $this->patch("/users/{$student->id}", ['firstName' => 'Nope']);
+        $this->assertEquals(403, $response->getStatusCode());
+
+        // Not visible.
+        $outsider = $generator->create_user();
+        $response = $this->patch("/users/{$outsider->id}", ['firstName' => 'Nope']);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function test_update_invalid_requests(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+
+        $user = $this->getDataGenerator()->create_user();
+        $other = $this->getDataGenerator()->create_user(['email' => 'taken@example.com']);
+        $this->setAdminUser();
+
+        foreach ([
+            [],
+            ['username' => 'changed'],
+            ['firstName' => ' '],
+            ['email' => 'not-an-email'],
+            ['email' => 'taken@example.com'],
+            ['timeZone' => 'Not/AZone'],
+        ] as $body) {
+            $response = $this->patch("/users/{$user->id}", $body);
+            $this->assertEquals(400, $response->getStatusCode(), json_encode($body));
+        }
+    }
+
+    public function test_update_if_match(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+
+        $user = $this->getDataGenerator()->create_user(['firstname' => 'Before']);
+        $this->setAdminUser();
+
+        $etag = $this->process_api_request('GET', "/users/{$user->id}")->getHeaderLine('ETag');
+
+        $response = $this->patch("/users/{$user->id}", ['firstName' => 'During'], ['If-Match' => $etag]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEquals($etag, $response->getHeaderLine('ETag'));
+
+        // The original ETag is now stale.
+        $response = $this->patch("/users/{$user->id}", ['firstName' => 'After'], ['If-Match' => $etag]);
+        $this->assertEquals(412, $response->getStatusCode());
+        $this->assertEquals('During', \core\user::get_user($user->id)->firstname);
+
+        // Without If-Match the update is applied.
+        $response = $this->patch("/users/{$user->id}", ['firstName' => 'After']);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }
