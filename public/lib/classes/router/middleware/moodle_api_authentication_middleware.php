@@ -92,6 +92,14 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
             if ($authenticatedrequest) {
                 // We have an authenticated request.
                 $request = $authenticatedrequest;
+
+                // Handlers rely on a null value meaning that the request was not authenticated with a scoped credential
+                // (for example a cookie session), so a scoped credential must always supply its granted scopes.
+                if ($request->getAttribute(scopeset::GRANTED_SCOPES) === null) {
+                    throw new \core\exception\coding_exception(
+                        'A request authenticated with an API key or OAuth2 must have its granted scopes set.',
+                    );
+                }
             } else if ($moodleroute->cookies !== false) {
                 // No authenticated request, but cookies are supported.
                 \core\session\manager::set_cookies_supported(true);
