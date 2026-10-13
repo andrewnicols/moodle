@@ -46,6 +46,18 @@ class user_representation {
         'lastaccess',
     ];
 
+    /** @var string[] The fields requested from get_user_details for the profile resource */
+    private const PROFILE_DETAILS = [
+        'city',
+        'country',
+        'institution',
+        'department',
+        'phone1',
+        'phone2',
+        'address',
+        'description',
+    ];
+
     /**
      * Get the core representation of a user.
      *
@@ -83,7 +95,56 @@ class user_representation {
      * @return array|null The representation, or null if the current user cannot see this user
      */
     public static function get_core_visible(stdClass $user, ?array &$courses = null): ?array {
-        $item = self::get_core($user);
+        return self::find_visible($user, $courses, self::get_core(...));
+    }
+
+    /**
+     * Get the profile representation of a user, looking for any course through which the current user may view them.
+     *
+     * @param stdClass $user A full user record
+     * @param stdClass[]|null $courses Courses where the current user has viewdetails, if already known
+     * @return array|null The representation, or null if the current user cannot see this user
+     */
+    public static function get_profile_visible(stdClass $user, ?array &$courses = null): ?array {
+        return self::find_visible($user, $courses, self::get_profile(...));
+    }
+
+    /**
+     * Get the profile representation of a user.
+     *
+     * @param stdClass $user A full user record
+     * @param stdClass|null $course A course in which the current user is viewing the user
+     * @return array|null The representation, or null if the current user cannot see this user
+     */
+    public static function get_profile(stdClass $user, ?stdClass $course = null): ?array {
+        $details = user::get_user_details($user, $course, self::PROFILE_DETAILS);
+        if ($details === null) {
+            return null;
+        }
+
+        return [
+            'city' => $details['city'] ?? null,
+            'country' => $details['country'] ?? null,
+            'institution' => $details['institution'] ?? null,
+            'department' => $details['department'] ?? null,
+            'phone' => $details['phone1'] ?? null,
+            'mobilePhone' => $details['phone2'] ?? null,
+            'address' => $details['address'] ?? null,
+            'description' => $details['description'] ?? null,
+            'descriptionFormat' => isset($details['descriptionformat']) ? (int) $details['descriptionformat'] : null,
+        ];
+    }
+
+    /**
+     * Find a course (if needed) in which the user is visible, and build a representation in it.
+     *
+     * @param stdClass $user
+     * @param stdClass[]|null $courses
+     * @param callable $builder Called with the user and an optional course
+     * @return array|null
+     */
+    private static function find_visible(stdClass $user, ?array &$courses, callable $builder): ?array {
+        $item = $builder($user);
         if ($item !== null) {
             return $item;
         }
@@ -92,21 +153,11 @@ class user_representation {
         $courses ??= visible_users::get_courses_with_viewdetails();
         foreach ($courses as $course) {
             if (is_enrolled(\core\context\course::instance($course->id), $user)) {
-                return self::get_core($user, $course);
+                return $builder($user, $course);
             }
         }
 
         return null;
-    }
-
-    /**
-     * Calculate an ETag for a representation.
-     *
-     * @param array $representation
-     * @return string A strong, quoted ETag
-     */
-    public static function get_etag(array $representation): string {
-        return '"' . sha1(json_encode($representation)) . '"';
     }
 
     /**

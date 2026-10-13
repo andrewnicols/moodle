@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 final class users_test extends route_testcase {
     public function test_required_scopes(): void {
         $this->assert_route_required_scopes(
-            [['core_user:user:read']],
+            [['core_user:user:read:self'], ['core_user:user:read']],
             [users::class, 'list_users'],
         );
     }
@@ -203,7 +203,7 @@ final class users_test extends route_testcase {
 
     public function test_get_user_required_scopes(): void {
         $this->assert_route_required_scopes(
-            [['core_user:user:read']],
+            [['core_user:user:read:self'], ['core_user:user:read']],
             [users::class, 'get_user'],
         );
     }
@@ -284,7 +284,7 @@ final class users_test extends route_testcase {
 
     public function test_update_user_required_scopes(): void {
         $this->assert_route_required_scopes(
-            [['core_user:user:update:self']],
+            [['core_user:user:update:self'], ['core_user:user:update']],
             [users::class, 'update_user'],
         );
     }

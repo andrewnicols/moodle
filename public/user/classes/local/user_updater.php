@@ -30,30 +30,51 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class user_updater {
-    /** @var string[] API fields which map to a user record field, and which may be edited as part of a profile */
-    private const PROFILE_FIELDS = [
+    /** @var string[] API fields of the core resource which map to a user record field. Editable with a profile capability. */
+    private const CORE_FIELDS = [
         'firstName' => 'firstname',
         'lastName' => 'lastname',
         'timeZone' => 'timezone',
     ];
 
-    /** @var string[] API fields which map to a user record field, and which require moodle/user:update */
+    /** @var string[] API fields of the core resource which require moodle/user:update */
     private const ADMIN_FIELDS = [
         'email' => 'email',
         'suspended' => 'suspended',
     ];
 
+    /** @var string[] API fields of the profile resource which map to a user record field */
+    private const PROFILE_FIELDS = [
+        'city' => 'city',
+        'country' => 'country',
+        'institution' => 'institution',
+        'department' => 'department',
+        'phone' => 'phone1',
+        'mobilePhone' => 'phone2',
+        'address' => 'address',
+        'description' => 'description',
+    ];
+
     /**
-     * Get the names of the API fields which can be updated.
+     * Get the names of the API fields of the core resource which can be updated.
      *
      * @return string[]
      */
     public static function get_updatable_fields(): array {
-        return array_merge(array_keys(self::PROFILE_FIELDS), array_keys(self::ADMIN_FIELDS));
+        return array_merge(array_keys(self::CORE_FIELDS), array_keys(self::ADMIN_FIELDS));
     }
 
     /**
-     * Update a user.
+     * Get the names of the API fields of the profile resource which can be updated.
+     *
+     * @return string[]
+     */
+    public static function get_updatable_profile_fields(): array {
+        return array_keys(self::PROFILE_FIELDS);
+    }
+
+    /**
+     * Update the core information about a user.
      *
      * @param stdClass $user The user to update
      * @param array $changes The API field names and their new values
@@ -61,22 +82,12 @@ class user_updater {
      * @throws access_denied_exception If the current user may not make the changes
      */
     public static function update(stdClass $user, array $changes): void {
-        if (empty($changes)) {
-            throw new invalid_parameter_exception('At least one field must be supplied.');
-        }
-
-        $unknown = array_diff(array_keys($changes), self::get_updatable_fields());
-        if ($unknown) {
-            throw new invalid_parameter_exception('Unknown or read-only fields: ' . implode(', ', $unknown));
-        }
-
-        self::require_access($user, $changes);
-
-        $record = (object) ['id' => $user->id];
-        foreach ($changes as $field => $value) {
-            $column = self::PROFILE_FIELDS[$field] ?? self::ADMIN_FIELDS[$field];
-            $record->{$column} = self::clean_value($user, $field, $value);
-        }
+        $record = self::build_record(
+            $user,
+            $changes,
+            self::CORE_FIELDS + self::ADMIN_FIELDS,
+            array_keys(self::ADMIN_FIELDS),
+        );
 
         \core\user::update_user($record, false);
 
@@ -86,35 +97,165 @@ class user_updater {
     }
 
     /**
-     * Check that the current user may update the specified fields of the user.
+     * Update the profile information about a user.
+     *
+     * @param stdClass $user The user to update
+     * @param array $changes The API field names and their new values
+     * @throws invalid_parameter_exception If the changes are empty, unknown, or invalid
+     * @throws access_denied_exception If the current user may not make the changes
+     */
+    public static function update_profile(stdClass $user, array $changes): void {
+        $record = self::build_record($user, $changes, self::PROFILE_FIELDS, []);
+
+        \core\user::update_user($record, false);
+    }
+
+    /**
+     * Check that the current user may edit the specified user at all.
+     *
+     * @param stdClass $user
+     * @throws access_denied_exception
+     */
+    public static function require_editable_user(stdClass $user): void {
+        global $USER;
+
+        if ((int) $user->id === (int) $USER->id) {
+            return;
+        }
+
+        if (isguestuser($user->id)) {
+            throw new access_denied_exception('guestnoeditprofileother');
+        }
+        if (is_siteadmin($user) && !is_siteadmin($USER)) {
+            throw new access_denied_exception('useradmineditadmin');
+        }
+    }
+
+    /**
+     * Whether the user's authentication plugin prevents the field from being changed.
+     *
+     * This mirrors the lock applied by the profile editing form: a field is locked, or locked while it has a value.
+     * It applies to everyone, including administrators, because the external source would overwrite any change.
+     *
+     * @param stdClass $user
+     * @param string $field The user record column, or the profile_field_* name of a custom field
+     * @param string|null $currentvalue The current value, if it is not a column of the user record
+     * @return bool
+     */
+    public static function is_locked_by_auth(stdClass $user, string $field, ?string $currentvalue = null): bool {
+        $authentication = \core\di::get(\core\authentication::class);
+        if (!$authentication->plugin_exists($user->auth)) {
+            return false;
+        }
+
+        $lock = $authentication->get_plugin($user->auth)->config->{"field_lock_{$field}"} ?? null;
+        $currentvalue ??= (string) ($user->{$field} ?? '');
+
+        return $lock === 'locked' || ($lock === 'unlockedifempty' && $currentvalue !== '');
+    }
+
+    /**
+     * Validate the changes, check access, and build a user record to save.
      *
      * @param stdClass $user
      * @param array $changes
-     * @throws access_denied_exception
+     * @param string[] $fieldmap Map of the permitted API fields to user record columns
+     * @param string[] $adminfields API fields which require moodle/user:update
+     * @return stdClass
      */
-    private static function require_access(stdClass $user, array $changes): void {
-        global $USER;
+    private static function build_record(stdClass $user, array $changes, array $fieldmap, array $adminfields): stdClass {
+        if (empty($changes)) {
+            throw new invalid_parameter_exception('At least one field must be supplied.');
+        }
 
-        $isself = (int) $user->id === (int) $USER->id;
-        $systemcontext = system::instance();
+        $unknown = array_diff(array_keys($changes), array_keys($fieldmap));
+        if ($unknown) {
+            throw new invalid_parameter_exception('Unknown or read-only fields: ' . implode(', ', $unknown));
+        }
 
-        if (!$isself) {
-            if (isguestuser($user->id)) {
-                throw new access_denied_exception('guestnoeditprofileother');
-            }
-            if (is_siteadmin($user) && !is_siteadmin($USER)) {
-                throw new access_denied_exception('useradmineditadmin');
+        self::require_access($user, array_keys($changes), $adminfields);
+
+        $record = (object) ['id' => $user->id];
+        foreach ($changes as $field => $value) {
+            $column = $fieldmap[$field];
+            $record->{$column} = self::clean_value($user, $field, $value);
+
+            // Resubmitting the current value is harmless, so clients may send back a whole representation.
+            if ((string) $record->{$column} !== (string) $user->{$column} && self::is_locked_by_auth($user, $column)) {
+                throw new access_denied_exception('nopermissions', '', '', "update {$field}: managed by the authentication plugin");
             }
         }
 
-        $canupdate = has_capability('moodle/user:update', $systemcontext);
-        $canedit = $canupdate || ($isself
-            ? has_capability('moodle/user:editownprofile', $systemcontext)
-            : has_capability('moodle/user:editprofile', user_context::instance($user->id)));
+        $errors = \core\user::validate($record);
+        if ($errors !== true) {
+            throw new invalid_parameter_exception('Invalid value for: ' . implode(', ', array_keys($errors)));
+        }
 
-        foreach (array_keys($changes) as $field) {
-            $allowed = array_key_exists($field, self::PROFILE_FIELDS) ? $canedit : $canupdate;
-            if (!$allowed) {
+        return $record;
+    }
+
+    /**
+     * Check that the current user may edit the user at all.
+     *
+     * This is the gate for every write to a user resource. It requires:
+     * - moodle/user:update in the system context; or
+     * - moodle/user:editownprofile in the system context when editing themselves; or
+     * - moodle/user:editprofile in the user context when editing someone else.
+     *
+     * Individual fields may require more (see {@see self::require_access()}).
+     *
+     * @param stdClass $user
+     * @throws access_denied_exception
+     */
+    public static function require_can_edit(stdClass $user): void {
+        self::require_editable_user($user);
+
+        if (!self::can_edit($user)) {
+            throw new access_denied_exception('nopermissions', '', '', 'update user');
+        }
+    }
+
+    /**
+     * Whether the current user may edit the user, subject to field-specific restrictions.
+     *
+     * @param stdClass $user
+     * @return bool
+     */
+    private static function can_edit(stdClass $user): bool {
+        global $USER;
+
+        if (self::can_update_any()) {
+            return true;
+        }
+
+        return (int) $user->id === (int) $USER->id
+            ? has_capability('moodle/user:editownprofile', system::instance())
+            : has_capability('moodle/user:editprofile', user_context::instance($user->id));
+    }
+
+    /**
+     * Whether the current user holds moodle/user:update, which allows editing any field of any user.
+     *
+     * @return bool
+     */
+    public static function can_update_any(): bool {
+        return has_capability('moodle/user:update', system::instance());
+    }
+
+    /**
+     * Check that the current user may update the specified fields of the user.
+     *
+     * @param stdClass $user
+     * @param string[] $fields The API fields being changed
+     * @param string[] $adminfields API fields which require moodle/user:update
+     * @throws access_denied_exception
+     */
+    private static function require_access(stdClass $user, array $fields, array $adminfields): void {
+        self::require_can_edit($user);
+
+        $canupdate = self::can_update_any();
+        foreach ($fields as $field) {
+            if (in_array($field, $adminfields, true) && !$canupdate) {
                 throw new access_denied_exception('nopermissions', '', '', "update {$field}");
             }
         }
@@ -162,8 +303,16 @@ class user_updater {
                     throw new invalid_parameter_exception('The time zone is invalid.');
                 }
                 return $value;
-            default:
+            case 'country':
+                $value = (string) $value;
+                if ($value !== '' && !array_key_exists($value, get_string_manager()->get_list_of_countries())) {
+                    throw new invalid_parameter_exception('The country must be an ISO 3166-1 alpha-2 code, or empty.');
+                }
+                return $value;
+            case 'suspended':
                 return (int) (bool) $value;
+            default:
+                return trim((string) $value);
         }
     }
 }

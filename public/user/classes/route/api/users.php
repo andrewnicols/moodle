@@ -16,9 +16,8 @@
 
 namespace core_user\route\api;
 
-use core\exception\insufficient_scope_exception;
 use core\exception\not_found_exception;
-use core\exception\precondition_failed_exception;
+use core\router\conditional_request;
 use core\router\parameters\path_user;
 use core\param;
 use core\router\pagination_request;
@@ -32,8 +31,10 @@ use core\router\schema\response\content\payload_response_type;
 use core\router\schema\collection;
 use core\router\schema\parameters\query_parameter;
 use core\router\schema\response\collection_response;
+use core\router\schema\etag;
 use core\router\scope\scopeset;
 use core_user\local\user_representation;
+use core_user\local\user_scope_check_trait;
 use core_user\local\user_updater;
 use core_user\local\visible_users;
 use core_user\route\responses\user_collection_response;
@@ -53,6 +54,8 @@ use Psr\Http\Message\ServerRequestInterface;
     requirelogin: new require_login(),
 )]
 class users {
+    use user_scope_check_trait;
+
     /**
      * List the users which the current user is allowed to see.
      *
@@ -62,7 +65,7 @@ class users {
      */
     #[route(
         title: 'List users',
-        description: 'List the users visible to the current user.',
+        description: 'List the users visible to the current user. A token with only the read:self scope lists just the current user.',
         method: ['GET'],
         queryparams: [
             new query_parameter(
@@ -78,6 +81,9 @@ class users {
     // Attributes cannot call functions. The sortable fields must match visible_users::SORT_COLUMNS.
     #[collection(sortable: ['firstname', 'lastname'])]
     #[scopeset(
+        new \core_user\route\scope\user\read_self(),
+    )]
+    #[scopeset(
         new \core_user\route\scope\user\read(),
     )]
     public function list_users(
@@ -87,6 +93,7 @@ class users {
         $result = visible_users::get_page(
             pagination: pagination_request::from_request($request),
             search: trim($request->getQueryParams()['search'] ?? ''),
+            onlyself: $this->is_read_limited_to_current_user($request),
         );
 
         $items = [];
@@ -121,6 +128,10 @@ class users {
             new user_response(),
         ],
     )]
+    #[etag]
+    #[scopeset(
+        new \core_user\route\scope\user\read_self(),
+    )]
     #[scopeset(
         new \core_user\route\scope\user\read(),
     )]
@@ -129,18 +140,15 @@ class users {
         ServerRequestInterface $request,
         \stdClass $userId,
     ): payload_response {
+        $this->require_read_scope_for($request, $userId);
+
         $item = user_representation::get_core_visible($userId);
         if ($item === null) {
             // Do not reveal the existence of users which the current user cannot see.
             throw new not_found_exception('user', (string) $userId->id);
         }
 
-        $etag = user_representation::get_etag($item);
-        if (in_array($etag, array_map('trim', explode(',', $request->getHeaderLine('If-None-Match'))), true)) {
-            return new payload_response([], $request, $response->withStatus(304)->withHeader('ETag', $etag));
-        }
-
-        return new payload_response($item, $request, $response->withHeader('ETag', $etag));
+        return conditional_request::respond($request, $response, $item);
     }
 
     /**
@@ -156,8 +164,6 @@ class users {
         title: 'Update a user',
         description: <<<EOF
         Partially update the key information about a user. Only the fields supplied are changed.
-
-        If an `If-Match` header is supplied, the update is only applied if it matches the current `ETag` of the user.
         EOF,
         method: ['PATCH'],
         pathtypes: [
@@ -181,43 +187,32 @@ class users {
             new user_response(),
         ],
     )]
+    #[etag]
     #[scopeset(
         new \core_user\route\scope\user\update_self(),
+    )]
+    #[scopeset(
+        new \core_user\route\scope\user\update(),
     )]
     public function update_user(
         ResponseInterface $response,
         ServerRequestInterface $request,
         \stdClass $userId,
     ): payload_response {
-        global $DB, $USER;
+        global $DB;
+
+        $this->require_update_scope_for($request, $userId);
 
         $current = user_representation::get_core_visible($userId);
         if ($current === null) {
             throw new not_found_exception('user', (string) $userId->id);
         }
 
-        // A token which is only able to update the current user cannot update anybody else.
-        $grantedscopes = $request->getAttribute(scopeset::GRANTED_SCOPES);
-        if (
-            $grantedscopes !== null
-            && (int) $userId->id !== (int) $USER->id
-            && !(new \core_user\route\scope\user\update())->is_satisfied_by($grantedscopes)
-        ) {
-            throw new insufficient_scope_exception(
-                'The core_user:user:update scope is required to update other users.',
-                [new scopeset(new \core_user\route\scope\user\update())],
-            );
-        }
+        user_updater::require_can_edit($userId);
 
         $transaction = $DB->start_delegated_transaction();
 
-        $ifmatch = trim($request->getHeaderLine('If-Match'));
-        if ($ifmatch !== '' && $ifmatch !== '*') {
-            $etags = array_map('trim', explode(',', $ifmatch));
-            if (!in_array(user_representation::get_etag($current), $etags, true)) {
-                throw new precondition_failed_exception();
-            }
-        }
+        conditional_request::assert_if_match($request, $current);
 
         user_updater::update($userId, (array) $request->getParsedBody());
 
@@ -227,7 +222,7 @@ class users {
         return new payload_response(
             $updated,
             $request,
-            $response->withHeader('ETag', user_representation::get_etag($updated)),
+            $response->withHeader('ETag', conditional_request::generate_etag($updated)),
         );
     }
 }
