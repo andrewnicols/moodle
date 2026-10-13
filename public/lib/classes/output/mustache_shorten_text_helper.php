@@ -44,8 +44,14 @@ class mustache_shorten_text_helper {
         $text = trim($text);
 
         // Allow mustache tags in the length and text.
-        $text = (string) $helper->render($text);
-        $length = (int) (string) $helper->render($length);
+        // Plain text needs no rendering, which avoids a lambda template lookup.
+        if (str_contains($text, '{{')) {
+            $text = (string) $helper->render($text);
+        }
+        if (str_contains($length, '{{')) {
+            $length = (string) $helper->render($length);
+        }
+        $length = (int) $length;
 
         return shorten_text($text, $length);
     }
