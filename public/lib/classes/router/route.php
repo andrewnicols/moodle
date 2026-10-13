@@ -18,6 +18,7 @@ namespace core\router;
 
 use core\exception\coding_exception;
 use core\router\schema\collection;
+use core\router\schema\etag;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
 use core\router\schema\request_body;
@@ -37,6 +38,9 @@ class route {
 
     /** @var collection|null Pagination configuration, if this is a collection route */
     public ?collection $collection = null;
+
+    /** @var etag|null Set if this route supports conditional requests using an ETag */
+    public ?etag $etag = null;
 
     /**
      * The parent route, if relevant.
@@ -194,6 +198,17 @@ class route {
     }
 
     /**
+     * Mark this route as supporting conditional requests using an ETag.
+     *
+     * @param etag|null $etag
+     * @return self
+     */
+    public function set_etag(?etag $etag): self {
+        $this->etag = $etag;
+        return $this;
+    }
+
+    /**
      * Create the route for a method from its attributes, including any sibling attributes such as #[collection].
      *
      * This is the single place in which routes are instantiated from reflection, and so the single place in which
@@ -231,7 +246,14 @@ class route {
                 try {
                     $methodroute->set_collection($collectionattributes[0]->newInstance());
                 } catch (\Error) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-                    // The attribute class does not exist in this version of Moodle.
+                }
+            }
+
+            $etagattributes = $methodinfo->getAttributes(etag::class);
+            if ($etagattributes) {
+                try {
+                    $methodroute->set_etag($etagattributes[0]->newInstance());
+                } catch (\Error) {  // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
                 }
             }
         }

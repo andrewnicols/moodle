@@ -530,6 +530,7 @@ $string['pleasereport'] = 'If you have time, please let us know what you were tr
 $string['pluginnotexist'] = '{$a} plugin doesn\'t exist';
 $string['pluginrequirementsnotmet'] = 'Plugin "{$a->pluginname}" ({$a->pluginversion}) could not be installed.  It requires a newer version of Moodle (currently you are using {$a->currentmoodle}, you need {$a->requiremoodle}).';
 $string['pluginunsupported'] = 'Plugin "{$a->pluginname}" {$a->pluginversion} does not support this version of Moodle {$a->moodleversion}. Seek plugin information to find supported versions.';
+$string['preconditionfailed'] = 'The resource has been modified since it was retrieved. Fetch the latest version and try again.';
 $string['prefixcannotbeempty'] = '<p>Error: database table prefix cannot be empty ({$a})</p>
 <p>The site administrator must fix this problem.</p>';
 $string['privatefilesupload'] = 'Uploading directly to user private files area is no longer supported. Upload to a draft area and then move the files with core_user::add_user_private_files';
