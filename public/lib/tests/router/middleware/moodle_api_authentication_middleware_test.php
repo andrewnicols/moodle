@@ -414,4 +414,17 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($user->id, $USER->id);
     }
+
+    public function test_scoped_credential_without_granted_scopes_is_a_coding_error(): void {
+        $middleware = $this->getMockBuilder(moodle_api_authentication_middleware::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['handle_api_key_auth'])
+            ->getMock();
+
+        $request = (new ServerRequest('GET', '/test'))->withAttribute(route::class, new route());
+        $middleware->method('handle_api_key_auth')->willReturn($request);
+
+        $this->expectException(\core\exception\coding_exception::class);
+        $middleware->process($request, $this->get_recording_handler());
+    }
 }
