@@ -56,9 +56,10 @@ class visible_users {
      *
      * @param pagination_request $pagination
      * @param string $search An optional search term, matched against names and visible identity fields
+     * @param bool $onlyself Limit the results to the current user
      * @return array{users: stdClass[], total: int}
      */
-    public static function get_page(pagination_request $pagination, string $search = ''): array {
+    public static function get_page(pagination_request $pagination, string $search = '', bool $onlyself = false): array {
         global $DB, $USER;
 
         $systemcontext = \core\context\system::instance();
@@ -66,7 +67,10 @@ class visible_users {
         $conditions = ['u.deleted = 0', 'u.id <> :guestid'];
         $params = ['guestid' => guest_user()->id];
 
-        if (!has_capability('moodle/user:viewdetails', $systemcontext)) {
+        if ($onlyself) {
+            $conditions[] = 'u.id = :selfid';
+            $params['selfid'] = $USER->id;
+        } else if (!has_capability('moodle/user:viewdetails', $systemcontext)) {
             [$enrolledsql, $enrolledparams] = user::get_enrolled_sql_on_courses_with_capability('moodle/user:viewdetails');
             if ($enrolledsql) {
                 $conditions[] = "(u.id IN ({$enrolledsql}) OR u.id = :selfid)";
