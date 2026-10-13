@@ -1,0 +1,10 @@
+issueNumber: MDL-90234
+notes:
+  core:
+    - message: >
+        Routes can now opt in to support conditional requests using the new `\core\router\schema\etag` attribute and the new `\core\router\conditional_request` response hellper.
+
+        When a Route adds the `#[etag]` attribute along side the `#[route]` attribute, support for the `ETag`, `If-None-Match` (304 Not Modified) and `If-Match` (412 Precondition Failed) headers is automatically documented in the OpenAPI specification.
+
+        The `\core\router\conditional_request` helper can be used to generate and check ETags in order to return the appropriate 304 Not Modified response if no change is detected in the response.
+      type: improved
