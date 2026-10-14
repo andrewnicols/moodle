@@ -27,7 +27,6 @@ namespace core\exception;
 class revoked_api_token_exception extends api_token_exception implements
     response_aware_exception,
     www_authenticate_aware_exception
-
 {
     /**
      * Constructor.

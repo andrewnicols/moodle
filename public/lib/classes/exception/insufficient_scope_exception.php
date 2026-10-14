@@ -38,7 +38,7 @@ class insufficient_scope_exception extends moodle_exception implements
         /** @var string A human-readable hint describing which scope(s) are missing. */
         public readonly string $hint,
         /** @var array The sets of scopes that are required. */
-        public readonly array  $scopesets,
+        public readonly array $scopesets,
     ) {
         parent::__construct(
             'insufficientscope',

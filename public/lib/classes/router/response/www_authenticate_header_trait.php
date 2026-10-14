@@ -38,13 +38,11 @@ trait www_authenticate_header_trait {
         string $error,
     ): array {
         // Now add the WWW-Authenticate header for the specified error.
-        $authenticateheader = 'Basic realm="Moodle API", error="' . $error . '"';
+        $authenticateheader = 'Bearer realm="Moodle API", error="' . $error . '"';
 
         if ($exception instanceof www_authenticate_aware_exception) {
             $authenticateparams = $exception->get_www_authenticate_params();
         }
-
-        $authenticateheader = 'Basic realm="Moodle API"';
 
         if (!empty($authenticateparams)) {
             $authenticateheader .= ', ' . implode(', ', $authenticateparams);

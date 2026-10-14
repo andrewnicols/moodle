@@ -34,7 +34,7 @@ class insufficient_scope_response extends access_denied_response {
         $response = parent::add_additional_headers($response, $exception);
 
         // Now add the WWW-Authenticate header for insufficient scope.
-        $authenticateheader = 'Basic realm="Moodle API", error="insufficient_scope"';
+        $authenticateheader = 'Bearer realm="Moodle API", error="insufficient_scope"';
         if ($exception instanceof insufficient_scope_exception) {
             foreach ($exception->scopesets as $scopeset) {
                 $response = $response->withAddedHeader(
