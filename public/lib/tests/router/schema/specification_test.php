@@ -33,6 +33,60 @@ use core\tests\router\route_testcase;
  * @covers     \core\router\schema\specification
  */
 final class specification_test extends route_testcase {
+    public function test_customised_referenced_object_gets_its_own_component(): void {
+        $spec = new specification();
+        $default = (new \core\router\parameters\path_user())->get_openapi_schema($spec);
+        $renamed = (new \core\router\parameters\path_user(name: 'userId'))->get_openapi_schema($spec);
+        $renamedagain = (new \core\router\parameters\path_user(name: 'userIdentifier'))->get_openapi_schema($spec);
+        $again = (new \core\router\parameters\path_user(name: 'userId'))->get_openapi_schema($spec);
+
+        $this->assertNotEquals($default->{'$ref'}, $renamed->{'$ref'});
+        $this->assertEquals($renamed->{'$ref'}, $again->{'$ref'});
+        $this->assertNotEquals($default->{'$ref'}, $renamedagain->{'$ref'});
+        $this->assertNotEquals($renamed->{'$ref'}, $renamedagain->{'$ref'});
+
+        $this->assertEquals('user', $spec->get_schema()->components->parameters->{substr($default->{'$ref'}, strlen('#/components/parameters/'))}->name);
+        $this->assertEquals('userId', $spec->get_schema()->components->parameters->{substr($renamed->{'$ref'}, strlen('#/components/parameters/'))}->name);
+        $this->assertEquals('userIdentifier', $spec->get_schema()->components->parameters->{substr($renamedagain->{'$ref'}, strlen('#/components/parameters/'))}->name);
+    }
+
+    public function test_default_reference_is_independent_of_order(): void {
+        $first = new specification();
+        $renamed = (new \core\router\parameters\path_user(name: 'userId'))->get_openapi_schema($first);
+        $default = (new \core\router\parameters\path_user())->get_openapi_schema($first);
+
+        $second = new specification();
+        $defaultfirst = (new \core\router\parameters\path_user())->get_openapi_schema($second);
+
+        $this->assertEquals($defaultfirst->{'$ref'}, $default->{'$ref'});
+        $this->assertNotEquals($default->{'$ref'}, $renamed->{'$ref'});
+    }
+
+    public function test_reference_is_stable_before_and_after_schema(): void {
+        $spec = new specification();
+        $default = new \core\router\parameters\path_user();
+        $renamed = new \core\router\parameters\path_user(name: 'userId');
+
+        $before = $renamed->get_reference();
+        $this->assertNotEquals($default->get_reference(), $before);
+        $this->assertEquals($before, $renamed->get_openapi_schema($spec)->{'$ref'});
+        $this->assertEquals($before, $renamed->get_reference());
+        $this->assertEquals(
+            $before,
+            (new \core\router\parameters\path_user(name: 'userId'))->get_reference(),
+        );
+    }
+
+    public function test_reference_is_independent_of_path(): void {
+        $spec = new specification();
+        $renamed = new \core\router\parameters\path_user(name: 'userId');
+
+        $this->assertEquals(
+            $renamed->get_openapi_schema($spec, '/a')->{'$ref'},
+            $renamed->get_openapi_schema($spec, '/b')->{'$ref'},
+        );
+    }
+
     public function test_basics(): void {
         global $CFG;
 
