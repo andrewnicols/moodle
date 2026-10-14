@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
+use core\output\renderer_base;
 use Mustache\LambdaHelper;
 
 /**
@@ -25,7 +26,7 @@ use Mustache\LambdaHelper;
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mustache_pix_helper {
+class pix_helper extends moodle_helper {
     /** @var renderer_base $renderer A reference to the renderer in use */
     private $renderer;
 
@@ -67,19 +68,5 @@ class mustache_pix_helper {
         $text = htmlspecialchars_decode($text, ENT_COMPAT);
 
         return trim($this->renderer->pix_icon($key, $text, $component));
-    }
-
-    /**
-     * Render the given text only if it contains Mustache tags; plain text is returned unchanged.
-     *
-     * @param string $text
-     * @param LambdaHelper $helper
-     * @return string
-     */
-    private function render_if_tagged(string $text, LambdaHelper $helper): string {
-        if (!str_contains($text, '{{')) {
-            return $text;
-        }
-        return (string) $helper->render($text);
     }
 }

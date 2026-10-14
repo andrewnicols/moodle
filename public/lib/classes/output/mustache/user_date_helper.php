@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
@@ -25,7 +25,7 @@ use Mustache\LambdaHelper;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package core
  */
-class mustache_user_date_helper {
+class user_date_helper extends moodle_helper {
     /**
      * Read a timestamp and format from the string.
      *
@@ -45,13 +45,8 @@ class mustache_user_date_helper {
         $timestamp = trim($timestamp);
         $format = trim($format);
 
-        // Plain text needs no rendering, which avoids a lambda template lookup.
-        if (str_contains($timestamp, '{{')) {
-            $timestamp = $helper->render($timestamp);
-        }
-        if (str_contains($format, '{{')) {
-            $format = $helper->render($format);
-        }
+        $timestamp = $this->render_if_tagged($timestamp, $helper);
+        $format = $this->render_if_tagged($format, $helper);
 
         return userdate($timestamp, $format);
     }

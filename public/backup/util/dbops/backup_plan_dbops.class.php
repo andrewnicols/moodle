@@ -26,7 +26,7 @@ use core\context\course;
 use core\context\module;
 use core\exception\coding_exception;
 use core\output\mustache_engine;
-use core\output\mustache_string_helper;
+use core\output\mustache\string_helper;
 
 /**
  * Non instantiable helper class providing DB support to the @backup_plan class
@@ -363,7 +363,7 @@ abstract class backup_plan_dbops extends backup_dbops {
      * @return mustache_engine
      */
     private static function get_mustache_for_filename_generation(): mustache_engine {
-        $stringhelper = new mustache_string_helper();
+        $stringhelper = new string_helper();
         return new mustache_engine([
             'helpers' => [
                 'str' => fn($text, $helper) => $stringhelper->str($text, $helper),

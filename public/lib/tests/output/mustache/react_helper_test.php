@@ -16,22 +16,22 @@
 
 declare(strict_types=1);
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
 /**
- * Unit tests for mustache_react_helper.
+ * Unit tests for react_helper.
  *
  * @package    core
  * @copyright  Meirza <meirza.arson@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(mustache_react_helper::class)]
-final class mustache_react_helper_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(react_helper::class)]
+final class react_helper_test extends \advanced_testcase {
     /** @var LambdaHelper|null Helper to handle lambda rendering. */
     private $lambdahelper = null;
-    /** @var mustache_react_helper|null Instance of the React mustache helper under test. */
+    /** @var react_helper|null Instance of the React mustache helper under test. */
     private $helper = null;
 
     /**
@@ -41,7 +41,7 @@ final class mustache_react_helper_test extends \advanced_testcase {
         parent::setUp();
         $this->resetAfterTest();
         $this->lambdahelper = new LambdaHelper(new \Mustache\Engine(), new \Mustache\Context());
-        $this->helper = new mustache_react_helper();
+        $this->helper = new react_helper();
     }
 
     /**

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
@@ -44,7 +44,7 @@ use Mustache\LambdaHelper;
  * @copyright  Meirza <meirza.arson@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mustache_react_helper {
+class react_helper extends moodle_helper {
     /**
      * Render React component mount point.
      *

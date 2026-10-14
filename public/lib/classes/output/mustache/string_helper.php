@@ -14,37 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
+use stdClass;
 
 /**
  * This class will load language strings in a template.
  *
- * @package core
- * @copyright  2021 Shamim Rezaie <shamim@moodle.com>
+ * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      4.0
+ * @since      2.9
+ * @package core
  */
-class mustache_clean_string_helper {
-    /** @var mustache_string_helper A string helper instance that is being used internally for fetching strings */
-    private $stringhelper;
-
-    /**
-     * Create new instance of mustache clean string helper.
-     */
-    public function __construct() {
-        $this->stringhelper = new \core\output\mustache_string_helper();
-    }
-
+class string_helper extends moodle_helper {
     /**
      * Read a lang string from a template and get it from get_string.
      *
      * Some examples for calling this from a template are:
      *
-     * {{#cleanstr}}activity{{/cleanstr}}
-     * {{#cleanstr}}actionchoice, core, {{#str}}delete{{/str}}{{/cleanstr}} (Together with the str helper)
-     * {{#cleanstr}}uploadrenamedchars, core, {"oldname":"Old", "newname":"New"}{{/cleanstr}} (Complex $a)
+     * {{#str}}activity{{/str}}
+     * {{#str}}actionchoice, core, {{#str}}delete{{/str}}{{/str}} (Nested)
+     * {{#str}}addinganewto, core, {"what":"This", "to":"That"}{{/str}} (Complex $a)
      *
      * The args are comma separated and only the first is required.
      * The last is a $a argument for get string. For complex data here, use JSON.
@@ -53,7 +44,26 @@ class mustache_clean_string_helper {
      * @param LambdaHelper $helper Used to render nested mustache variables.
      * @return string
      */
-    public function cleanstr($text, LambdaHelper $helper) {
-        return s($this->stringhelper->str($text, $helper));
+    public function str(string $text, LambdaHelper $helper) {
+        // Split the text into an array of variables.
+        $key = strtok($text, ",");
+        $key = trim($key);
+        $component = strtok(",");
+        $component = trim($component);
+        if (!$component) {
+            $component = '';
+        }
+
+        $a = new stdClass();
+
+        $next = strtok('');
+        $next = trim($next);
+        if ((strpos($next, '{') === 0) && (strpos($next, '{{') !== 0)) {
+            $rawjson = $helper->render($next);
+            $a = json_decode((string) $rawjson);
+        } else {
+            $a = $this->render_if_tagged($next, $helper);
+        }
+        return get_string($key, $component, $a);
     }
 }

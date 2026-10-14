@@ -16,18 +16,18 @@
 
 declare(strict_types=1);
 
-namespace core\output;
+namespace core\output\mustache;
 
 /**
- * Unit tests for the mustache_quote_helper class.
+ * Unit tests for the quote_helper class.
  *
  * @package   core
  * @category  test
  * @copyright 2022 TU Berlin
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\core\output\mustache_quote_helper::class)]
-final class mustache_quote_helper_test extends \basic_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\output\mustache\quote_helper::class)]
+final class quote_helper_test extends \basic_testcase {
 
     /**
      * Tests the quote helper
@@ -40,7 +40,7 @@ final class mustache_quote_helper_test extends \basic_testcase {
         ]);
         $lambdahelper = new \Mustache\LambdaHelper($engine, $context);
 
-        $quotehelper = new mustache_quote_helper();
+        $quotehelper = new quote_helper();
 
         // Simple string.
         $this->assertEquals('"Hello world!"', $quotehelper->quote('Hello world!', $lambdahelper));

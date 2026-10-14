@@ -16,18 +16,18 @@
 
 declare(strict_types=1);
 
-namespace core\output;
+namespace core\output\mustache;
 
 /**
- * Unit tests for the mustache_clean_string_helper class.
+ * Unit tests for the clean_string_helper class.
  *
  * @package   core
  * @category  test
  * @copyright 2021 Shamim Rezaie <shamim@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\core\output\mustache_clean_string_helper::class)]
-final class mustache_clean_string_helper_test extends \basic_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\output\mustache\clean_string_helper::class)]
+final class clean_string_helper_test extends \basic_testcase {
 
     /**
      * Test the get_lang_menu
@@ -37,7 +37,7 @@ final class mustache_clean_string_helper_test extends \basic_testcase {
         $context = new \Mustache\Context();
         $lambdahelper = new \Mustache\LambdaHelper($engine, $context);
 
-        $cleanstringhelper = new mustache_clean_string_helper();
+        $cleanstringhelper = new clean_string_helper();
 
         // Simple string.
         $this->assertEquals('Log in', $cleanstringhelper->cleanstr('login, core', $lambdahelper));

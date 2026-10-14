@@ -1,0 +1,10 @@
+issueNumber: MDL-90114
+notes:
+  core:
+    - message: >-
+        The Mustache helper classes in `\core\output` have been moved to the
+        `\core\output\mustache` namespace and the `mustache_` prefix removed
+        (for example `\core\output\mustache_string_helper` is now
+        `\core\output\mustache\string_helper`). These are private APIs and are
+        not expected to be used outside of core.
+      type: changed

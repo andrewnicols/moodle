@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
@@ -26,7 +26,7 @@ use Mustache\LambdaHelper;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      2.9
  */
-class mustache_javascript_helper {
+class javascript_helper extends moodle_helper {
     /** @var \moodle_page $page - Page used to get requirement manager */
     private $page = null;
 

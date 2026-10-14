@@ -94,14 +94,14 @@ class renderer_base {
             }
 
             $loader = new mustache_filesystem_loader();
-            $stringhelper = new mustache_string_helper();
-            $cleanstringhelper = new mustache_clean_string_helper();
-            $quotehelper = new mustache_quote_helper();
-            $jshelper = new mustache_javascript_helper($this->page);
-            $pixhelper = new mustache_pix_helper($this);
-            $shortentexthelper = new mustache_shorten_text_helper();
-            $userdatehelper = new mustache_user_date_helper();
-            $reacthelper = new mustache_react_helper();
+            $stringhelper = new mustache\string_helper();
+            $cleanstringhelper = new mustache\clean_string_helper();
+            $quotehelper = new mustache\quote_helper();
+            $jshelper = new mustache\javascript_helper($this->page);
+            $pixhelper = new mustache\pix_helper($this);
+            $shortentexthelper = new mustache\shorten_text_helper();
+            $userdatehelper = new mustache\user_date_helper();
+            $reacthelper = new mustache\react_helper();
 
             // We only expose the variables that are exposed to JS templates.
             $safeconfig = $this->page->requires->get_config_for_javascript($this->page, $this);
@@ -197,7 +197,7 @@ class renderer_base {
         // but will be different from template to template. This is useful for
         // e.g. aria attributes that only work with id attributes and must be
         // unique in a page.
-        $mustache->addHelper('uniqid', new mustache_uniqid_helper());
+        $mustache->addHelper('uniqid', new mustache\uniqid_helper());
         if (isset($this->templatecache[$templatename])) {
             $template = $this->templatecache[$templatename];
         } else {

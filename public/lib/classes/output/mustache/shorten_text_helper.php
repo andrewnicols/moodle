@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
@@ -25,7 +25,7 @@ use Mustache\LambdaHelper;
  * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mustache_shorten_text_helper {
+class shorten_text_helper extends moodle_helper {
     /**
      * Read a length and text component from the string.
      *
@@ -44,14 +44,8 @@ class mustache_shorten_text_helper {
         $text = trim($text);
 
         // Allow mustache tags in the length and text.
-        // Plain text needs no rendering, which avoids a lambda template lookup.
-        if (str_contains($text, '{{')) {
-            $text = (string) $helper->render($text);
-        }
-        if (str_contains($length, '{{')) {
-            $length = (string) $helper->render($length);
-        }
-        $length = (int) $length;
+        $text = $this->render_if_tagged($text, $helper);
+        $length = (int) $this->render_if_tagged($length, $helper);
 
         return shorten_text($text, $length);
     }

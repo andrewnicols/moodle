@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core\output;
+namespace core\output\mustache;
 
 use Mustache\LambdaHelper;
 
@@ -33,7 +33,7 @@ use Mustache\LambdaHelper;
  * @copyright  2016 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mustache_quote_helper {
+class quote_helper extends moodle_helper {
     /**
      * Wrap content in quotes, and escape all special JSON characters used.
      *

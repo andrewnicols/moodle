@@ -14,38 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+namespace core\output\mustache;
+
+use Mustache\LambdaHelper;
+
 /**
- * Mustache helper that will add JS to the end of the page.
+ * Base class for Moodle's Mustache lambda helpers.
  *
  * @package    core
  * @category   output
- * @copyright  2015 Damyon Wiese
+ * @copyright  2026 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace core\output;
-
-/**
- * Lazy create a uniqid per instance of the class. The id is only generated
- * when this class it converted to a string.
- *
- * @copyright  2015 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      2.9
- */
-class mustache_uniqid_helper {
-    /** @var string $uniqid The unique id */
-    private $uniqid = null;
-
+abstract class moodle_helper {
     /**
-     * Init the random variable and return it as a string.
+     * Render the given text only if it contains Mustache tags; plain text is returned unchanged.
      *
-     * @return string random id.
+     * This avoids a lambda template lookup for text which does not need rendering.
+     *
+     * @param string $text
+     * @param LambdaHelper $helper
+     * @return string
      */
-    public function __toString() {
-        if ($this->uniqid === null) {
-            $this->uniqid = \html_writer::random_id(uniqid());
+    protected function render_if_tagged(string $text, LambdaHelper $helper): string {
+        if (!str_contains($text, '{{')) {
+            return $text;
         }
-        return $this->uniqid;
+        return (string) $helper->render($text);
     }
 }
