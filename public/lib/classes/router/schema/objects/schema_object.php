@@ -33,7 +33,7 @@ class schema_object extends type_base {
      * An array of things.
      *
      * @param type_base[] $content The child content
-     * @param mixed[] ...$extra
+     * @param mixed[] ...$extra}
      * @throws coding_exception
      */
     public function __construct(

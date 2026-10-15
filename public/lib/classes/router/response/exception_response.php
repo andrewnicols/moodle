@@ -21,7 +21,7 @@ use core\router\schema\objects\scalar_type;
 use core\router\schema\objects\schema_object;
 use core\router\schema\objects\stacktrace;
 use core\router\schema\referenced_object;
-use core\router\schema\response\content\payload_response_type;
+use core\router\schema\response\content\problem_payload_response_type;
 use core\router\schema\response\payload_response;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,7 +43,7 @@ abstract class exception_response extends \core\router\schema\response\response 
         parent::__construct(
             statuscode: static::get_exception_status_code(),
             description: static::get_response_description(),
-            content: new payload_response_type(
+            content: new problem_payload_response_type(
                 schema: static::get_response_schema(),
             ),
         );
@@ -62,9 +62,8 @@ abstract class exception_response extends \core\router\schema\response\response 
         \Exception $exception,
         ...$extra,
     ): payload_response {
-        $extra['request'] = $request;
         return new payload_response(
-            payload: static::get_response_payload($exception, ...$extra),
+            payload: static::get_response_payload($exception, $request),
             request: $request,
             response: static::add_additional_headers(
                 new Response(
