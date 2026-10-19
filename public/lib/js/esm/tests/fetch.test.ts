@@ -682,6 +682,34 @@ describe('@moodle/lms/core/fetch', () => {
             await second;
         });
 
+        it('flushes the queue when it reaches 20 requests, so no batch exceeds 20', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                // A lone queued request is sent directly rather than as a batch.
+                if (req.method === 'GET') {
+                    return new MockResponse(JSON.stringify({ok: true}));
+                }
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', ids.map((id) => ({id, body: JSON.stringify({ok: true})}))),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            const responses = Array.from({length: 21}, (_, i) => batcher.performGet('mod_example', `item${i}`));
+            await batcher.execute();
+            await Promise.all(responses);
+
+            expect(mockFetch).toHaveBeenCalledTimes(2);
+            // The 21st request is sent on its own, not appended to the first batch.
+            const calls = mockFetch.mock.calls.map(([req]) => req);
+            const batch = calls.find((req) => req.method === 'POST');
+            expect(getRequestIds(batch.body)).toHaveLength(20);
+            expect(calls.filter((req) => req.method === 'GET')).toHaveLength(1);
+        });
+
         it('rejects a request with no matching Content-ID in the batch response', async() => {
             (globalThis as any).M.cfg.batchFetchRequests = true;
             const batcher = new Fetch();

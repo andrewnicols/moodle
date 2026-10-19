@@ -468,9 +468,11 @@ export default class Fetch {
             return;
         }
 
+        const resolvePending = new Pending(`core/fetch:execute:${requestMap.size}`);
         const response = await fetch(await this.#getRequests(requestMap));
         if (!response.ok) {
             requestMap.forEach((requestWrapper) => requestWrapper.reject(response.statusText));
+            resolvePending.resolve();
             return;
         }
 
@@ -490,6 +492,7 @@ export default class Fetch {
                 requestWrapper.reject(`Request failed. No response provided for request ${key} by provider`);
             }
         });
+        resolvePending.resolve();
     }
 
     /**
@@ -531,7 +534,7 @@ export default class Fetch {
             return Fetch.request(component, endpoint, {cachekey, headers, params, body, method});
         }
 
-        if (this.#requestMap.size > 20) {
+        if (this.#requestMap.size >= 20) {
             this.execute();
         }
 
