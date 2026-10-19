@@ -70,7 +70,7 @@ describe('@moodle/lms/core/stringUtils', () => {
     });
 
     it('passes the template revision as the cache key when fetching uncached strings', async() => {
-        (globalThis as any).M.cfg.templaterev = 2;
+        (globalThis as any).M.cfg.langrev = 2;
 
         const performGetSpy = jest.spyOn(Fetch.getBatcher(), 'performGet');
         performGetSpy.mockResolvedValue({
@@ -85,7 +85,7 @@ describe('@moodle/lms/core/stringUtils', () => {
             {cachekey: 2},
         );
 
-        (globalThis as any).M.cfg.templaterev = 1;
+        (globalThis as any).M.cfg.langrev = 1;
     });
 
     it('fetches and caches all strings for a component via getComponentStrings', async() => {
@@ -98,7 +98,7 @@ describe('@moodle/lms/core/stringUtils', () => {
                 },
             }),
         } as unknown as Response);
-        (globalThis as any).M.cfg.templaterev = 2;
+        (globalThis as any).M.cfg.langrev = 2;
 
         await getComponentStrings('mod_forum', 'en');
 
@@ -108,7 +108,7 @@ describe('@moodle/lms/core/stringUtils', () => {
             {cachekey: 2},
         );
 
-        (globalThis as any).M.cfg.templaterev = 1;
+        (globalThis as any).M.cfg.langrev = 1;
 
         await expect(getString('modulename', 'mod_forum')).resolves.toBe('Forum');
         await expect(getString('modulenameplural', 'mod_forum')).resolves.toBe('Forums');
@@ -117,11 +117,11 @@ describe('@moodle/lms/core/stringUtils', () => {
     it('resolves to null when getComponentStrings fails to fetch', async() => {
         const performGetSpy = jest.spyOn(Fetch, 'performGet');
         performGetSpy.mockRejectedValue(new Error('Network error'));
-        (globalThis as any).M.cfg.templaterev = 2;
+        (globalThis as any).M.cfg.langrev = 2;
 
         await expect(getComponentStrings('mod_forum', 'en')).resolves.toBeNull();
 
-        (globalThis as any).M.cfg.templaterev = 1;
+        (globalThis as any).M.cfg.langrev = 1;
     });
 
     describe('params', () => {
