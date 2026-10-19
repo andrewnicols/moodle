@@ -119,6 +119,7 @@ async function enableBadge(badgeId, badgeName, reportElement) {
             document.location = document.location.pathname + `?id=${badgeId}&awards=${awards}`;
         }
     } catch (error) {
+        pendingPromise.resolve();
         Notification.exception(error);
     }
 }
@@ -171,6 +172,7 @@ async function disableBadge(badgeId, badgeName, reportElement) {
             document.location = document.location.pathname + `?id=${badgeId}`;
         }
     } catch (error) {
+        pendingPromise.resolve();
         Notification.exception(error);
     }
 }
