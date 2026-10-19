@@ -47,6 +47,7 @@ class strings {
         title: 'Fetch Moodle Language Strings',
         description: 'Fetch a single string, or all strings for a component',
         security: [],
+        cookies: false,
         cachelifetime: '90 days',
         pathtypes: [
             new \core\router\parameters\path_language(),
