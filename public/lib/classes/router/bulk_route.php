@@ -16,7 +16,6 @@
 
 namespace core\router;
 
-use core\di;
 use core\router;
 use core\uuid;
 use GuzzleHttp\Psr7\ServerRequest;

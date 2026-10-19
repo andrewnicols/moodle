@@ -757,9 +757,6 @@ export default class Fetch {
             return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?(?:\r\n)?)`, 'gm'))
                 // Filter empty values (first and last).
                 .filter((value) => !!value.length);
-        } else if (contentType === 'application/json') {
-            // Handle JSON response.
-            return await response.json();
         }
 
         throw new Error(

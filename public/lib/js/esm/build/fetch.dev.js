@@ -545,8 +545,6 @@ class Fetch {
       const responseBody = await response.text();
       return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?(?:\r
 )?)`, "gm")).filter((value) => !!value.length);
-    } else if (contentType === "application/json") {
-      return await response.json();
     }
     throw new Error(
       `Unknown response type '${contentType}'`
