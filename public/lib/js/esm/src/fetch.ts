@@ -638,32 +638,32 @@ export default class Fetch {
      */
     async #getRequests(requestMap: Map<string, RequestWrapper>): Promise<Request> {
         const boundary = this.#getGuid();
-        const getBoundaryMarker = (finalDelimiter: boolean = false): string => `--${boundary}${finalDelimiter ? '--' : ''}\n`;
+        const getBoundaryMarker = (finalDelimiter: boolean = false): string => `--${boundary}${finalDelimiter ? '--' : ''}\r\n`;
 
         const getRequestHeader = (): string[] => ([
             getBoundaryMarker(),
-            `Content-Type: application/http\n\n`,
+            `Content-Type: application/http\r\n\r\n`,
         ]);
 
         const requestBodies = await Promise.all([...requestMap.entries()].map(async([id, {request}]) => {
             const thisBody: string[] = [];
             thisBody.push(...getRequestHeader());
-            thisBody.push(`${request.method} ${request.url}\n`);
-            thisBody.push(`Content-Type: ${request.headers.get('Content-Type')}\n`);
-            thisBody.push(`Content-ID: ${id}\n`);
+            thisBody.push(`${request.method} ${request.url}\r\n`);
+            thisBody.push(`Content-Type: ${request.headers.get('Content-Type')}\r\n`);
+            thisBody.push(`Content-ID: ${id}\r\n`);
 
             if (request.body) {
-                thisBody.push(`\n`);
+                thisBody.push(`\r\n`);
                 thisBody.push(await request.text());
             }
 
-            thisBody.push(`\n`);
+            thisBody.push(`\r\n`);
             return thisBody;
         }));
 
         const body = [
             // Add a prologue to aid debugging.
-            ...[...requestMap.values()].map(({request}) => `# Requesting ${request.method} ${request.url}\n`),
+            ...[...requestMap.values()].map(({request}) => `# Requesting ${request.method} ${request.url}\r\n`),
             // Now add the actual request bodies.
             ...requestBodies.map((requestBody) => requestBody.join('')),
             // The final boundary marker.
@@ -704,10 +704,10 @@ export default class Fetch {
         // The leading "Content-Type: application/http" envelope line is discarded, and any remaining
         // sections (there may be more than one if the body itself contains blank lines) are rejoined
         // to reconstruct the body.
-        const [, headerText, ...bodyParts] = text.split(`\n\n`).map((part) => part.trim());
-        const body = bodyParts.length ? bodyParts.join('\n\n').trim() : null;
+        const [, headerText, ...bodyParts] = text.split(`\r\n\r\n`).map((part) => part.trim());
+        const body = bodyParts.length ? bodyParts.join('\r\n\r\n').trim() : null;
 
-        const headers = headerText.split(`\n`);
+        const headers = headerText.split(`\r\n`);
 
         // Extract the status from the rest of the headers.
         const statusLine = headers.shift() ?? '';
@@ -750,7 +750,7 @@ export default class Fetch {
             // It ends in a trailing `--`.
             const responseBody = await response.text();
 
-            return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?\n?)`, 'gm'))
+            return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?(?:\r\n)?)`, 'gm'))
                 // Filter empty values (first and last).
                 .filter((value) => !!value.length);
         } else if (contentType === 'application/json') {

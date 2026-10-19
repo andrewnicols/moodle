@@ -98,23 +98,23 @@ class bulk_route {
 
             // Write the response to the body of the combined response.
             // Note: The response is written within an application/http and may have its own headers and status.
-            $response->getBody()->write("--{$responseboundary}\n");
-            $response->getBody()->write("Content-Type: application/http\n\n");
+            $response->getBody()->write("--{$responseboundary}\r\n");
+            $response->getBody()->write("Content-Type: application/http\r\n\r\n");
             $response->getBody()->write(sprintf(
-                "HTTP/1.1 %s %s\n",
+                "HTTP/1.1 %s %s\r\n",
                 $requestresponse->getStatusCode(),
                 $requestresponse->getReasonPhrase(),
             ));
             foreach ($requestresponse->getHeaders() as $header => $values) {
-                $response->getBody()->write(sprintf("%s: %s\n", $header, implode(', ', $values)));
+                $response->getBody()->write(sprintf("%s: %s\r\n", $header, implode(', ', $values)));
             }
-            $response->getBody()->write("\n");
+            $response->getBody()->write("\r\n");
 
             $data = (string) $requestresponse->getBody();
             $response->getBody()->write($data);
 
             // Every response part is separated by two new-lines.
-            $response->getBody()->write("\n\n");
+            $response->getBody()->write("\r\n\r\n");
         }
 
         $response->getBody()->write("--{$responseboundary}--");
@@ -144,7 +144,7 @@ class bulk_route {
         $requestbody = trim(substr($requestbody, 0, $lastboundaryposition));
 
         // Split the request body into parts.
-        $requestparts = array_filter(explode("--{$boundary}\n", $requestbody));
+        $requestparts = array_filter(explode("--{$boundary}\r\n", $requestbody));
 
         return $requestparts;
     }
@@ -179,7 +179,7 @@ class bulk_route {
         // - The request header.
         // - Two new-lines.
         // - The request body.
-        $parts = explode("\n\n", $requestpart);
+        $parts = explode("\r\n\r\n", $requestpart, 3);
 
         // The multipart header should contain:
         // A Content-Type with value 'application/header'.
@@ -200,7 +200,7 @@ class bulk_route {
             throw new \InvalidArgumentException("Invalid request");
         }
 
-        $requestheaders = explode("\n", $requestheader);
+        $requestheaders = explode("\r\n", $requestheader);
         [$method, $uri, $protocol] = self::get_method_and_uri(array_shift($requestheaders));
 
         $parsedheaders = [];

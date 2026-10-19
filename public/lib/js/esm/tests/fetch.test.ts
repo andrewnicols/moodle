@@ -380,7 +380,7 @@ describe('@moodle/lms/core/fetch', () => {
                     lines.push(body);
                 }
                 lines.push('');
-                return lines.join('\n');
+                return lines.join('\r\n');
             });
 
             return [...partsText, `--${boundary}--`, ''].join('');
@@ -612,10 +612,10 @@ describe('@moodle/lms/core/fetch', () => {
             const batchRequest = mockFetch.mock.calls[0][0];
             const requestBody = await batchRequest.text();
             expect(requestBody).toMatch(
-                /# Requesting GET https:\/\/example\.com\/rest\/v2\/mod_example\/list\n/,
+                /# Requesting GET https:\/\/example\.com\/rest\/v2\/mod_example\/list\r\n/,
             );
             expect(requestBody).toMatch(
-                /# Requesting POST https:\/\/example\.com\/rest\/v2\/mod_example\/create\n/,
+                /# Requesting POST https:\/\/example\.com\/rest\/v2\/mod_example\/create\r\n/,
             );
         });
 

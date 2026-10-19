@@ -457,35 +457,35 @@ class Fetch {
    */
   async #getRequests(requestMap) {
     const boundary = this.#getGuid();
-    const getBoundaryMarker = /* @__PURE__ */ __name((finalDelimiter = false) => `--${boundary}${finalDelimiter ? "--" : ""}
+    const getBoundaryMarker = /* @__PURE__ */ __name((finalDelimiter = false) => `--${boundary}${finalDelimiter ? "--" : ""}\r
 `, "getBoundaryMarker");
     const getRequestHeader = /* @__PURE__ */ __name(() => [
       getBoundaryMarker(),
-      `Content-Type: application/http
-
+      `Content-Type: application/http\r
+\r
 `
     ], "getRequestHeader");
     const requestBodies = await Promise.all([...requestMap.entries()].map(async ([id, { request }]) => {
       const thisBody = [];
       thisBody.push(...getRequestHeader());
-      thisBody.push(`${request.method} ${request.url}
+      thisBody.push(`${request.method} ${request.url}\r
 `);
-      thisBody.push(`Content-Type: ${request.headers.get("Content-Type")}
+      thisBody.push(`Content-Type: ${request.headers.get("Content-Type")}\r
 `);
-      thisBody.push(`Content-ID: ${id}
+      thisBody.push(`Content-ID: ${id}\r
 `);
       if (request.body) {
-        thisBody.push(`
+        thisBody.push(`\r
 `);
         thisBody.push(await request.text());
       }
-      thisBody.push(`
+      thisBody.push(`\r
 `);
       return thisBody;
     }));
     const body = [
       // Add a prologue to aid debugging.
-      ...[...requestMap.values()].map(({ request }) => `# Requesting ${request.method} ${request.url}
+      ...[...requestMap.values()].map(({ request }) => `# Requesting ${request.method} ${request.url}\r
 `),
       // Now add the actual request bodies.
       ...requestBodies.map((requestBody) => requestBody.join("")),
@@ -512,11 +512,11 @@ class Fetch {
    * @returns The parsed {@link Response}.
    */
   #getResponseFromText(text) {
-    const [, headerText, ...bodyParts] = text.split(`
-
+    const [, headerText, ...bodyParts] = text.split(`\r
+\r
 `).map((part) => part.trim());
-    const body = bodyParts.length ? bodyParts.join("\n\n").trim() : null;
-    const headers = headerText.split(`
+    const body = bodyParts.length ? bodyParts.join("\r\n\r\n").trim() : null;
+    const headers = headerText.split(`\r
 `);
     const statusLine = headers.shift() ?? "";
     const matches = statusLine.match(/HTTP\/(?<protocol>[^ ]*) (?<status>\d{3}) (?<statusText>.*)$/);
@@ -540,8 +540,8 @@ class Fetch {
       const [, boundaryPart] = contentType.split(";").map((part) => part.trim());
       const boundary = boundaryPart.replace("boundary=", "").trim();
       const responseBody = await response.text();
-      return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?
-?)`, "gm")).filter((value) => !!value.length);
+      return responseBody.split(new RegExp(`(?:--${boundary}(?:--)?(?:\r
+)?)`, "gm")).filter((value) => !!value.length);
     } else if (contentType === "application/json") {
       return await response.json();
     }

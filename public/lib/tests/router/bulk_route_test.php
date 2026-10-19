@@ -110,7 +110,7 @@ final class bulk_route_test extends route_testcase {
         );
 
         // Add a prologue.
-        $request->getBody()->write("Some example junk content in the prologue.\n");
+        $request->getBody()->write("Some example junk content in the prologue.\r\n");
 
         $this->add_request_to_bulk_body(
             $this->create_request(
@@ -145,10 +145,10 @@ final class bulk_route_test extends route_testcase {
             3,
         );
 
-        $request->getBody()->write("--boundary--\n\n");
+        $request->getBody()->write("--boundary--\r\n\r\n");
 
         // Add an epilogue.
-        $request->getBody()->write("Some example junk content in the epilogue.\n");
+        $request->getBody()->write("Some example junk content in the epilogue.\r\n");
 
         // Handle the request.
         $response = $app->handle($request);
@@ -162,13 +162,13 @@ final class bulk_route_test extends route_testcase {
         $body = $response->getBody()->getContents();
 
         // The response should start and end with the boundary.
-        $this->assertStringStartsWith("--{$boundary}\n", $body);
+        $this->assertStringStartsWith("--{$boundary}\r\n", $body);
         $this->assertStringEndsWith("--{$boundary}--", $body);
 
         // Strip them off.
-        $body = trim(substr($body, strlen("--{$boundary}\n"), -strlen("--{$boundary}--")));
+        $body = trim(substr($body, strlen("--{$boundary}\r\n"), -strlen("--{$boundary}--")));
 
-        $parts = explode("--{$boundary}\n", $body);
+        $parts = explode("--{$boundary}\r\n", $body);
 
         // There should only be three parts.
         $this->assertCount(3, $parts);
@@ -214,7 +214,7 @@ final class bulk_route_test extends route_testcase {
             $request->getBody(),
             1,
         );
-        $request->getBody()->write("--boundary--\n\n");
+        $request->getBody()->write("--boundary--\r\n\r\n");
 
         // Handle the request.
         $response = $app->handle($request);
@@ -300,17 +300,17 @@ final class bulk_route_test extends route_testcase {
         StreamInterface $body,
         int $contentid,
     ): void {
-        $body->write("--{$boundary}\n");
-        $body->write("Content-Type: application/http\n");
-        $body->write("\n");
-        $body->write($request->getMethod() . " " . $request->getUri() . "\n");
+        $body->write("--{$boundary}\r\n");
+        $body->write("Content-Type: application/http\r\n");
+        $body->write("\r\n");
+        $body->write($request->getMethod() . " " . $request->getUri() . "\r\n");
         foreach ($request->getHeaders() as $name => $values) {
-            $body->write("{$name}: " . implode(", ", $values) . "\n");
+            $body->write("{$name}: " . implode(", ", $values) . "\r\n");
         }
-        $body->write("Content-ID: {$contentid}\n");
+        $body->write("Content-ID: {$contentid}\r\n");
 
         $body->write((string) $request->getBody());
-        $body->write("\n\n");
+        $body->write("\r\n\r\n");
     }
 
     /**
@@ -326,7 +326,7 @@ final class bulk_route_test extends route_testcase {
         // - The request headeer.
         // - Two new-lines.
         // - The request body.
-        $parts = explode("\n\n", $responsepart);
+        $parts = explode("\r\n\r\n", $responsepart);
 
         // The multipart header should contain:
         // A Content-Type with value 'application/header'.
@@ -347,7 +347,7 @@ final class bulk_route_test extends route_testcase {
             throw new \InvalidArgumentException("Invalid request");
         }
 
-        $requestheaders = explode("\n", $requestheader);
+        $requestheaders = explode("\r\n", $requestheader);
         [$protocolversion, $code, $reason] = self::get_protocol_and_response_code(array_shift($requestheaders));
 
         $parsedheaders = [];
