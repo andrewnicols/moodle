@@ -521,7 +521,10 @@ class Fetch {
     const statusLine = headers.shift() ?? "";
     const matches = statusLine.match(/HTTP\/(?<protocol>[^ ]*) (?<status>\d{3}) (?<statusText>.*)$/);
     const { status, statusText } = matches?.groups ?? { status: void 0, statusText: void 0 };
-    const headerList = headers.filter((header) => header.length > 0).map((header) => header.split(":", 2).map((value) => value.trim()));
+    const headerList = headers.filter((header) => header.includes(":")).map((header) => {
+      const index = header.indexOf(":");
+      return [header.slice(0, index).trim(), header.slice(index + 1).trim()];
+    });
     return new Response(body, {
       status: Number(status),
       statusText,

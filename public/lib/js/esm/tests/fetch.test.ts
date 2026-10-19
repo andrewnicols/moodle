@@ -364,9 +364,16 @@ describe('@moodle/lms/core/fetch', () => {
          */
         const buildBatchResponseBody = (
             boundary: string,
-            parts: Array<{id: string; status?: number; statusText?: string; contentType?: string; body?: string}>,
+            parts: Array<{
+                id: string;
+                status?: number;
+                statusText?: string;
+                contentType?: string;
+                headers?: string[];
+                body?: string;
+            }>,
         ): string => {
-            const partsText = parts.map(({id, status = 200, statusText = 'OK', contentType = 'application/json', body}) => {
+            const partsText = parts.map(({id, status = 200, statusText = 'OK', contentType = 'application/json', headers = [], body}) => {
                 const lines = [
                     `--${boundary}`,
                     'Content-Type: application/http',
@@ -374,6 +381,7 @@ describe('@moodle/lms/core/fetch', () => {
                     `HTTP/1.1 ${status} ${statusText}`,
                     `Content-Type: ${contentType}`,
                     `Content-ID: ${id}`,
+                    ...headers,
                     '',
                 ];
                 if (body) {
@@ -643,6 +651,35 @@ describe('@moodle/lms/core/fetch', () => {
 
             const secondResponse = await second;
             expect(secondResponse.status).toBe(200);
+        });
+
+        it('preserves colons in sub-response header values', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            const first = batcher.performGet('mod_example', 'list');
+            const second = batcher.performGet('mod_example', 'other');
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', [
+                        {
+                            id: ids[0],
+                            headers: ['Date: Sun, 17 Jan 2027 08:41:12 GMT'],
+                            body: JSON.stringify({ok: true}),
+                        },
+                        {id: ids[1], body: JSON.stringify({ok: true})},
+                    ]),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+
+            const firstResponse = await first;
+            expect(firstResponse.headers.get('Date')).toBe('Sun, 17 Jan 2027 08:41:12 GMT');
+            await second;
         });
 
         it('rejects a request with no matching Content-ID in the batch response', async() => {

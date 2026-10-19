@@ -715,8 +715,12 @@ export default class Fetch {
         const {status, statusText} = matches?.groups ?? {status: undefined, statusText: undefined};
 
         const headerList: Array<[string, string]> = headers
-            .filter((header) => header.length > 0)
-            .map((header) => header.split(':', 2).map((value) => value.trim()) as [string, string]);
+            .filter((header) => header.includes(':'))
+            .map((header): [string, string] => {
+                // Split on the first colon only, as values (e.g. dates) may contain further colons.
+                const index = header.indexOf(':');
+                return [header.slice(0, index).trim(), header.slice(index + 1).trim()];
+            });
 
         return new Response(body, {
             status: Number(status),
