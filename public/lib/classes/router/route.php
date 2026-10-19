@@ -16,7 +16,6 @@
 
 namespace core\router;
 
-use core\param;
 use core\exception\coding_exception;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
@@ -123,7 +122,6 @@ class route {
 
         /** @var null|string Public cache lifetime if browser cacheable */
         public readonly ?string $cachelifetime = null,
-
 
         // Note. We do not make use of these extras.
         // These allow us to add additional arguments in future versions, whilst allowing plugins to use this version.
