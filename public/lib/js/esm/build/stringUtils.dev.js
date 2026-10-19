@@ -55,7 +55,7 @@ const getRequestedStrings = /* @__PURE__ */ __name((requests) => {
       batcher.performGet(
         "core",
         `/strings/${lang}/${component}/${key}`,
-        { cachekey: config.templaterev }
+        { cachekey: config.langrev }
       ).then((response) => response.json()).then((response) => response.strings).then((strings) => resolve(strings[`${component}/${key}`])).catch((err) => reject(err));
     });
   }
@@ -65,7 +65,7 @@ const getStrings = /* @__PURE__ */ __name((requests) => Promise.all(getRequested
 const getComponentStrings = /* @__PURE__ */ __name((component, lang = config.language) => Fetch.performGet(
   "core",
   `/strings/${lang}/${component}`,
-  { cachekey: config.templaterev }
+  { cachekey: config.langrev }
 ).then((response) => response.json()).then((response) => response.strings).then((strings) => {
   return cacheStrings(
     Object.entries(strings).map(([identifier, value]) => {

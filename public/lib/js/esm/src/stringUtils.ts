@@ -153,7 +153,7 @@ export const getRequestedStrings = (requests: StringRequest[]): Promise<string>[
             batcher.performGet(
                 'core',
                 `/strings/${lang}/${component}/${key}`,
-                {cachekey: config.templaterev},
+                {cachekey: config.langrev},
             )
             .then((response) => response.json())
             .then((response) => (response as {strings: Record<string, string>}).strings)
@@ -191,7 +191,7 @@ export const getComponentStrings = (
     Fetch.performGet(
         'core',
         `/strings/${lang}/${component}`,
-        {cachekey: config.templaterev},
+        {cachekey: config.langrev},
     )
     .then((response) => response.json())
     .then((response) => (response as {strings: Record<string, string>}).strings)
