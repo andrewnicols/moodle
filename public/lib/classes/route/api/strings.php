@@ -73,8 +73,8 @@ class strings {
                         ),
                         examples: [
                             new \core\router\schema\example(
-                                name: 'Single template value',
-                                summary: 'A json response containing the template for a single template',
+                                name: 'Single String',
+                                summary: 'A json response containing the translation for a single string',
                                 value: [
                                     'strings' => [
                                         'core/actionsmenu' => 'Actions menu',
