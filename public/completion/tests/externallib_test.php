@@ -29,6 +29,7 @@ use core_external\external_api;
  * @since      Moodle 2.9
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\core_completion_external::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('override_activity_completion_status')]
 final class externallib_test extends \core_external\tests\externallib_testcase {
     /**
      * Test update_activity_completion_status_manually

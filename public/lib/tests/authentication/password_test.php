@@ -29,6 +29,7 @@ use core\exception\moodle_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(password::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('update')]
 final class password_test extends \advanced_testcase {
     /**
      * Get the password service via DI.

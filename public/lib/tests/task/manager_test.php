@@ -35,6 +35,7 @@ require_once(__DIR__ . '/../fixtures/task_fixtures.php');
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\task\manager::class)]
 #[\PHPUnit\Framework\Attributes\CoversMethod(\core\task\manager::class, 'get_next_adhoc_task')]
 #[\PHPUnit\Framework\Attributes\CoversMethod(\core\task\manager::class, 'adhoc_task_delayed')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\core\task\manager::class, 'adhoc_task_delayed')]
 final class manager_test extends \advanced_testcase {
     /**
      * Data provider for test_get_candidate_adhoc_tasks.
@@ -406,10 +407,10 @@ final class manager_test extends \advanced_testcase {
         $stubpluginman = $this->createStub(\core_plugin_manager::class);
         $stubpluginman
             ->method('get_plugin_info')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['fullsubtype_example', $stubavailableplugininfo],
                 ['fulldeprecatedsubtype_test', $stubdeprecatedplugininfo],
-            ]));
+            ]);
 
         $pluginman = new \ReflectionClass(\core_plugin_manager::class);
         $pluginman->setStaticPropertyValue('singletoninstance', $stubpluginman);
@@ -485,11 +486,11 @@ final class manager_test extends \advanced_testcase {
         $stubdeletedplugininfo->component = "fulldeletedsubtype_demo";
         $stubpluginman = $this->createStub(\core_plugin_manager::class);
         $stubpluginman->method('get_plugin_info')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['fullsubtype_example', $stubavailableplugininfo],
                 ['fulldeprecatedsubtype_test', $stubdeprecatedplugininfo],
                 ['fulldeletedsubtype_demo', $stubdeletedplugininfo],
-            ]));
+            ]);
         $pluginmanrc = new \ReflectionClass(\core_plugin_manager::class);
         $pluginmanrc->setStaticPropertyValue('singletoninstance', $stubpluginman);
 
@@ -545,9 +546,9 @@ final class manager_test extends \advanced_testcase {
         $stubpluginman = $this->createStub(\core_plugin_manager::class);
         $stubpluginman
             ->method('get_plugin_info')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['fullsubtype_example', $stubavailableplugininfo],
-            ]));
+            ]);
         $pluginmanrc = new \ReflectionClass(\core_plugin_manager::class);
         $pluginmanrc->setStaticPropertyValue('singletoninstance', $stubpluginman);
 
@@ -566,9 +567,9 @@ final class manager_test extends \advanced_testcase {
         $stubpluginman = $this->createStub(\core_plugin_manager::class);
         $stubpluginman
             ->method('get_plugin_info')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['fullsubtype_example', $stubdeprecatedplugininfo],
-            ]));
+            ]);
         $pluginmanrc->setStaticPropertyValue('singletoninstance', $stubpluginman);
 
         // Assert prior-queued tasks can be fetched and run.
@@ -647,8 +648,6 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test that adhoc_task_delayed() marks a task as failed once it has exhausted its
      * last available attempt.
-     *
-     * @covers \core\task\manager::adhoc_task_delayed
      */
     public function test_adhoc_task_delayed_marks_failed_when_attempts_exhausted(): void {
         global $DB;
