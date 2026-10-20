@@ -145,114 +145,112 @@ abstract class lti_advantage_testcase extends \advanced_testcase {
             ->getMock();
         $mocklaunch->expects($this->any())
             ->method('getLaunchData')
-            ->will($this->returnCallback(
-                function()
-                use ($resource, $mockuser, $resourcelinkid, $migrationclaiminfo, $ags, $nrps, $customparams, $aud) {
-                    // This simulates the data in the jwt['body'] of a real resource link launch.
-                    // Real launches would of course have this data and authenticity of the user verified.
-                    $rltitle = $resourcelinkid ? "Resource link $resourcelinkid in platform" : "Resource link in platform";
-                    $rlid = $resourcelinkid ?: '12345';
-                    $data = [
-                        'iss' => $this->issuer, // Must match registration in create_test_environment.
-                        'aud' => $aud, // Must match registration in create_test_environment.
-                        'sub' => $mockuser['user_id'], // User id on the platform site.
-                        'exp' => time() + 60,
-                        'nonce' => 'some-nonce-value-123',
-                        'https://purl.imsglobal.org/spec/lti/claim/deployment_id' => '1', // Must match registration.
-                        'https://purl.imsglobal.org/spec/lti/claim/roles' =>
-                            $mockuser['roles'] ?? ['http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor'],
-                        'https://purl.imsglobal.org/spec/lti/claim/resource_link' => [
-                            'title' => $rltitle,
-                            'id' => $rlid, // Arbitrary, will be mapped to the user during resource link launch.
-                        ],
-                        "https://purl.imsglobal.org/spec/lti/claim/context" => [
-                            "id" => "context-id-12345",
-                            "label" => "ITS 123",
-                            "title" => "ITS 123 Machine Learning",
-                            "type" => ["http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"]
-                        ],
-                        'https://purl.imsglobal.org/spec/lti/claim/target_link_uri' =>
-                            'https://this-moodle-tool.example.org/context/24/resource/14',
-                        'given_name' => $mockuser['given_name'],
-                        'family_name' => $mockuser['family_name'],
-                        'email' => $mockuser['email'],
+            ->willReturnCallback(function()
+            use ($resource, $mockuser, $resourcelinkid, $migrationclaiminfo, $ags, $nrps, $customparams, $aud) {
+                // This simulates the data in the jwt['body'] of a real resource link launch.
+                // Real launches would of course have this data and authenticity of the user verified.
+                $rltitle = $resourcelinkid ? "Resource link $resourcelinkid in platform" : "Resource link in platform";
+                $rlid = $resourcelinkid ?: '12345';
+                $data = [
+                    'iss' => $this->issuer, // Must match registration in create_test_environment.
+                    'aud' => $aud, // Must match registration in create_test_environment.
+                    'sub' => $mockuser['user_id'], // User id on the platform site.
+                    'exp' => time() + 60,
+                    'nonce' => 'some-nonce-value-123',
+                    'https://purl.imsglobal.org/spec/lti/claim/deployment_id' => '1', // Must match registration.
+                    'https://purl.imsglobal.org/spec/lti/claim/roles' =>
+                        $mockuser['roles'] ?? ['http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor'],
+                    'https://purl.imsglobal.org/spec/lti/claim/resource_link' => [
+                        'title' => $rltitle,
+                        'id' => $rlid, // Arbitrary, will be mapped to the user during resource link launch.
+                    ],
+                    "https://purl.imsglobal.org/spec/lti/claim/context" => [
+                        "id" => "context-id-12345",
+                        "label" => "ITS 123",
+                        "title" => "ITS 123 Machine Learning",
+                        "type" => ["http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"]
+                    ],
+                    'https://purl.imsglobal.org/spec/lti/claim/target_link_uri' =>
+                        'https://this-moodle-tool.example.org/context/24/resource/14',
+                    'given_name' => $mockuser['given_name'],
+                    'family_name' => $mockuser['family_name'],
+                    'email' => $mockuser['email'],
+                ];
+
+                if (!is_null($customparams)) {
+                    $data['https://purl.imsglobal.org/spec/lti/claim/custom'] = $customparams;
+                } else {
+                    $data['https://purl.imsglobal.org/spec/lti/claim/custom'] = [
+                        'id' => $resource->uuid,
                     ];
-
-                    if (!is_null($customparams)) {
-                        $data['https://purl.imsglobal.org/spec/lti/claim/custom'] = $customparams;
-                    } else {
-                        $data['https://purl.imsglobal.org/spec/lti/claim/custom'] = [
-                            'id' => $resource->uuid,
-                        ];
-                    }
-
-                    if (is_array($ags)) {
-                        if (empty($ags)) {
-                            $agsclaim = [
-                                "scope" => [
-                                    "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
-                                    "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
-                                    "https://purl.imsglobal.org/spec/lti-ags/scope/score"
-                                ],
-                                "lineitems" => "https://platform.example.com/10/lineitems/",
-                                "lineitem" => "https://platform.example.com/10/lineitems/45/lineitem"
-                            ];
-                        } else {
-                            $agsclaim = $ags;
-                        }
-                        $data["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"] = $agsclaim;
-                    }
-
-                    if ($nrps) {
-                        $data['https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'] = [
-                            'context_memberships_url' => 'https://lms.example.org/context/24/memberships',
-                            'service_versions' => ['2.0']
-                        ];
-                    }
-
-                    if (!empty($mockuser['picture'])) {
-                        $data['picture'] = $mockuser['picture'];
-                    }
-
-                    if ($migrationclaiminfo) {
-                        if (isset($migrationclaiminfo['consumer_key'])) {
-                            $base = [
-                                $migrationclaiminfo['consumer_key'],
-                                $data['https://purl.imsglobal.org/spec/lti/claim/deployment_id'],
-                                $data['iss'],
-                                $data['aud'],
-                                $data['exp'],
-                                $data['nonce']
-                            ];
-                            $basestring = implode('&', $base);
-
-                            $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1'] = [
-                                'oauth_consumer_key' => $migrationclaiminfo['consumer_key'],
-                            ];
-
-                            if (isset($migrationclaiminfo['signing_secret'])) {
-                                $sig = base64_encode(hash_hmac('sha256', $basestring, $migrationclaiminfo['signing_secret']));
-                                $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1']['oauth_consumer_key_sign'] = $sig;
-                            }
-                        }
-
-                        $claimprops = ['user_id', 'context_id', 'tool_consumer_instance_guid', 'resource_link_id'];
-                        foreach ($claimprops as $prop) {
-                            if (!empty($migrationclaiminfo[$prop])) {
-                                $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1'][$prop] =
-                                    $migrationclaiminfo[$prop];
-                            }
-                        }
-                    }
-                    return $data;
                 }
-            ));
+
+                if (is_array($ags)) {
+                    if (empty($ags)) {
+                        $agsclaim = [
+                            "scope" => [
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+                                "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+                            ],
+                            "lineitems" => "https://platform.example.com/10/lineitems/",
+                            "lineitem" => "https://platform.example.com/10/lineitems/45/lineitem"
+                        ];
+                    } else {
+                        $agsclaim = $ags;
+                    }
+                    $data["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"] = $agsclaim;
+                }
+
+                if ($nrps) {
+                    $data['https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'] = [
+                        'context_memberships_url' => 'https://lms.example.org/context/24/memberships',
+                        'service_versions' => ['2.0']
+                    ];
+                }
+
+                if (!empty($mockuser['picture'])) {
+                    $data['picture'] = $mockuser['picture'];
+                }
+
+                if ($migrationclaiminfo) {
+                    if (isset($migrationclaiminfo['consumer_key'])) {
+                        $base = [
+                            $migrationclaiminfo['consumer_key'],
+                            $data['https://purl.imsglobal.org/spec/lti/claim/deployment_id'],
+                            $data['iss'],
+                            $data['aud'],
+                            $data['exp'],
+                            $data['nonce']
+                        ];
+                        $basestring = implode('&', $base);
+
+                        $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1'] = [
+                            'oauth_consumer_key' => $migrationclaiminfo['consumer_key'],
+                        ];
+
+                        if (isset($migrationclaiminfo['signing_secret'])) {
+                            $sig = base64_encode(hash_hmac('sha256', $basestring, $migrationclaiminfo['signing_secret']));
+                            $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1']['oauth_consumer_key_sign'] = $sig;
+                        }
+                    }
+
+                    $claimprops = ['user_id', 'context_id', 'tool_consumer_instance_guid', 'resource_link_id'];
+                    foreach ($claimprops as $prop) {
+                        if (!empty($migrationclaiminfo[$prop])) {
+                            $data['https://purl.imsglobal.org/spec/lti/claim/lti1p1'][$prop] =
+                                $migrationclaiminfo[$prop];
+                        }
+                    }
+                }
+                return $data;
+            });
 
         $mocklaunch->expects($this->any())
             ->method('getLaunchId')
-            ->will($this->returnCallback(function() {
+            ->willReturnCallback(function() {
                 return uniqid('lti1p3_launch_', true);
-            }));
+            });
 
         return $mocklaunch;
     }

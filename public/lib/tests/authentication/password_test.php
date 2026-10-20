@@ -29,6 +29,7 @@ use core\exception\moodle_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(password::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('update')]
 final class password_test extends \advanced_testcase {
     /**
      * Get the password service via DI.
@@ -477,8 +478,6 @@ final class password_test extends \advanced_testcase {
 
     /**
      * Test that updating a user's password invalidates any outstanding forgot-password tokens.
-     *
-     * @covers ::update
      */
     public function test_update_invalidates_password_reset_tokens(): void {
         global $DB;
@@ -503,8 +502,6 @@ final class password_test extends \advanced_testcase {
     /**
      * Test that a rehash-only update (e.g. a legacy hash being upgraded on login, with the
      * password itself unchanged) does not invalidate outstanding forgot-password tokens.
-     *
-     * @covers ::update
      */
     public function test_update_keeps_password_reset_tokens_on_rehash_only(): void {
         global $DB;
