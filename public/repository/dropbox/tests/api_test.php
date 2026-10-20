@@ -280,7 +280,7 @@ final class api_test extends \advanced_testcase {
 
         $mock->expects($this->once())
             ->method('fetch_dropbox_data')
-            ->will($this->throwException(new \repository_dropbox\authentication_exception('Exception should be caught')));
+            ->willThrowException(new \repository_dropbox\authentication_exception('Exception should be caught'));
 
         $this->assertNull($mock->logout());
     }
@@ -296,7 +296,7 @@ final class api_test extends \advanced_testcase {
 
         $mock->expects($this->once())
             ->method('fetch_dropbox_data')
-            ->will($this->throwException(new \repository_dropbox\rate_limit_exception));
+            ->willThrowException(new \repository_dropbox\rate_limit_exception);
 
         $this->expectException(\repository_dropbox\rate_limit_exception::class);
         $mock->logout();
@@ -321,14 +321,14 @@ final class api_test extends \advanced_testcase {
         $mock->expects($this->once())
             ->method('get_api_endpoint')
             ->with($endpoint)
-            ->will($this->returnValue("https://example.com/api/2/{$endpoint}"));
+            ->willReturn("https://example.com/api/2/{$endpoint}");
 
         $mock->expects($this->never())
             ->method('get_content_endpoint');
 
         $mock->expects($this->once())
             ->method('request')
-            ->will($this->returnValue(json_encode([])));
+            ->willReturn(json_encode([]));
 
         // Make the call.
         $rc = new \ReflectionClass(\repository_dropbox\dropbox::class);
@@ -354,7 +354,7 @@ final class api_test extends \advanced_testcase {
             ->with($this->anything(), $this->callback(function($d) {
                     return $d['CURLOPT_POSTFIELDS'] === 'null';
                 }))
-            ->will($this->returnValue(json_encode([])));
+            ->willReturn(json_encode([]));
 
         // Make the call.
         $rc = new \ReflectionClass(\repository_dropbox\dropbox::class);
@@ -381,7 +381,7 @@ final class api_test extends \advanced_testcase {
             ->with($this->anything(), $this->callback(function($d) use ($data) {
                     return $d['CURLOPT_POSTFIELDS'] === json_encode($data);
                 }))
-            ->will($this->returnValue(json_encode([])));
+            ->willReturn(json_encode([]));
 
         // Make the call.
         $rc = new \ReflectionClass(\repository_dropbox\dropbox::class);
@@ -475,7 +475,7 @@ final class api_test extends \advanced_testcase {
         $mock->expects($this->once())
             ->method('get_content_endpoint')
             ->with($endpoint)
-            ->will($this->returnValue($url));
+            ->willReturn($url);
 
         $mock->expects($this->never())
             ->method('get_api_endpoint');
@@ -545,7 +545,7 @@ final class api_test extends \advanced_testcase {
         $mock->expects($this->once())
             ->method('normalize_file_share_info')
             ->with($this->equalTo($file))
-            ->will($this->returnValue($sharelink));
+            ->willReturn($sharelink);
 
         $this->assertEquals($sharelink, $mock->get_file_share_info($id));
     }
@@ -588,7 +588,7 @@ final class api_test extends \advanced_testcase {
         $mock->expects($this->once())
             ->method('normalize_file_share_info')
             ->with($this->equalTo($file))
-            ->will($this->returnValue($sharelink));
+            ->willReturn($sharelink);
 
         $this->assertEquals($sharelink, $mock->get_file_share_info($id));
     }

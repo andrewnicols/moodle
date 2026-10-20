@@ -29,6 +29,7 @@ use core_external\external_api;
  * @since      Moodle 2.9
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\core_completion_external::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('override_activity_completion_status')]
 final class externallib_test extends \core_external\tests\externallib_testcase {
     /**
      * Test update_activity_completion_status_manually
@@ -371,8 +372,6 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
 
     /**
      * Test overriding activity completion status uses an existing passing grade.
-     *
-     * @covers ::override_activity_completion_status
      */
     public function test_override_activity_completion_status_with_grade(): void {
         global $DB, $CFG;
@@ -490,8 +489,6 @@ final class externallib_test extends \core_external\tests\externallib_testcase {
     /**
      * A grade changing after an override must move the stored state between complete and
      * complete-pass, in either direction, without ever undoing the override itself.
-     *
-     * @covers ::override_activity_completion_status
      */
     public function test_override_activity_completion_status_grade_changes_after_override(): void {
         global $DB, $CFG;
