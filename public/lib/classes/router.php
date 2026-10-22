@@ -16,9 +16,9 @@
 
 namespace core;
 
-use core\exception\not_found_exception;
 use core\exception\response_aware_exception;
 use core\router\error_renderer;
+use core\router\middleware\api_debugging_middleware;
 use core\router\middleware\api_validation_middleware;
 use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
@@ -269,7 +269,12 @@ class router {
             ->add(di::get(cors_middleware::class))
             ->add(di::get(api_validation_middleware::class))
             ->add(di::get(moodle_api_authentication_middleware::class))
-            ->add(di::get(error_handling_middleware::class));
+            ->add(di::get(error_handling_middleware::class))
+
+
+            // Add the API Debugging Middleware for all REST Responses.
+            // This must be the last middleware added to the API route, and the first used.
+            ->add(di::get(api_debugging_middleware::class));
     }
 
     /**
