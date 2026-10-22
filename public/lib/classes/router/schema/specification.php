@@ -26,7 +26,7 @@ use core\router\response\unprocessable_entity_response;
 use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
-use core\router\schema\parameters\header_object;
+use core\router\schema\parameters\header_object as header_parameter;
 use core\router\schema\response\response;
 use core\router\util;
 use core\url;
@@ -126,7 +126,7 @@ class specification implements
      * @return specification
      */
     protected function generate_conditional_request_documentation(): self {
-        $ifmatch = new header_object(
+        $ifmatch = new header_parameter(
             name: 'If-Match',
             type: \core\param::RAW,
             required: false,
@@ -137,7 +137,7 @@ class specification implements
                 'If omitted, the change is applied unconditionally.',
             ]),
         );
-        $ifnonematch = new header_object(
+        $ifnonematch = new header_parameter(
             name: 'If-None-Match',
             type: \core\param::RAW,
             required: false,

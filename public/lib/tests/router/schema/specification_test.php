@@ -262,6 +262,21 @@ final class specification_test extends route_testcase {
         $this->assertTrue($spec->is_reference_defined($child->get_reference(true)));
     }
 
+    public function test_referenced_header_parameter_is_defined(): void {
+        $spec = new specification();
+        $header = new \core\router\parameters\header_language();
+
+        $reference = $header->get_openapi_schema($spec);
+        $schema = $spec->get_schema();
+        $name = $header->get_reference(false);
+
+        $this->assertEquals('#/components/parameters/' . $name, $reference->{'$ref'});
+        $this->assertObjectHasProperty($name, $schema->components->parameters);
+        $this->assertEquals('header', $schema->components->parameters->{$name}->in);
+        $this->assertEquals('language', $schema->components->parameters->{$name}->name);
+        $this->assertObjectNotHasProperty($name, $schema->components->headers);
+    }
+
     public function test_add_header(): void {
         $spec = new specification();
 
