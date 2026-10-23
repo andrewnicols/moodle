@@ -341,12 +341,9 @@ export default class Loader {
                 // the server.
                 return batcher.performGet(
                     'core',
-                    `/templates/${theme}/${component}/${name}`,
+                    `/templates/${theme}:${config.language}/${component}/${name}`,
                     {
                         cachekey: config.templaterev,
-                        headers: {
-                            Language: config.language,
-                        },
                     },
                 )
                 .then((response) => response.json())

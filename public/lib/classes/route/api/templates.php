@@ -35,6 +35,63 @@ class templates {
     use \core\router\route_controller;
 
     /**
+     * Fetch a single template for a component in a theme with the language specified.
+     *
+     * @param ServerRequestInterface $request
+     * @param string $themename
+     * @param string $component
+     * @param null|string $identifier
+     * @return payload_response
+     */
+    #[route(
+        path: '/templates/{themename}:{language}/{component}/{identifier:.*}',
+        method: ['GET'],
+        title: 'Fetch a single template',
+        description: 'Fetch a single template for a component in a theme specifying the language',
+        security: [],
+        cookies: false,
+        cachelifetime: '90 days',
+        pathtypes: [
+            new \core\router\parameters\path_language(),
+            new \core\router\parameters\path_themename(),
+            new \core\router\parameters\path_component(),
+            new \core\router\schema\parameters\path_parameter(
+                name: 'identifier',
+                type: param::SAFEPATH,
+            ),
+        ],
+        queryparams: [
+            new \core\router\schema\parameters\query_parameter(
+                name: 'includecomments',
+                type: param::BOOL,
+                description: 'Include comments in the template',
+                default: false,
+            ),
+        ],
+        responses: [
+            new template_response(),
+        ],
+    )]
+    #[\core\router\scope\unscoped_resource]
+    public function get_templates_with_language(
+        ServerRequestInterface $request,
+        mustache_template_source_loader $loader,
+        string $language,
+        string $themename,
+        string $component,
+        string $identifier,
+    ): payload_response {
+        return $this->template_provider(
+            $request,
+            $loader,
+            $language,
+            $themename,
+            $component,
+            $identifier,
+        );
+    }
+
+    /**
      * Fetch a single template for a component in a theme.
      *
      * @param ServerRequestInterface $request
@@ -91,63 +148,6 @@ class templates {
             $request,
             $loader,
             $request->getHeaderLine('language'),
-            $themename,
-            $component,
-            $identifier,
-        );
-    }
-
-    /**
-     * Fetch a single template for a component in a theme with the language specified.
-     *
-     * @param ServerRequestInterface $request
-     * @param string $themename
-     * @param string $component
-     * @param null|string $identifier
-     * @return payload_response
-     */
-    #[route(
-        path: '/templates/{language}/{themename}/{component}/{identifier:.*}',
-        method: ['GET'],
-        title: 'Fetch a single template',
-        description: 'Fetch a single template for a component in a theme specifying the language',
-        security: [],
-        cookies: false,
-        cachelifetime: '90 days',
-        pathtypes: [
-            new \core\router\parameters\path_language(),
-            new \core\router\parameters\path_themename(),
-            new \core\router\parameters\path_component(),
-            new \core\router\schema\parameters\path_parameter(
-                name: 'identifier',
-                type: param::SAFEPATH,
-            ),
-        ],
-        queryparams: [
-            new \core\router\schema\parameters\query_parameter(
-                name: 'includecomments',
-                type: param::BOOL,
-                description: 'Include comments in the template',
-                default: false,
-            ),
-        ],
-        responses: [
-            new template_response(),
-        ],
-    )]
-    #[\core\router\scope\unscoped_resource]
-    public function get_templates_with_language(
-        ServerRequestInterface $request,
-        mustache_template_source_loader $loader,
-        string $language,
-        string $themename,
-        string $component,
-        string $identifier,
-    ): payload_response {
-        return $this->template_provider(
-            $request,
-            $loader,
-            $language,
             $themename,
             $component,
             $identifier,
