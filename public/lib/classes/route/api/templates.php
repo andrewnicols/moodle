@@ -87,7 +87,6 @@ class templates {
         string $component,
         string $identifier,
     ): payload_response {
-        \core\deprecation::emit_deprecation(__METHOD__);
         return $this->template_provider(
             $request,
             $loader,

@@ -271,6 +271,18 @@ class util {
         return []; // @codeCoverageIgnore
     }
 
+    public static function get_reflected_method_from_request(
+        ServerRequestInterface $request,
+    ): ?\ReflectionMethod {
+        $context = RouteContext::fromRequest($request);
+        if ($slimroute = $context->getRoute()) {
+            return self::get_reflected_method_from_callable($slimroute->getCallable());
+        }
+
+        // This should not be encountered - the route should always be set.
+        return null; // @codeCoverageIgnore
+    }
+
     /**
      * Get the reflected method for the specified callable if one is available.
      *
