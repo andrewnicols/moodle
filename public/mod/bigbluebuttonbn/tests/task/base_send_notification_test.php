@@ -35,15 +35,9 @@ final class base_send_notification_test extends advanced_testcase {
      * @return base_send_notification
      */
     private function get_mock(): base_send_notification {
-        return $this->getMockForAbstractClass(
-            base_send_notification::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            []
-        );
+        return $this->getMockBuilder(base_send_notification::class)
+            ->onlyMethods(['get_html_message', 'get_notification_type', 'get_small_message', 'get_subject'])
+            ->getMock();
     }
 
     /**

@@ -540,6 +540,8 @@ final class filterset_test extends advanced_testcase {
      */
     protected function get_mocked_filterset(array $mockedmethods = []): filterset {
 
-        return $this->getMockForAbstractClass(filterset::class, [], '', true, true, true, $mockedmethods);
+        return $this->getMockBuilder(filterset::class)
+            ->onlyMethods($mockedmethods)
+            ->getMock();
     }
 }

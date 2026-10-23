@@ -74,7 +74,8 @@ final class base_test extends \advanced_testcase {
 
         $builder = $this->getMockBuilder('\core_search\base');
         $builder->disableOriginalConstructor();
-        $stub = $builder->getMockForAbstractClass();
+        $builder->onlyMethods(['check_access', 'get_context_url', 'get_doc_url', 'get_document']);
+        $stub = $builder->getMock();
 
         $result = $stub->get_search_fileareas();
 
@@ -111,8 +112,9 @@ final class base_test extends \advanced_testcase {
         // with required methods stubbed.
         $builder = $this->getMockBuilder('\core_search\base');
         $builder->disableOriginalConstructor();
-        $builder->onlyMethods(array('get_search_fileareas', 'get_component_name'));
-        $stub = $builder->getMockForAbstractClass();
+        $builder->onlyMethods(['get_search_fileareas', 'get_component_name',
+                'check_access', 'get_context_url', 'get_doc_url', 'get_document']);
+        $stub = $builder->getMock();
         $stub->method('get_search_fileareas')->willReturn(array($filearea));
         $stub->method('get_component_name')->willReturn($component);
 
@@ -142,7 +144,8 @@ final class base_test extends \advanced_testcase {
     public function test_get_default_doc_icon(): void {
         $basearea = $this->getMockBuilder('\core_search\base')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->onlyMethods(['check_access', 'get_context_url', 'get_doc_url', 'get_document'])
+            ->getMock();
 
         $document = $this->getMockBuilder('\core_search\document')
             ->disableOriginalConstructor()
@@ -160,7 +163,8 @@ final class base_test extends \advanced_testcase {
     public function test_get_category_names(): void {
         $builder = $this->getMockBuilder('\core_search\base');
         $builder->disableOriginalConstructor();
-        $stub = $builder->getMockForAbstractClass();
+        $builder->onlyMethods(['check_access', 'get_context_url', 'get_doc_url', 'get_document']);
+        $stub = $builder->getMock();
 
         $expected = ['core-other'];
         $this->assertEquals($expected, $stub->get_category_names());

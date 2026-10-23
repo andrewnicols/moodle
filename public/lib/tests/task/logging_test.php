@@ -444,7 +444,9 @@ final class logging_test extends \advanced_testcase {
      * @return  adhoc_task
      */
     protected function get_test_adhoc_task(): adhoc_task {
-        $task = $this->getMockForAbstractClass(adhoc_task::class);
+        $task = $this->getMockBuilder(adhoc_task::class)
+            ->onlyMethods(['execute'])
+            ->getMock();
         $task->set_component('core');
 
         // Mock a lock on the task.
@@ -462,7 +464,9 @@ final class logging_test extends \advanced_testcase {
      * @return  scheduled_task
      */
     protected function get_test_scheduled_task(): scheduled_task {
-        $task = $this->getMockForAbstractClass(scheduled_task::class);
+        $task = $this->getMockBuilder(scheduled_task::class)
+            ->onlyMethods(['execute', 'get_name'])
+            ->getMock();
 
         // Mock a lock on the task.
         $lock = $this->getMockBuilder(\core\lock\lock::class)

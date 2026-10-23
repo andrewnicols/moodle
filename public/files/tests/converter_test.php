@@ -48,7 +48,7 @@ final class converter_test extends advanced_testcase {
     protected function get_testable_mock($mockedmethods = []) {
         $converter = $this->getMockBuilder(\core_files\converter::class)
             ->onlyMethods($mockedmethods)
-            ->getMockForAbstractClass();
+            ->getMock();
 
         return $converter;
     }
@@ -77,8 +77,14 @@ final class converter_test extends advanced_testcase {
      */
     protected function get_mocked_converter($mockedmethods = []) {
         $converter = $this->getMockBuilder(\core_files\converter_interface::class)
-            ->onlyMethods($mockedmethods)
-            ->getMockForAbstractClass();
+            ->onlyMethods(array_unique(array_merge($mockedmethods, [
+                'are_requirements_met',
+                'get_supported_conversions',
+                'poll_conversion_status',
+                'start_document_conversion',
+                'supports',
+            ])))
+            ->getMock();
 
         return $converter;
     }

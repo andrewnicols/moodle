@@ -41,12 +41,10 @@ final class export_test extends \advanced_testcase {
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('format_feedback_provider')]
     public function test_format_feedback($input, $inputformat, $expected): void {
-        $feedback = $this->getMockForAbstractClass(
-                \grade_export::class,
-                [],
-                '',
-                false
-            );
+        $feedback = $this->getMockBuilder(\grade_export::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['print_grades'])
+            ->getMock();
 
         $this->assertEquals(
             $expected,
@@ -99,12 +97,10 @@ final class export_test extends \advanced_testcase {
             ],
         ];
 
-        $feedback = $this->getMockForAbstractClass(
-            \grade_export::class,
-            [],
-            '',
-            false
-        );
+        $feedback = $this->getMockBuilder(\grade_export::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['print_grades'])
+            ->getMock();
 
         foreach ($tests as $key => $testdetails) {
             $expected = $testdetails[2];

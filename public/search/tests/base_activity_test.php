@@ -114,7 +114,8 @@ final class base_activity_test extends \advanced_testcase {
 
         $builder = $this->getMockBuilder('\core_search\base_activity');
         $builder->disableOriginalConstructor();
-        $stub = $builder->getMockForAbstractClass();
+        $builder->onlyMethods([]);
+        $stub = $builder->getMock();
 
         $result = $stub->get_search_fileareas();
 
@@ -160,7 +161,7 @@ final class base_activity_test extends \advanced_testcase {
         $builder = $this->getMockBuilder('\core_search\base_activity');
         $builder->disableOriginalConstructor();
         $builder->onlyMethods(array('get_module_name', 'get_component_name'));
-        $stub = $builder->getMockForAbstractClass();
+        $stub = $builder->getMock();
         $stub->method('get_module_name')->willReturn($module);
         $stub->method('get_component_name')->willReturn($component);
 
@@ -377,7 +378,7 @@ final class base_activity_test extends \advanced_testcase {
         $baseactivity = $this->getMockBuilder('\core_search\base_activity')
             ->disableOriginalConstructor()
             ->onlyMethods(array('get_module_name'))
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $baseactivity->method('get_module_name')->willReturn('test_activity');
 

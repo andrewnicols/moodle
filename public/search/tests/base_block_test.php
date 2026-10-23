@@ -445,7 +445,8 @@ final class base_block_test extends \advanced_testcase {
     public function test_get_doc_icon(): void {
         $baseblock = $this->getMockBuilder('\core_search\base_block')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->onlyMethods(['get_document'])
+            ->getMock();
 
         $document = $this->getMockBuilder('\core_search\document')
             ->disableOriginalConstructor()

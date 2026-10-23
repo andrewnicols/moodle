@@ -115,7 +115,8 @@ final class document_test extends \advanced_testcase {
     public function test_get_and_set_doc_icon(): void {
         $document = $this->getMockBuilder('\core_search\document')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->onlyMethods([])
+            ->getMock();
 
         $this->assertNull($document->get_doc_icon());
 

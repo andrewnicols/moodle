@@ -100,8 +100,15 @@ final class file_system_test extends \advanced_testcase {
      */
     protected function get_testable_mock($mockedmethods = []) {
         $fs = $this->getMockBuilder(file_system::class)
-            ->onlyMethods($mockedmethods)
-            ->getMockForAbstractClass();
+            ->onlyMethods(array_unique(array_merge($mockedmethods, [
+                'add_file_from_path',
+                'add_file_from_string',
+                'copy_content_from_storedfile',
+                'get_local_path_from_hash',
+                'get_remote_path_from_hash',
+                'remove_file',
+            ])))
+            ->getMock();
 
         return $fs;
     }
@@ -480,8 +487,7 @@ final class file_system_test extends \advanced_testcase {
         $contenthash = \file_storage::hash_from_string($filecontent);
 
         $DB = $this->getMockBuilder(\moodle_database::class)
-            ->onlyMethods(['record_exists'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $DB->method('record_exists')->willReturn(true);
 
         $method = new \ReflectionMethod(file_system::class, 'is_file_removable');
@@ -501,8 +507,7 @@ final class file_system_test extends \advanced_testcase {
         $contenthash = \file_storage::hash_from_string($filecontent);
 
         $DB = $this->getMockBuilder(\moodle_database::class)
-            ->onlyMethods(['record_exists'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $DB->method('record_exists')->willReturn(false);
 
         $method = new \ReflectionMethod(file_system::class, 'is_file_removable');
@@ -571,8 +576,14 @@ final class file_system_test extends \advanced_testcase {
             ->willReturn(__FILE__);
 
         $packer = $this->getMockBuilder(file_packer::class)
-            ->onlyMethods(['list_files'])
-            ->getMockForAbstractClass();
+            ->onlyMethods([
+                'archive_to_pathname',
+                'archive_to_storage',
+                'extract_to_pathname',
+                'extract_to_storage',
+                'list_files',
+            ])
+            ->getMock();
 
         $packer->expects($this->once())
             ->method('list_files')
@@ -602,8 +613,14 @@ final class file_system_test extends \advanced_testcase {
             ->willReturn(__FILE__);
 
         $packer = $this->getMockBuilder(file_packer::class)
-            ->onlyMethods(['extract_to_pathname'])
-            ->getMockForAbstractClass();
+            ->onlyMethods([
+                'archive_to_pathname',
+                'archive_to_storage',
+                'extract_to_pathname',
+                'extract_to_storage',
+                'list_files',
+            ])
+            ->getMock();
 
         $packer->expects($this->once())
             ->method('extract_to_pathname')
@@ -633,8 +650,14 @@ final class file_system_test extends \advanced_testcase {
             ->willReturn(__FILE__);
 
         $packer = $this->getMockBuilder(file_packer::class)
-            ->onlyMethods(['extract_to_storage'])
-            ->getMockForAbstractClass();
+            ->onlyMethods([
+                'archive_to_pathname',
+                'archive_to_storage',
+                'extract_to_pathname',
+                'extract_to_storage',
+                'list_files',
+            ])
+            ->getMock();
 
         $packer->expects($this->once())
             ->method('extract_to_storage')
@@ -675,8 +698,20 @@ final class file_system_test extends \advanced_testcase {
             ->onlyMethods([
                 'add_directory',
                 'add_file_from_pathname',
+                'add_file_from_string',
+                'close',
+                'count',
+                'current',
+                'get_info',
+                'get_stream',
+                'key',
+                'list_files',
+                'next',
+                'open',
+                'rewind',
+                'valid',
             ])
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $archive->expects($this->once())
             ->method('add_directory')
@@ -712,8 +747,20 @@ final class file_system_test extends \advanced_testcase {
             ->onlyMethods([
                 'add_directory',
                 'add_file_from_pathname',
+                'add_file_from_string',
+                'close',
+                'count',
+                'current',
+                'get_info',
+                'get_stream',
+                'key',
+                'list_files',
+                'next',
+                'open',
+                'rewind',
+                'valid',
             ])
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $archive->expects($this->never())
             ->method('add_directory');

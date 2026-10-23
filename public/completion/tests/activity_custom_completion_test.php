@@ -41,8 +41,13 @@ final class activity_custom_completion_test extends advanced_testcase {
     protected function setup_mock(array $methods) {
         return $this->getMockBuilder(activity_custom_completion::class)
             ->disableOriginalConstructor()
-            ->onlyMethods($methods)
-            ->getMockForAbstractClass();
+            ->onlyMethods(array_unique(array_merge($methods, [
+                'get_custom_rule_descriptions',
+                'get_defined_custom_rules',
+                'get_sort_order',
+                'get_state',
+            ])))
+            ->getMock();
     }
 
     /**
