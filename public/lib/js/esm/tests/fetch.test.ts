@@ -425,6 +425,44 @@ describe('@moodle/lms/core/fetch', () => {
             expect(req.url).toBe('https://example.com/rest/v2/mod_example/list');
         });
 
+        it('batches requests separately by Authorization header and includes the header in each sub-request', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+            const requests = [
+                batcher.performGet('mod_example', 'cookie-one'),
+                batcher.performGet('mod_example', 'cookie-two'),
+                batcher.performGet('mod_example', 'token-one-a', {headers: {Authorization: 'Bearer token-one'}}),
+                batcher.performGet('mod_example', 'token-one-b', {headers: {authorization: 'Bearer token-one'}}),
+                batcher.performGet('mod_example', 'token-two-a', {headers: {Authorization: 'Bearer token-two'}}),
+                batcher.performGet('mod_example', 'token-two-b', {headers: {Authorization: 'Bearer token-two'}}),
+            ];
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody(
+                        'resp-boundary',
+                        ids.map((id) => ({id, body: JSON.stringify({})})),
+                    ),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+            await Promise.all(requests);
+
+            expect(mockFetch).toHaveBeenCalledTimes(3);
+            const authHeadersByBatch = await Promise.all(mockFetch.mock.calls.map(async([req]) => {
+                const body = await req.text();
+                return [...body.matchAll(/^authorization: (.+)$/gim)].map(([, value]) => value);
+            }));
+            expect(authHeadersByBatch).toEqual([
+                [],
+                ['Bearer token-one', 'Bearer token-one'],
+                ['Bearer token-two', 'Bearer token-two'],
+            ]);
+        });
+
         it('queues requests until execute() is called when batchFetchRequests is enabled', async() => {
             (globalThis as any).M.cfg.batchFetchRequests = true;
             const batcher = new Fetch();

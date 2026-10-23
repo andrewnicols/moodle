@@ -100,7 +100,7 @@ class Fetch {
   static {
     __name(this, "Fetch");
   }
-  /** A Map of requests queued for the next batch execution. */
+  /** Requests queued for the next batch execution, grouped by authentication context. */
   #requestMap = /* @__PURE__ */ new Map();
   /** The singleton instance of the automatic batcher, created lazily by {@link Fetch.getBatcher}. */
   static #batcher = null;
@@ -309,17 +309,33 @@ class Fetch {
     if (requestMap.size === 0) {
       return;
     }
+    const requestCount = [...requestMap.values()].reduce((count, group) => count + group.size, 0);
+    if (requestCount === 1) {
+      const requestGroup = requestMap.values().next().value;
+      await this.#executeRequestMap(requestGroup);
+      return;
+    }
+    const resolvePending = new Pending(`core/fetch:execute:${requestCount}`);
+    for (const group of requestMap.values()) {
+      await this.#executeRequestMap(group);
+    }
+    resolvePending.resolve();
+  }
+  /**
+   * Execute requests sharing the same explicit Authorization header.
+   *
+   * @param requestMap The map of request IDs to wrappers.
+   */
+  async #executeRequestMap(requestMap) {
     if (requestMap.size === 1) {
       const requestWrapper = requestMap.values().next().value;
       const result = await fetch(requestWrapper.request);
       requestWrapper.handleResponse(result);
       return;
     }
-    const resolvePending = new Pending(`core/fetch:execute:${requestMap.size}`);
     const response = await fetch(await this.#getRequests(requestMap));
     if (!response.ok) {
       requestMap.forEach((requestWrapper) => requestWrapper.reject(response.statusText));
-      resolvePending.resolve();
       return;
     }
     const responses = await this.#processBatchResponse(response);
@@ -336,7 +352,6 @@ class Fetch {
         requestWrapper.reject(`Request failed. No response provided for request ${key} by provider`);
       }
     });
-    resolvePending.resolve();
   }
   /**
    * Normalise a component name by stripping the `core_` prefix.
@@ -369,26 +384,32 @@ class Fetch {
       }
       return Fetch.request(component, endpoint, { cachekey, headers, params, body, method });
     }
-    if (this.#requestMap.size >= 20) {
+    const requestCount = [...this.#requestMap.values()].reduce((count, group) => count + group.size, 0);
+    if (requestCount >= 20) {
       this.execute();
     }
+    const requestHeaders = new Headers(headers);
+    const authenticationContext = requestHeaders.has("Authorization") ? `authorization:${requestHeaders.get("Authorization")}` : "cookie";
     let requestId;
     if (id) {
-      if (this.#requestMap.has(id)) {
+      if (this.#requestMap.get(authenticationContext)?.has(id)) {
         throw new Error(`Request with ID ${id} already exists.`);
       }
       requestId = id;
     } else {
       do {
         requestId = this.#getGuid();
-      } while (this.#requestMap.has(requestId));
+      } while (this.#requestMap.get(authenticationContext)?.has(requestId));
     }
     const request = Fetch.#getRequest(
       Fetch.#normaliseComponent(component),
       endpoint,
       { cachekey, headers, params, method, body }
     );
-    this.#requestMap.set(requestId, request);
+    if (!this.#requestMap.has(authenticationContext)) {
+      this.#requestMap.set(authenticationContext, /* @__PURE__ */ new Map());
+    }
+    this.#requestMap.get(authenticationContext)?.set(requestId, request);
     if (!this.#batchRequests) {
       this.execute();
     } else if (this.#autoBatchTimeout) {
@@ -477,6 +498,12 @@ class Fetch {
 `);
       thisBody.push(`Content-ID: ${id}\r
 `);
+      request.headers.forEach((value, name) => {
+        if (name.toLowerCase() !== "content-type" && name.toLowerCase() !== "content-id") {
+          thisBody.push(`${name}: ${value}\r
+`);
+        }
+      });
       if (request.body) {
         thisBody.push(`\r
 `);

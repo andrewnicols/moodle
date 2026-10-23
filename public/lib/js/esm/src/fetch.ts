@@ -173,8 +173,8 @@ class RequestWrapper {
  * A class to handle requests to the Moodle REST API.
  */
 export default class Fetch {
-    /** A Map of requests queued for the next batch execution. */
-    #requestMap: Map<string, RequestWrapper> = new Map();
+    /** Requests queued for the next batch execution, grouped by authentication context. */
+    #requestMap: Map<string, Map<string, RequestWrapper>> = new Map();
 
     /** The singleton instance of the automatic batcher, created lazily by {@link Fetch.getBatcher}. */
     static #batcher: Fetch | null = null;
@@ -459,6 +459,26 @@ export default class Fetch {
             return;
         }
 
+        const requestCount = [...requestMap.values()].reduce((count, group) => count + group.size, 0);
+        if (requestCount === 1) {
+            const requestGroup = requestMap.values().next().value as Map<string, RequestWrapper>;
+            await this.#executeRequestMap(requestGroup);
+            return;
+        }
+
+        const resolvePending = new Pending(`core/fetch:execute:${requestCount}`);
+        for (const group of requestMap.values()) {
+            await this.#executeRequestMap(group);
+        }
+        resolvePending.resolve();
+    }
+
+    /**
+     * Execute requests sharing the same explicit Authorization header.
+     *
+     * @param requestMap The map of request IDs to wrappers.
+     */
+    async #executeRequestMap(requestMap: Map<string, RequestWrapper>): Promise<void> {
         if (requestMap.size === 1) {
             const requestWrapper = requestMap.values().next().value as RequestWrapper;
             const result = await fetch(requestWrapper.request);
@@ -468,11 +488,9 @@ export default class Fetch {
             return;
         }
 
-        const resolvePending = new Pending(`core/fetch:execute:${requestMap.size}`);
         const response = await fetch(await this.#getRequests(requestMap));
         if (!response.ok) {
             requestMap.forEach((requestWrapper) => requestWrapper.reject(response.statusText));
-            resolvePending.resolve();
             return;
         }
 
@@ -492,7 +510,6 @@ export default class Fetch {
                 requestWrapper.reject(`Request failed. No response provided for request ${key} by provider`);
             }
         });
-        resolvePending.resolve();
     }
 
     /**
@@ -534,20 +551,26 @@ export default class Fetch {
             return Fetch.request(component, endpoint, {cachekey, headers, params, body, method});
         }
 
-        if (this.#requestMap.size >= 20) {
+        const requestCount = [...this.#requestMap.values()].reduce((count, group) => count + group.size, 0);
+        if (requestCount >= 20) {
             this.execute();
         }
 
+        const requestHeaders = new Headers(headers);
+        const authenticationContext = requestHeaders.has('Authorization')
+            ? `authorization:${requestHeaders.get('Authorization')}`
+            : 'cookie';
+
         let requestId: string;
         if (id) {
-            if (this.#requestMap.has(id)) {
+            if (this.#requestMap.get(authenticationContext)?.has(id)) {
                 throw new Error(`Request with ID ${id} already exists.`);
             }
             requestId = id;
         } else {
             do {
                 requestId = this.#getGuid();
-            } while (this.#requestMap.has(requestId));
+            } while (this.#requestMap.get(authenticationContext)?.has(requestId));
         }
 
         const request = Fetch.#getRequest(
@@ -556,7 +579,10 @@ export default class Fetch {
             {cachekey, headers, params, method, body},
         );
 
-        this.#requestMap.set(requestId, request);
+        if (!this.#requestMap.has(authenticationContext)) {
+            this.#requestMap.set(authenticationContext, new Map());
+        }
+        this.#requestMap.get(authenticationContext)?.set(requestId, request);
 
         if (!this.#batchRequests) {
             this.execute();
@@ -654,6 +680,11 @@ export default class Fetch {
             thisBody.push(`${request.method} ${request.url}\r\n`);
             thisBody.push(`Content-Type: ${request.headers.get('Content-Type')}\r\n`);
             thisBody.push(`Content-ID: ${id}\r\n`);
+            request.headers.forEach((value, name) => {
+                if (name.toLowerCase() !== 'content-type' && name.toLowerCase() !== 'content-id') {
+                    thisBody.push(`${name}: ${value}\r\n`);
+                }
+            });
 
             if (request.body) {
                 thisBody.push(`\r\n`);

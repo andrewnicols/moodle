@@ -58,16 +58,14 @@ final class bulk_route_test extends route_testcase {
     /**
      * Data provider containing request methods not supported by the bulk handler.
      *
-     * @return array
+     * @return \Generator
      */
-    public static function invalid_bulk_http_methods_provider(): array {
-        return [
-            ['GET'],
-            ['PUT'],
-            ['PATCH'],
-            ['DELETE'],
-            ['HEAD'],
-        ];
+    public static function invalid_bulk_http_methods_provider(): \Generator {
+        yield 'GET' => ['GET'];
+        yield 'PUT' => ['PUT'];
+        yield 'PATCH' => ['PATCH'];
+        yield 'DELETE' => ['DELETE'];
+        yield 'HEAD' => ['HEAD'];
     }
 
     /**
@@ -223,6 +221,65 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Ensure a batch cannot mix explicit authentication contexts.
+     *
+     * @param array $firstheaders
+     * @param array $secondheaders
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mixed_authentication_context_provider')]
+    public function test_mixed_authentication_contexts_are_rejected(
+        array $firstheaders,
+        array $secondheaders,
+    ): void {
+        self::mock_route_loader();
+        $app = $this->get_app();
+
+        $request = $this->create_request(
+            'POST',
+            '',
+            headers: [
+                'Content-Type' => 'multipart/mixed; boundary=boundary',
+            ],
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+        );
+
+        foreach ([$firstheaders, $secondheaders] as $index => $headers) {
+            $this->add_request_to_bulk_body(
+                $this->create_request(
+                    'GET',
+                    '/templates/boost/core/modal',
+                    headers: $headers,
+                    prefix: route_loader_interface::ROUTE_GROUP_API,
+                ),
+                'boundary',
+                $request->getBody(),
+                $index + 1,
+            );
+        }
+        $request->getBody()->write("--boundary--\r\n\r\n");
+
+        $response = $app->handle($request);
+
+        $this->assert_valid_response($response, 400);
+    }
+
+    /**
+     * Data provider for mixed authentication context cases.
+     *
+     * @return \Generator
+     */
+    public static function mixed_authentication_context_provider(): \Generator {
+        yield 'authenticated and cookie-authenticated' => [
+            ['Authorization' => 'Bearer token-one'],
+            [],
+        ];
+        yield 'different bearer credentials' => [
+            ['Authorization' => 'Bearer token-one'],
+            ['Authorization' => 'Bearer token-two'],
+        ];
+    }
+
+    /**
      * Ensure that a boundary can be extracted from a content type.
      *
      * @param string $contenttype
@@ -239,40 +296,36 @@ final class bulk_route_test extends route_testcase {
     /**
      * Data provider for testing boundary extraction.
      *
-     * @return array
+     * @return \Generator
      */
-    public static function boundary_from_contenttype_provider(): array {
-        return [
-            'Single string' => [
-                'multipart/mixed; boundary=boundary',
-                'boundary',
-            ],
-            'GUID-4 style' => [
-                'multipart/mixed; boundary=6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
-                '6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
-            ],
-            'Missing boundary' => [
-                'multipart/mixed; boundary=',
-                null,
-            ],
-            'Wrong mimetype' => [
-                'multipart/other; boundary=6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
-                null,
-            ],
+    public static function boundary_from_contenttype_provider(): \Generator {
+        yield 'Single string' => [
+            'multipart/mixed; boundary=boundary',
+            'boundary',
+        ];
+        yield 'GUID-4 style' => [
+            'multipart/mixed; boundary=6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
+            '6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
+        ];
+        yield 'Missing boundary' => [
+            'multipart/mixed; boundary=',
+            null,
+        ];
+        yield 'Wrong mimetype' => [
+            'multipart/other; boundary=6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
+            null,
         ];
     }
 
     /**
      * Data provider containing content types not supported by the bulk handler.
      *
-     * @return array
+     * @return \Generator
      */
-    public static function invalid_bulk_http_content_types_provider(): array {
-        return [
-            ['application/json'],
-            ['application/http'],
-            ['application/x-www-form-urlencoded'],
-        ];
+    public static function invalid_bulk_http_content_types_provider(): \Generator {
+        yield 'application/json' => ['application/json'];
+        yield 'application/http' => ['application/http'];
+        yield 'application/x-www-form-urlencoded' => ['application/x-www-form-urlencoded'];
     }
 
     /**

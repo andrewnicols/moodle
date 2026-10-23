@@ -88,10 +88,13 @@ class bulk_route {
 
         $body = (string) $request->getBody();
         $requestparts = $this->get_requests_from_body($body, $boundary);
+        $requests = array_map([self::class, 'get_request_from_part'], $requestparts);
+        if (!$this->have_consistent_authentication_context($requests)) {
+            return $response->withStatus(400);
+        }
 
-        foreach ($requestparts as $requestpart) {
-            // Get the ServerRequest from a multipart request part, and pass it through the Router.
-            $request = self::get_request_from_part($requestpart);
+        foreach ($requests as $request) {
+            // Pass each sub-request through the Router.
             $requestresponse = $this->router->handle_request($request);
             $requestresponse = $requestresponse->withHeader('Content-ID', $request->getHeaderLine('Content-ID'));
 
@@ -118,6 +121,36 @@ class bulk_route {
 
         $response->getBody()->write("--{$responseboundary}--");
         return $response;
+    }
+
+    /**
+     * Ensure all requests in a batch use the same explicit authentication context.
+     *
+     * Cookie authentication uses the outer HTTP request's session context. Explicit Authorization headers must
+     * either be absent from every sub-request or have the same value on every sub-request.
+     *
+     * @param ServerRequestInterface[] $requests
+     * @return bool
+     */
+    protected function have_consistent_authentication_context(array $requests): bool {
+        if (!$requests) {
+            return true;
+        }
+
+        $firstrequest = reset($requests);
+        $hasauthorization = $firstrequest->hasHeader('Authorization');
+        $authorization = trim($firstrequest->getHeaderLine('Authorization'));
+
+        foreach ($requests as $request) {
+            if ($request->hasHeader('Authorization') !== $hasauthorization) {
+                return false;
+            }
+            if ($hasauthorization && trim($request->getHeaderLine('Authorization')) !== $authorization) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
