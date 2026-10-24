@@ -257,7 +257,7 @@ final class filetypes_util_test extends \advanced_testcase {
         $util = new filetypes_util();
 
         $data = $util->data_for_browser();
-        $this->assertContainsOnly('object', $data);
+        $this->assertContainsOnlyObject($data);
         foreach ($data as $group) {
             $this->assertObjectHasProperty('key', $group);
             $this->assertObjectHasProperty('types', $group);
