@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class deprecated_api_route_middleware extends validation_middleware {
     #[\Override]
@@ -45,11 +45,12 @@ class deprecated_api_route_middleware extends validation_middleware {
 
                 // Log a deprecation warning for non-final routes.
                 $deprecationstring = \core\deprecation::get_deprecation_string($deprecation);
+                // phpcs:disable moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                 error_log(sprintf(
                     "%s: %s",
                     $deprecationstring,
                     $request->getUri()->__toString(),
-                )); // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
+                ));
             }
         }
 
