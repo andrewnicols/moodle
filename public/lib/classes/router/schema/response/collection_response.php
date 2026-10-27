@@ -34,13 +34,15 @@ class collection_response extends payload_response {
      * Create a new collection response.
      *
      * @param array $items The items on the requested page
-     * @param int $totalitems The total number of items across all pages
+     * @param int|null $totalitems The total number of items across all pages, or null if not calculated
+     * @param bool $hasmore Whether another page of items is available
      * @param ServerRequestInterface $request The request
      * @param ResponseInterface|null $response The response
      */
     public function __construct(
         array $items,
-        int $totalitems,
+        ?int $totalitems,
+        bool $hasmore,
         ServerRequestInterface $request,
         ?ResponseInterface $response = null,
     ) {
@@ -53,6 +55,7 @@ class collection_response extends payload_response {
                     'page' => $pagination->page,
                     'pageSize' => $pagination->pagesize,
                     'totalItems' => $totalitems,
+                    'hasMore' => $hasmore,
                 ],
             ],
             request: $request,

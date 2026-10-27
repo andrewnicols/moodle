@@ -105,7 +105,7 @@ class users {
             }
         }
 
-        return new collection_response($items, $result['total'], $request, $response);
+        return new collection_response($items, $result['total'], $result['hasmore'], $request, $response);
     }
 
     /**

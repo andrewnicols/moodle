@@ -246,12 +246,12 @@ final class collection_test extends route_testcase {
 
     public function test_collection_response(): void {
         $request = $this->validate(new collection(), ['page' => '2', 'pagesize' => '2']);
-        $response = new collection_response([['id' => 3], ['id' => 4]], 5, $request);
+        $response = new collection_response([['id' => 3], ['id' => 4]], null, true, $request);
 
         $this->assertSame(
             [
                 'items' => [['id' => 3], ['id' => 4]],
-                'pagination' => ['page' => 2, 'pageSize' => 2, 'totalItems' => 5],
+                'pagination' => ['page' => 2, 'pageSize' => 2, 'totalItems' => null, 'hasMore' => true],
             ],
             $response->payload,
         );
@@ -269,6 +269,11 @@ final class collection_test extends route_testcase {
         $this->assertEquals('object', $description->type);
         $this->assertEquals('array', $description->properties->items->type);
         $this->assertEquals('integer', $description->properties->items->items->properties->id->type);
-        $this->assertEquals('integer', $description->properties->pagination->properties->totalItems->type);
+        $this->assertEquals(['integer', 'null'], $description->properties->pagination->properties->totalItems->type);
+        $this->assertEquals('boolean', $description->properties->pagination->properties->hasMore->type);
+
+        $response = new collection_response([['id' => 3]], 8, false, $this->validate(new collection(), []));
+        $this->assertSame(8, $response->payload['pagination']['totalItems']);
+        $this->assertFalse($response->payload['pagination']['hasMore']);
     }
 }

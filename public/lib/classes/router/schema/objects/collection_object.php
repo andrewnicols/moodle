@@ -17,9 +17,12 @@
 namespace core\router\schema\objects;
 
 use core\param;
+use core\router\schema\specification;
 
 /**
  * The standard envelope for a paginated collection: a list of items, and pagination metadata.
+ *
+ * `totalItems` is nullable when an exact count is not calculated. `hasMore` reports whether another page exists.
  *
  * @package    core
  * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
@@ -42,11 +45,23 @@ class collection_object extends schema_object {
                 content: [
                     'page' => new scalar_type(param::INT, required: true),
                     'pageSize' => new scalar_type(param::INT, required: true),
-                    'totalItems' => new scalar_type(param::INT, required: true),
+                    'totalItems' => new scalar_type(param::INT),
+                    'hasMore' => new scalar_type(param::BOOL, required: true),
                 ],
             ),
         ];
 
         parent::__construct(...$extra);
+    }
+
+    #[\Override]
+    public function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): ?\stdClass {
+        $description = parent::get_openapi_description($api, $path);
+        $description->properties->pagination->properties->totalItems->type = ['integer', 'null'];
+
+        return $description;
     }
 }

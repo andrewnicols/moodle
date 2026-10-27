@@ -85,7 +85,8 @@ final class users_test extends route_testcase {
         $this->assertContains((int) $user->id, $ids);
         $this->assertNotContains((int) $deleted->id, $ids);
         $this->assertNotContains((int) guest_user()->id, $ids);
-        $this->assertEquals(count($ids), $payload['pagination']['totalItems']);
+        $this->assertNull($payload['pagination']['totalItems']);
+        $this->assertFalse($payload['pagination']['hasMore']);
 
         $item = $payload['items'][array_search((int) $user->id, $ids)];
         $this->assertEquals('alice', $item['username']);
@@ -135,12 +136,14 @@ final class users_test extends route_testcase {
         $response = $this->process_api_request('GET', '/users?search=Zed&sort=firstname&pagesize=3');
         $this->assert_valid_response($response);
         $payload = $this->decode_response($response, true);
-        $this->assertEquals(4, $payload['pagination']['totalItems']);
+        $this->assertNull($payload['pagination']['totalItems']);
+        $this->assertTrue($payload['pagination']['hasMore']);
         $this->assertEquals(['Anna', 'Bella', 'Cara'], array_column($payload['items'], 'firstName'));
 
         $response = $this->process_api_request('GET', '/users?search=Zed&sort=-firstname&pagesize=3&page=2');
         $payload = $this->decode_response($response, true);
         $this->assertEquals(['Anna'], array_column($payload['items'], 'firstName'));
+        $this->assertFalse($payload['pagination']['hasMore']);
 
         // Out of range pages are empty.
         $response = $this->process_api_request('GET', '/users?search=Zed&page=5');
@@ -174,7 +177,8 @@ final class users_test extends route_testcase {
         $payload = $this->decode_response($response, true);
 
         $this->assertEquals([(int) $user->id], array_column($payload['items'], 'id'));
-        $this->assertEquals(1, $payload['pagination']['totalItems']);
+        $this->assertNull($payload['pagination']['totalItems']);
+        $this->assertFalse($payload['pagination']['hasMore']);
     }
 
     public function test_user_sees_users_in_shared_courses_only(): void {

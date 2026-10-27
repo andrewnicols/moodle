@@ -54,6 +54,32 @@ The semantic design question remains wherever the options are placed. Headers
 are a possible solution to define in the guide, not inherently forbidden and not
 an automatic compliance workaround.
 
+### Why not put the creation modifiers in query parameters?
+
+`generatePassword` and `sendPasswordEmail` could technically be query
+parameters on `POST /user/users`; HTTP does not prohibit query parameters on a
+POST. This would keep them out of the JSON resource representation, but would
+not make them declarative or settle the style-guide question: they still control
+how creation is processed, and their defaults, compatibility, errors and
+side-effects need to be specified.
+
+Keep them with the creation request body for now because they form one logical,
+validated account-provisioning request with the account and initial fields.
+Splitting one operation across URL and body makes the contract less cohesive
+and can complicate client construction and auditing. URLs are also commonly
+captured in proxy and access logs, so the body is the less surprising place for
+processing choices; the password itself must never be placed in the URL.
+`Prefer` could express processing preferences, but using it for credential
+generation or email delivery would require defining custom preference tokens
+and whether the server may ignore them.
+
+This is a design preference, not an HTTP prohibition. If the REST style guide
+establishes query parameters or a `Prefer` extension as its standard for
+creation-time controls, the location can be revisited without changing their
+semantics. Whichever location is chosen, reject incompatible combinations
+(for example, explicit and generated passwords together) instead of silently
+ignoring them.
+
 ## Creation response
 
 **Section 11.3** requires a `201 Created` response containing:
@@ -98,8 +124,9 @@ requirement just to construct its response.
 
 The devdocs proposal now distinguishes three cases:
 
-- **Resource state:** use ordinary mutations, including an administrative PATCH
-  that supplies an explicit password.
+- **Resource state:** use ordinary mutations for persistent attributes. An
+  explicit password remains a dedicated write-only subresource because its
+  authorization and lifecycle differ from ordinary user-field updates.
 - **Processing controls:** allow documented notification controls on mutations
   and one-time initialisation controls on creation. Define applicability,
   defaults, validation, side effects, failures and retry behaviour. Do not
@@ -110,6 +137,88 @@ The devdocs proposal now distinguishes three cases:
 The creation representation may be permission-limited, including identifiers
 and caller-supplied values, without requiring an additional read scope.
 Processing-result metadata must be distinguished from stored user attributes.
+
+## User resource boundaries
+
+Use `GET /user/users/{userId}` for the canonical user representation, including
+profile fields visible to the caller. Hidden or unavailable fields are `null`;
+the collection and single-user response use the same `User` schema.
+
+Keep setting an explicit password on
+`PATCH /user/users/{userId}/password`, not in the ordinary user PATCH body.
+Although a password is supplied as desired state, the operation has a distinct
+security and lifecycle contract:
+
+- It requires administrative authorization; self-update scope alone is
+  insufficient.
+- It is write-only. The secret must not appear in the user representation,
+  response, or ordinary user-update result.
+- It invokes password-policy and authentication-plugin handling and may
+  invalidate sessions. It has no user-resource ETag or `If-Match` semantics.
+- Keeping it separate prevents ordinary user-update permissions, validation,
+  auditing, or future representation changes from implicitly authorizing or
+  handling credential changes.
+
+Keep generated temporary-password reset separate from explicit password
+setting. It generates a new credential, requires a change at next login, may
+send an email, and repeating the request performs another password change.
+Public password recovery is a third workflow: it does not change credentials
+until the user redeems Moodle's existing reset link and must not reveal
+account-specific outcomes.
+
+### Other endpoint boundaries to consider
+
+- **Profile fields:** update them through `PATCH /user/users/{userId}`,
+  matching the canonical user representation, with field-level authorization,
+  validation and authentication-plugin locks and a single ETag and `If-Match`
+  boundary. Profile fields remain subject to Moodle's read visibility rules.
+- **Custom profile fields:** keep their GET/PUT/PATCH resource for now. Their
+  configured, shortname-keyed values have dynamic schemas and distinct
+  visibility/editability rules; embedding them in the fixed user representation
+  would make it less predictable. PUT and PATCH can share the same path because
+  they intentionally mean replacement and partial update, respectively.
+- **Password operations:** do not merge explicit password setting, generated
+  temporary-password reset, and public recovery. Their authorization,
+  repeatability, side effects, and information-disclosure contracts differ.
+
+### Selectable response fields
+
+Returning the same `User` representation from collection and single-user GETs
+keeps client expectations and OpenAPI schemas consistent. A `fields` query
+parameter could let callers request a projection (for example, only `id` and
+`fullName`) to reduce response size, especially for collection requests.
+Selection is distinct from visibility: unrequested fields would be omitted,
+while requested but hidden or unavailable fields would remain `null`, so the
+existing nullability/privacy contract is preserved.
+
+The trade-off is more than a small query parameter:
+
+- A projected response no longer guarantees the full `User` shape. OpenAPI
+  properties would need to become optional, and generated clients could not
+  assume fields are present even when no projection was requested unless the
+  contract clearly specifies the default.
+- The API must define an allowlist, field-name syntax, duplicate handling,
+  unknown-field errors, and whether selection applies to collection GET,
+  single-user GET, or both. It must not allow selection to bypass visibility or
+  capabilities.
+- ETags and caches must represent the selected response, and include the query
+  selection in cache keys. Different callers may also receive different values
+  due to visibility.
+- Omitting fields may reduce bytes, but is unlikely to reduce database work
+  unless the implementation can avoid loading or computing those fields. The
+  fixed user representation is modest; dynamic custom fields already have a
+  separate resource.
+
+**Recommendation:** do not add selection by default without a demonstrated
+client or payload-cost need. If needed, begin with an explicit allowlisted
+`fields` parameter on `GET /user/users` (the collection has the clearest
+payload-size case), defaulting to all fields in `User`. Keep detail GET complete
+unless clients show a need there too. Document that unrequested fields are
+omitted, requested-but-hidden fields are `null`, unknown fields are rejected,
+and selection does not change authorization. Model the response schema as
+`User` with optional properties, while documenting the default complete
+response; do not create separate summary/full resource schemas solely to
+describe the projection.
 
 ### Password contracts in the review schema
 
@@ -202,8 +311,7 @@ The non-validation identifier convention is agreed below.
 ### Singleton resource names
 
 Use plural nouns for collections and allow singular nouns for genuine singleton
-subresources. Keep `/users/{userId}/profile` and `/users/{userId}/password`
-singular; retain plural collection names such as `custom-fields`. Use singular
+subresources. Keep `/users/{userId}/password` singular; retain plural collection names such as `custom-fields`. Use singular
 `password-reset` for the administrative and public processing resources, without
 inventing a historical result collection. The noun-only rule still applies.
 
@@ -238,8 +346,8 @@ updated.
 ### Resource expansion
 
 Expansion is optional rather than mandatory for every single-resource GET.
-Keep the current user endpoints without expansion; profile and custom-field
-resources remain independently addressable.
+Keep the current user endpoints without expansion; the user GET includes
+visible profile fields, and custom fields remain independently addressable.
 
 When an endpoint offers expansion, document its parameter syntax, allowed
 relationships, response shape, permission filtering and cost/depth limits.

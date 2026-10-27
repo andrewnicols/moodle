@@ -63,17 +63,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "required": [
-                                        "message"
-                                    ],
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "If an eligible account matches, password-reset instructions will be sent."
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/PasswordResetEmailResponse"
                                 },
                                 "examples": {
                                     "accepted": {
@@ -313,15 +303,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "fields": {
-                                            "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                                        }
-                                    },
-                                    "required": [
-                                        "fields"
-                                    ]
+                                    "$ref": "#/components/schemas/UserCustomFields"
                                 }
                             }
                         },
@@ -395,15 +377,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "fields": {
-                                            "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                                        }
-                                    },
-                                    "required": [
-                                        "fields"
-                                    ]
+                                    "$ref": "#/components/schemas/UserCustomFields"
                                 }
                             }
                         },
@@ -441,16 +415,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "fields": {
-                                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "fields"
-                                ]
+                                "$ref": "#/components/schemas/UserCustomFieldsUpdate"
                             },
                             "examples": {
                                 "replaceCustomFields": {
@@ -512,15 +477,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "fields": {
-                                            "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                                        }
-                                    },
-                                    "required": [
-                                        "fields"
-                                    ]
+                                    "$ref": "#/components/schemas/UserCustomFields"
                                 }
                             }
                         },
@@ -558,16 +515,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "fields": {
-                                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": [
-                                    "fields"
-                                ]
+                                "$ref": "#/components/schemas/UserCustomFieldsUpdate"
                             },
                             "examples": {
                                 "updateOneCustomField": {
@@ -586,372 +534,6 @@
                                         "fields": {
                                             "programme": ""
                                         }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "oauth2": [
-                            "core_user:user:update:self"
-                        ]
-                    },
-                    {
-                        "oauth2": [
-                            "core_user:user:update"
-                        ]
-                    },
-                    {
-                        "api_key": []
-                    },
-                    {
-                        "cookie": []
-                    }
-                ]
-            }
-        },
-        "/user/users/{userId}/profile": {
-            "get": {
-                "description": "Fetch a user's visible profile information.\n\n**Token scope:** `core_user:user:read` for other users, or `core_user:user:read:self` for yourself. Moodle visibility rules also apply.",
-                "summary": "Fetch a user profile",
-                "x-implementation-status": "proposed",
-                "tags": [
-                    "core_user"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
-                    },
-                    {
-                        "name": "If-None-Match",
-                        "in": "header",
-                        "description": "An optional ETag, as previously returned by this resource. If it matches the current ETag, an empty 304 Not Modified response is returned.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "city": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "country": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "institution": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "department": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "phone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "mobilePhone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "address": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "description": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "descriptionFormat": {
-                                            "type": [
-                                                "integer",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
-                                        }
-                                    },
-                                    "required": [
-                                        "city",
-                                        "country",
-                                        "institution",
-                                        "department",
-                                        "phone",
-                                        "mobilePhone",
-                                        "address",
-                                        "description",
-                                        "descriptionFormat"
-                                    ]
-                                }
-                            }
-                        },
-                        "headers": {
-                            "ETag": {
-                                "$ref": "#/components/headers/ETag"
-                            }
-                        }
-                    },
-                    "304": {
-                        "$ref": "#/components/responses/core--router--response--not_modified_response"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthenticated"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationFailure"
-                    }
-                },
-                "security": [
-                    {
-                        "oauth2": [
-                            "core_user:user:read:self"
-                        ]
-                    },
-                    {
-                        "oauth2": [
-                            "core_user:user:read"
-                        ]
-                    },
-                    {
-                        "api_key": []
-                    },
-                    {
-                        "cookie": []
-                    }
-                ]
-            },
-            "patch": {
-                "description": "Update selected profile fields. **Omitted fields remain unchanged.**\n\nField validation and authentication-plugin locks apply.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
-                "summary": "Update a user profile",
-                "x-implementation-status": "proposed",
-                "tags": [
-                    "core_user"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
-                    },
-                    {
-                        "name": "If-Match",
-                        "in": "header",
-                        "description": "An optional ETag, as previously returned by this resource. If supplied, the change is only applied if it matches the current ETag of the resource, otherwise the request fails with a 412 Precondition Failed response. If omitted, the change is applied unconditionally.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "city": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "country": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "institution": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "department": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "phone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "mobilePhone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "address": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "description": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "descriptionFormat": {
-                                            "type": [
-                                                "integer",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
-                                        }
-                                    },
-                                    "required": [
-                                        "city",
-                                        "country",
-                                        "institution",
-                                        "department",
-                                        "phone",
-                                        "mobilePhone",
-                                        "address",
-                                        "description",
-                                        "descriptionFormat"
-                                    ]
-                                }
-                            }
-                        },
-                        "headers": {
-                            "ETag": {
-                                "$ref": "#/components/headers/ETag"
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthenticated"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "412": {
-                        "$ref": "#/components/responses/core--router--response--precondition_failed_response"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationFailure"
-                    }
-                },
-                "requestBody": {
-                    "description": "Supply at least one writable field. Omitted fields are unchanged; null, unknown and read-only fields are rejected with `422`.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    },
-                                    "country": {
-                                        "type": "string"
-                                    },
-                                    "institution": {
-                                        "type": "string"
-                                    },
-                                    "department": {
-                                        "type": "string"
-                                    },
-                                    "phone": {
-                                        "type": "string"
-                                    },
-                                    "mobilePhone": {
-                                        "type": "string"
-                                    },
-                                    "address": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "minProperties": 1
-                            },
-                            "examples": {
-                                "updateLocation": {
-                                    "summary": "Update profile location",
-                                    "description": "Change the user's city and country, leaving all other profile fields unchanged. The country is an ISO 3166-1 alpha-2 code.",
-                                    "value": {
-                                        "city": "Perth",
-                                        "country": "AU"
-                                    }
-                                },
-                                "updateOrganisation": {
-                                    "summary": "Update organisation details",
-                                    "description": "Change the institution and department without modifying other profile fields. Authentication-plugin field locks still apply.",
-                                    "value": {
-                                        "institution": "Example University",
-                                        "department": "Computer Science"
-                                    }
-                                },
-                                "clearOptionalProfileField": {
-                                    "summary": "Clear an optional profile field",
-                                    "description": "Remove the current city value by sending an empty string. Omitted profile fields remain unchanged.",
-                                    "value": {
-                                        "city": ""
                                     }
                                 }
                             }
@@ -1104,7 +686,7 @@
                 ]
             },
             "get": {
-                "description": "List users visible to the caller, with pagination, sorting and optional search.\n\n**Token scope:** `core_user:user:read` or `core_user:user:read:self`. A self-only token lists only the caller. Moodle visibility rules also apply.",
+                "description": "List users visible to the caller, with pagination, sorting and optional search. `hasMore` indicates whether another visible result exists after this page. `totalItems` is an exact count when calculated, or `null` when it is not calculated.\n\n**Token scope:** `core_user:user:read` or `core_user:user:read:self`. A self-only token lists only the caller. Moodle visibility rules also apply.",
                 "summary": "List users",
                 "x-implementation-status": "proposed",
                 "tags": [
@@ -1156,123 +738,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "items": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "username": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "fullName": {
-                                                        "type": "string"
-                                                    },
-                                                    "firstName": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "lastName": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "email": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "profileImageUrl": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "profileImageUrlSmall": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "timeZone": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                                    },
-                                                    "suspended": {
-                                                        "type": [
-                                                            "boolean",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
-                                                    },
-                                                    "firstAccess": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                                        "format": "date-time"
-                                                    },
-                                                    "lastAccess": {
-                                                        "type": [
-                                                            "string",
-                                                            "null"
-                                                        ],
-                                                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                                        "format": "date-time"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "id",
-                                                    "username",
-                                                    "fullName",
-                                                    "firstName",
-                                                    "lastName",
-                                                    "email",
-                                                    "profileImageUrl",
-                                                    "profileImageUrlSmall",
-                                                    "timeZone",
-                                                    "suspended",
-                                                    "firstAccess",
-                                                    "lastAccess"
-                                                ]
-                                            }
-                                        },
-                                        "pagination": {
-                                            "type": "object",
-                                            "properties": {
-                                                "page": {
-                                                    "type": "integer"
-                                                },
-                                                "pageSize": {
-                                                    "type": "integer"
-                                                },
-                                                "totalItems": {
-                                                    "type": "integer"
-                                                }
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/UserCollection"
                                 }
                             }
                         }
@@ -1372,7 +838,7 @@
                 ]
             },
             "get": {
-                "description": "Fetch a user's visible core information.\n\n**Token scope:** `core_user:user:read` for other users, or `core_user:user:read:self` for yourself. Moodle visibility rules also apply.",
+                "description": "Fetch a user's visible core and profile information. Profile fields follow Moodle visibility rules and are returned as null when hidden or unavailable.\n\n**Token scope:** `core_user:user:read` for other users, or `core_user:user:read:self` for yourself.",
                 "summary": "Fetch a user",
                 "x-implementation-status": "proposed",
                 "tags": [
@@ -1397,101 +863,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "username": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "fullName": {
-                                            "type": "string"
-                                        },
-                                        "firstName": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "lastName": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "email": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "profileImageUrl": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "profileImageUrlSmall": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "timeZone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "suspended": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
-                                        },
-                                        "firstAccess": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                            "format": "date-time"
-                                        },
-                                        "lastAccess": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                            "format": "date-time"
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "username",
-                                        "fullName",
-                                        "firstName",
-                                        "lastName",
-                                        "email",
-                                        "profileImageUrl",
-                                        "profileImageUrlSmall",
-                                        "timeZone",
-                                        "suspended",
-                                        "firstAccess",
-                                        "lastAccess"
-                                    ]
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         },
@@ -1540,7 +912,7 @@
                 ]
             },
             "patch": {
-                "description": "Update selected core user fields. **Omitted fields remain unchanged.**\n\n- Email and suspension changes require `moodle/user:update`.\n- Suspending an account invalidates its active sessions.\n- Field validation and authentication-plugin locks apply.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
+                "description": "Update selected core user or profile fields. **Omitted fields remain unchanged.**\n\n- Email and suspension changes require `moodle/user:update`.\n- Suspending an account invalidates its active sessions.\n- Profile visibility rules govern reads; write permissions, field validation and authentication-plugin locks apply to updates.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
                 "summary": "Update a user",
                 "x-implementation-status": "proposed",
                 "tags": [
@@ -1565,101 +937,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "username": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "fullName": {
-                                            "type": "string"
-                                        },
-                                        "firstName": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "lastName": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "email": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "profileImageUrl": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "profileImageUrlSmall": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "timeZone": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
-                                        },
-                                        "suspended": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
-                                        },
-                                        "firstAccess": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                            "format": "date-time"
-                                        },
-                                        "lastAccess": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ],
-                                            "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
-                                            "format": "date-time"
-                                        }
-                                    },
-                                    "required": [
-                                        "id",
-                                        "username",
-                                        "fullName",
-                                        "firstName",
-                                        "lastName",
-                                        "email",
-                                        "profileImageUrl",
-                                        "profileImageUrlSmall",
-                                        "timeZone",
-                                        "suspended",
-                                        "firstAccess",
-                                        "lastAccess"
-                                    ]
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         },
@@ -1692,31 +970,12 @@
                     }
                 },
                 "requestBody": {
-                    "description": "Supply at least one writable field. Omitted fields are unchanged; null, unknown and read-only fields are rejected with `422`.",
+                    "description": "Supply at least one writable core or profile field. Omitted fields are unchanged; null, unknown and read-only fields are rejected with `422`.",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "firstName": {
-                                        "type": "string"
-                                    },
-                                    "lastName": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string"
-                                    },
-                                    "timeZone": {
-                                        "type": "string"
-                                    },
-                                    "suspended": {
-                                        "type": "boolean"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "minProperties": 1
+                                "$ref": "#/components/schemas/UserUpdate"
                             },
                             "examples": {
                                 "updateNameAndTimeZone": {
@@ -1740,6 +999,29 @@
                                     "description": "Suspend the account and invalidate its active sessions. Requires moodle/user:update. Other core fields remain unchanged.",
                                     "value": {
                                         "suspended": true
+                                    }
+                                },
+                                "updateLocation": {
+                                    "summary": "Update profile location",
+                                    "description": "Change the user's city and country, leaving all other profile fields unchanged. The country is an ISO 3166-1 alpha-2 code.",
+                                    "value": {
+                                        "city": "Perth",
+                                        "country": "AU"
+                                    }
+                                },
+                                "updateOrganisation": {
+                                    "summary": "Update organisation details",
+                                    "description": "Change the institution and department without modifying other profile fields. Authentication-plugin field locks still apply.",
+                                    "value": {
+                                        "institution": "Example University",
+                                        "department": "Computer Science"
+                                    }
+                                },
+                                "clearOptionalProfileField": {
+                                    "summary": "Clear an optional profile field",
+                                    "description": "Remove the current city value by sending an empty string. Omitted profile fields remain unchanged.",
+                                    "value": {
+                                        "city": ""
                                     }
                                 }
                             }
@@ -2046,6 +1328,304 @@
                             "notRequested"
                         ],
                         "description": "Present only when `generatePassword` is true.\n\n- `sent`: accepted by the mail transport.\n- `failed`: email failed and was logged; the account exists.\n- `notRequested`: `sendPasswordEmail` was false.\n\n**Do not retry account creation to resend credentials.**"
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "fullName": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "lastName": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "profileImageUrl": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "profileImageUrlSmall": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "timeZone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "suspended": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
+                    },
+                    "firstAccess": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
+                        "format": "date-time"
+                    },
+                    "lastAccess": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished.",
+                        "format": "date-time"
+                    },
+                    "city": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "country": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "institution": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "department": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "phone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "mobilePhone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "address": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+                    },
+                    "descriptionFormat": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "Null when hidden from the caller or unavailable; these reasons are not distinguished."
+                    }
+                },
+                "required": [
+                    "id",
+                    "username",
+                    "fullName",
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "profileImageUrl",
+                    "profileImageUrlSmall",
+                    "timeZone",
+                    "suspended",
+                    "firstAccess",
+                    "lastAccess",
+                    "city",
+                    "country",
+                    "institution",
+                    "department",
+                    "phone",
+                    "mobilePhone",
+                    "address",
+                    "description",
+                    "descriptionFormat"
+                ],
+                "description": "A user representation. Profile fields are null when hidden from the caller or unavailable; these reasons are not distinguished. A readable empty string remains an empty string."
+            },
+            "Pagination": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "integer"
+                    },
+                    "pageSize": {
+                        "type": "integer"
+                    },
+                    "totalItems": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "Exact collection size, or null when not calculated."
+                    },
+                    "hasMore": {
+                        "type": "boolean",
+                        "description": "Whether another page is available."
+                    }
+                },
+                "required": [
+                    "page",
+                    "pageSize",
+                    "totalItems",
+                    "hasMore"
+                ]
+            },
+            "UserCollection": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "pagination": {
+                        "$ref": "#/components/schemas/Pagination"
+                    }
+                },
+                "required": [
+                    "items",
+                    "pagination"
+                ]
+            },
+            "UserUpdate": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "timeZone": {
+                        "type": "string"
+                    },
+                    "suspended": {
+                        "type": "boolean"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "institution": {
+                        "type": "string"
+                    },
+                    "department": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "mobilePhone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "minProperties": 1
+            },
+            "UserCustomFields": {
+                "type": "object",
+                "properties": {
+                    "fields": {
+                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
+                    }
+                },
+                "required": [
+                    "fields"
+                ]
+            },
+            "UserCustomFieldsUpdate": {
+                "type": "object",
+                "properties": {
+                    "fields": {
+                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "fields"
+                ]
+            },
+            "PasswordResetEmailResponse": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "const": "If an eligible account matches, password-reset instructions will be sent."
                     }
                 }
             },

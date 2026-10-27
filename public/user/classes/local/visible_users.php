@@ -57,7 +57,7 @@ class visible_users {
      * @param pagination_request $pagination
      * @param string $search An optional search term, matched against names and visible identity fields
      * @param bool $onlyself Limit the results to the current user
-     * @return array{users: stdClass[], total: int}
+     * @return array{users: stdClass[], total: int|null, hasmore: bool}
      */
     public static function get_page(pagination_request $pagination, string $search = '', bool $onlyself = false): array {
         global $DB, $USER;
@@ -89,21 +89,24 @@ class visible_users {
 
         $where = implode(' AND ', $conditions);
 
-        $total = $DB->count_records_sql("SELECT COUNT(1) FROM {user} u WHERE {$where}", $params);
-
         $order = $pagination->get_order_by(self::SORT_COLUMNS);
         $order = $order ? "{$order}, " . self::DEFAULT_ORDER : self::DEFAULT_ORDER;
 
-        $users = $DB->get_records_sql(
+        $users = array_values($DB->get_records_sql(
             "SELECT u.* FROM {user} u WHERE {$where} ORDER BY {$order}",
             $params,
             $pagination->get_offset(),
-            $pagination->get_limit(),
-        );
+            $pagination->get_limit() + 1,
+        ));
+        $hasmore = count($users) > $pagination->get_limit();
+        if ($hasmore) {
+            array_pop($users);
+        }
 
         return [
-            'users' => array_values($users),
-            'total' => $total,
+            'users' => $users,
+            'total' => null,
+            'hasmore' => $hasmore,
         ];
     }
 
