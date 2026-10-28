@@ -21,17 +21,17 @@ use core\router\schema\example;
 use core\router\schema\referenced_object;
 
 /**
- * A component path parameter.
+ * A path parameter describing a cachekey.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class path_cachekey extends \core\router\schema\parameters\path_parameter implements referenced_object {
     /**
-     * Create a new path_component parameter.
+     * Create a new instance of the parameter.
      *
-     * @param string $name The name of the parameter to use for the component name
+     * @param string $name The name the parameter should match in the path
      * @param mixed ...$extra Additional arguments
      */
     public function __construct(
