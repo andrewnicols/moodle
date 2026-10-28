@@ -254,7 +254,7 @@ class phpunit_util extends testing_util {
 
         // Reset other singletons.
         if (class_exists('core_plugin_manager')) {
-            core_plugin_manager::reset_caches(true);
+            core_plugin_manager::phpunit_restore();
         }
         if (class_exists('\core\update\checker')) {
             \core\update\checker::reset_caches(true);
@@ -371,6 +371,7 @@ class phpunit_util extends testing_util {
         // Refresh data in all tables, clear caches, etc.
         self::reset_all_data();
         \core_component::phpunit_init();
+        \core_plugin_manager::phpunit_init();
     }
 
     /**

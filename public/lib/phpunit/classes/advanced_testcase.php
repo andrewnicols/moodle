@@ -765,6 +765,9 @@ abstract class advanced_testcase extends base_testcase {
         $mockedcomponent->setStaticPropertyValue($propertyname, $plugintypes);
 
         $this->resetDebugging();
+
+        // Reset the plugin manager.
+        \core\plugin_manager::phpunit_reset();
     }
 
     /**
@@ -797,6 +800,9 @@ abstract class advanced_testcase extends base_testcase {
         $plugins[$plugintype][$pluginname] = $path;
         $mockedcomponent->setStaticPropertyValue('plugins', $plugins);
         $this->resetDebugging();
+
+        // Reset the plugin manager.
+        \core\plugin_manager::phpunit_reset();
     }
 
     /**
