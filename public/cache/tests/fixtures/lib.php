@@ -42,6 +42,13 @@ use core_cache\store;
  */
 class cache_config_testing extends cache_config_writer {
     /**
+     * Cache definitions are immutable for the lifetime of a PHPUnit process.
+     *
+     * @var array|null
+     */
+    protected static $defaultdefinitions = null;
+
+    /**
      * Creates the default configuration and saves it.
      *
      * This function calls config_save, however it is safe to continue using it afterwards as this function should only ever
@@ -58,7 +65,10 @@ class cache_config_testing extends cache_config_writer {
         // default store plugins are protected from deletion.
         $writer = new self();
         $writer->configstores = self::get_default_stores();
-        $writer->configdefinitions = self::locate_definitions();
+        if (self::$defaultdefinitions === null) {
+            self::$defaultdefinitions = self::locate_definitions();
+        }
+        $writer->configdefinitions = self::$defaultdefinitions;
         $defaultapplication = 'default_application';
 
         $appdefine = defined('TEST_CACHE_USING_APPLICATION_STORE') ? TEST_CACHE_USING_APPLICATION_STORE : false;
