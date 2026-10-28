@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class strings {
     use \core\router\route_controller;
@@ -35,8 +35,8 @@ class strings {
     /**
      * Fetch a string or all strings for a component in a language.
      *
-     * @param ResponseInterface $response
-     * @param string $themename
+     * @param ServerRequestInterface $request
+     * @param string $language
      * @param string $component
      * @param null|string $identifier
      * @return payload_response

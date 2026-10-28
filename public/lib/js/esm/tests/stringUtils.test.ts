@@ -69,7 +69,7 @@ describe('@moodle/lms/core/stringUtils', () => {
         );
     });
 
-    it('passes the template revision as the cache key when fetching uncached strings', async() => {
+    it('passes the language revision as the cache key when fetching uncached strings', async() => {
         (globalThis as any).M.cfg.langrev = 2;
 
         const performGetSpy = jest.spyOn(Fetch.getBatcher(), 'performGet');
