@@ -35,6 +35,17 @@ final class moodle_extension implements Extension {
         Facade $facade,
         ParameterCollection $parameters
     ): void {
+        $profilefile = getenv('MOODLE_PHPUNIT_PROFILE');
+        if ($profilefile !== false && $profilefile !== '') {
+            define('MOODLE_PHPUNIT_PROFILE', true);
+            performance_profiler::enable($profilefile);
+            $facade->registerSubscribers(
+                new performance_profiler(),
+                new performance_profiler_prepared_subscriber(),
+                new performance_profiler_finished_subscriber(),
+            );
+        }
+
         if ($configuration->noOutput()) {
             return;
         }

@@ -97,11 +97,25 @@ class phpunit_util extends \core\test\testing_util {
      *      false - no errors reported
      *      null  - only critical problems are reported as errors
      */
-    public static function reset_all_data($detectchanges = false) {
+    public static function reset_all_data($detectchanges = false, string $resetmode = 'direct') {
         global $DB, $CFG, $USER, $SITE, $COURSE, $PAGE, $OUTPUT, $SESSION, $FULLME, $FILTERLIB_PRIVATE;
+        $profileenabled = defined('MOODLE_PHPUNIT_PROFILE');
+        if ($profileenabled) {
+            $profilestart = hrtime(true);
+            $phasestart = $profilestart;
+        }
 
         // Stop all hook redirections.
+        if ($profileenabled) {
+            $operationstart = hrtime(true);
+        }
         \core\di::get(\core\hook\manager::class)->phpunit_stop_redirections();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'di_container_get_hook_manager',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+            );
+        }
 
         // Stop any message redirection.
         self::stop_message_redirection();
@@ -130,9 +144,29 @@ class phpunit_util extends \core\test\testing_util {
             $DB->force_transaction_rollback();
         }
 
+        if ($profileenabled) {
+            $databasestart = hrtime(true);
+        }
         $resetdb = self::reset_database();
+        if ($profileenabled) {
+            $profilecontext = ['reset_mode' => $resetmode, 'database_reset' => $resetdb];
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_pre_database',
+                ($databasestart - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'database_reset',
+                (hrtime(true) - $databasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $phasestart = hrtime(true);
+        }
         $localename = self::get_locale_name();
         $warnings = [];
+        if ($profileenabled) {
+            $phasestart = hrtime(true);
+        }
 
         if ($detectchanges === true) {
             if ($resetdb) {
@@ -183,6 +217,15 @@ class phpunit_util extends \core\test\testing_util {
             set_time_limit(0);
         }
 
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_change_detection',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext + ['detect_changes' => $detectchanges === true],
+            );
+            $phasestart = hrtime(true);
+        }
+
         // Restore original globals.
         $_SERVER = self::get_global_backup('_SERVER');
         $CFG = self::get_global_backup('CFG');
@@ -209,22 +252,127 @@ class phpunit_util extends \core\test\testing_util {
         // Empty sessison and set fresh new not-logged-in user.
         \core\session\manager::init_empty_session();
 
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_globals_and_session',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $phasestart = hrtime(true);
+        }
+
         // Reset all static caches.
         \core\session\manager::phpunit_reset();
         \core\event\manager::phpunit_reset();
+        if ($profileenabled) {
+            $operationstart = hrtime(true);
+        }
         accesslib_clear_all_caches(true);
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_accesslib_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         accesslib_reset_role_cache();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_role_cache',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         get_string_manager()->reset_caches(true);
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_string_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         reset_text_filters_cache(true);
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_text_filter_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         get_message_processors(false, true, true);
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_message_processor_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \filter_manager::reset_caches();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_filter_manager_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \core_filetypes::reset_caches();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_filetype_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \core_search\manager::clear_static();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_search_manager_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \core\user::reset_caches();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_user_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \core\task\manager::reset_state();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_task_manager_state',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $operationstart = hrtime(true);
+        }
         \core\output\icon_system::reset_caches();
         if (class_exists(\core_media_manager::class, false)) {
             \core_media_manager::reset_caches();
+        }
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_output_and_media_caches',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_primary_static_caches',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $phasestart = hrtime(true);
         }
 
         // Reset static unit test options.
@@ -242,12 +390,28 @@ class phpunit_util extends \core\test\testing_util {
 
         // Reset hub registration caches.
         \core\hub\registration::reset_caches();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_secondary_static_caches',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $phasestart = hrtime(true);
+        }
 
         // TODO MDL-25290: add more resets here and probably refactor them to new core function.
 
         // Reset course and module caches.
         \core_courseformat\base::reset_course_cache(0);
         get_fast_modinfo(0, 0, true);
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_course_and_module_caches',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            $phasestart = hrtime(true);
+        }
 
         // Reset other singletons.
         if (class_exists(\core_plugin_manager::class)) {
@@ -268,8 +432,19 @@ class phpunit_util extends \core\test\testing_util {
             \restore_section_structure_step::reset_caches();
         }
 
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_other_singletons',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+        }
+
         // Purge dataroot directory.
-        self::reset_dataroot();
+        self::reset_dataroot($resetmode, $resetdb);
+        if ($profileenabled) {
+            $phasestart = hrtime(true);
+        }
 
         // Restore original config once more in case resetting of caches changed CFG.
         $CFG = self::get_global_backup('CFG');
@@ -293,7 +468,17 @@ class phpunit_util extends \core\test\testing_util {
         \core_useragent::instance(true, null);
 
         // Reset the DI container.
+        if ($profileenabled) {
+            $operationstart = hrtime(true);
+        }
         \core\di::reset_container();
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'di_container_reset',
+                (hrtime(true) - $operationstart) / 1_000_000_000,
+                $profilecontext,
+            );
+        }
 
         // Verify db writes just in case something goes wrong in reset.
         if (self::$lastdbwrites != $DB->perf_get_writes()) {
@@ -304,6 +489,19 @@ class phpunit_util extends \core\test\testing_util {
         if ($warnings) {
             $warnings = implode("\n", $warnings);
             throw new \core\test\phpunit\exception\test_exception($warnings);
+        }
+
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_post_dataroot',
+                (hrtime(true) - $phasestart) / 1_000_000_000,
+                $profilecontext,
+            );
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'reset_all_data',
+                (hrtime(true) - $profilestart) / 1_000_000_000,
+                $profilecontext,
+            );
         }
     }
 

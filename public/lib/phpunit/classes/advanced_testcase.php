@@ -75,6 +75,16 @@ abstract class advanced_testcase extends base_testcase {
     #[After]
     final public function teardown_test_environment(): void {
         global $CFG, $DB;
+        $profileenabled = defined('MOODLE_PHPUNIT_PROFILE');
+        if ($profileenabled) {
+            $profilestart = hrtime(true);
+            $resetmode = match ($this->resetAfterTest) {
+                true => 'reset-enabled',
+                false => 'reset-disabled',
+                default => 'reset-default',
+            };
+        }
+
         // Reset global state after test and test failure.
         $CFG = phpunit_util::get_global_backup('CFG');
         $DB = phpunit_util::get_global_backup('DB');
@@ -95,14 +105,34 @@ abstract class advanced_testcase extends base_testcase {
 
         if ($this->resetAfterTest === true) {
             if ($this->testdbtransaction) {
+                if ($profileenabled) {
+                    $rollbackstart = hrtime(true);
+                }
                 $DB->force_transaction_rollback();
+                if ($profileenabled) {
+                    \core\tests\phpunit\performance_profiler::record_metric(
+                        'database_transaction_rollback',
+                        (hrtime(true) - $rollbackstart) / 1_000_000_000,
+                        ['reset_mode' => $resetmode, 'database_reset' => false],
+                    );
+                }
                 phpunit_util::reset_all_database_sequences();
                 phpunit_util::$lastdbwrites = $DB->perf_get_writes(); // No db reset necessary.
             }
-            self::resetAllData(null);
+            self::resetAllData(null, 'reset-enabled');
         } else if ($this->resetAfterTest === false) {
             if ($this->testdbtransaction) {
+                if ($profileenabled) {
+                    $commitstart = hrtime(true);
+                }
                 $this->testdbtransaction->allow_commit();
+                if ($profileenabled) {
+                    \core\tests\phpunit\performance_profiler::record_metric(
+                        'database_transaction_commit',
+                        (hrtime(true) - $commitstart) / 1_000_000_000,
+                        ['reset_mode' => $resetmode, 'database_reset' => false],
+                    );
+                }
             }
             // Keep all data untouched for other tests.
         } else {
@@ -111,11 +141,11 @@ abstract class advanced_testcase extends base_testcase {
                 try {
                     $this->testdbtransaction->allow_commit();
                 } catch (dml_transaction_exception $e) {
-                    self::resetAllData();
+                    self::resetAllData(false, 'transaction-error');
                     throw new coding_exception('Invalid transaction state detected in test ' . $this->getName());
                 }
             }
-            self::resetAllData(true);
+            self::resetAllData(true, 'reset-default');
         }
 
         // Reset context cache.
@@ -131,6 +161,14 @@ abstract class advanced_testcase extends base_testcase {
             ) {
                 throw new coding_exception('Test ' . $this->getName() . ' did not close database transaction');
             }
+        }
+
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'moodle_test_teardown',
+                (hrtime(true) - $profilestart) / 1_000_000_000,
+                ['reset_mode' => $resetmode],
+            );
         }
     }
 
@@ -479,8 +517,8 @@ abstract class advanced_testcase extends base_testcase {
      *      null  - only critical problems are reported as errors
      * @return void
      */
-    public static function resetAllData($detectchanges = false) {
-        phpunit_util::reset_all_data($detectchanges);
+    public static function resetAllData($detectchanges = false, string $resetmode = 'direct') {
+        phpunit_util::reset_all_data($detectchanges, $resetmode);
     }
 
     /**
