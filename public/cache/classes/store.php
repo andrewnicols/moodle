@@ -278,6 +278,20 @@ abstract class store implements store_interface {
     }
 
     /**
+     * Purge a configured store after PHPUnit or Behat dataroot cleanup.
+     *
+     * This is static so plugins can avoid constructing stores whose data has already been removed.
+     * Normal cache purges must continue to use helper::purge_store().
+     *
+     * @param string $name Configured store name.
+     * @param config $config The test's cache configuration, retained before dataroot cleanup.
+     * @return bool Whether the store was successfully purged.
+     */
+    public static function purge_for_testing(string $name, config $config): bool {
+        return helper::purge_store($name, $config);
+    }
+
+    /**
      * Creates a clone of this store instance ready to be initialised.
      *
      * This method is used so that a cache store needs only be constructed once.
