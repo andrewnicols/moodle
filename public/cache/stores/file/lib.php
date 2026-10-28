@@ -274,6 +274,31 @@ class cachestore_file extends store implements
     }
 
     /**
+     * Purge after test dataroot cleanup without recreating a deleted file store.
+     *
+     * @param string $name Configured store name.
+     * @param \core_cache\config $config The test's cache configuration.
+     * @return bool Whether the store was successfully purged.
+     */
+    public static function purge_for_testing(string $name, \core_cache\config $config): bool {
+        global $CFG;
+
+        $stores = $config->get_all_stores();
+        if (!isset($stores[$name])) {
+            return false;
+        }
+        $path = $stores[$name]['configuration']['path'] ?? '';
+        if ($path === '') {
+            $path = $CFG->cachedir . '/cachestore_file/' . preg_replace('#[^a-zA-Z0-9\.\-_]+#', '', $name);
+        }
+        clearstatcache(true, $path);
+        if (!file_exists($path) && !is_link($path)) {
+            return true;
+        }
+        return parent::purge_for_testing($name, $config);
+    }
+
+    /**
      * Performs any necessary operation when the file store instance has been created.
      */
     public function instance_created() {
