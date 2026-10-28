@@ -81,6 +81,8 @@ class plugin_manager {
     protected static $singletoninstance;
     /** @var stdClass cache of standard plugins */
     protected static ?stdClass $standardplugincache = null;
+    /** @var array|null Plugin manager caches captured for PHPUnit teardown resets. */
+    protected static ?array $phpunitcachebaseline = null;
     /** @var array of raw plugins information */
     protected $pluginsinfo = null;
     /** @var array of raw subplugins information */
@@ -150,6 +152,63 @@ class plugin_manager {
         }
         $cache = cache::make('core', 'plugin_manager');
         $cache->purge();
+    }
+
+    /**
+     * Capture the initial plugin manager caches for PHPUnit.
+     */
+    public static function phpunit_init(): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            throw new coding_exception('Plugin manager cache baseline can only be captured in PHPUnit.');
+        }
+
+        $pluginmanager = static::instance();
+        $pluginmanager->get_plugin_types();
+        $pluginmanager->load_installed_plugins();
+        $pluginmanager->load_enabled_plugins();
+        $pluginmanager->load_present_plugins();
+        $pluginmanager->get_subplugins();
+
+        static::$phpunitcachebaseline = self::get_phpunit_resettable_caches();
+    }
+
+    /**
+     * Reset plugin manager caches between PHPUnit tests.
+     */
+    public static function phpunit_reset(): void {
+        static::reset_caches(true);
+    }
+
+    /**
+     * Restore the initial plugin manager caches after a PHPUnit test.
+     */
+    public static function phpunit_restore(): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST || static::$phpunitcachebaseline === null) {
+            static::reset_caches(true);
+            return;
+        }
+
+        static::reset_caches(true);
+        $pluginmanager = static::instance();
+        foreach (static::$phpunitcachebaseline as $property => $value) {
+            $pluginmanager->{$property} = $value;
+        }
+    }
+
+    /**
+     * Return the plugin manager caches preserved for PHPUnit resets.
+     *
+     * @return array
+     */
+    private static function get_phpunit_resettable_caches(): array {
+        $pluginmanager = static::instance();
+        return [
+            'installedplugins' => $pluginmanager->installedplugins,
+            'enabledplugins' => $pluginmanager->enabledplugins,
+            'presentplugins' => $pluginmanager->presentplugins,
+            'plugintypes' => $pluginmanager->plugintypes,
+            'subpluginsinfo' => $pluginmanager->subpluginsinfo,
+        ];
     }
 
     /**

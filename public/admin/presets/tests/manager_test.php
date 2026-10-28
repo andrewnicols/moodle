@@ -811,6 +811,7 @@ final class manager_test extends \advanced_testcase {
         // Inject the mock plugin type + plugin, and deprecate it.
         $this->add_mocked_plugintype('fake', "$CFG->libdir/tests/fixtures/fakeplugins/fake", true);
         $this->add_mocked_plugin('fake', 'fullfeatured', $CFG->libdir . '/tests/fixtures/fakeplugins/fake/fullfeatured');
+        \core_plugin_manager::phpunit_reset();
 
         // Pre-flight check to ensure that the plugin is deprecated.
         $pluginman = \core\plugin_manager::instance();

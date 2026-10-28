@@ -42,6 +42,7 @@ final class flatfile_test extends \advanced_testcase {
         $enabled['flatfile'] = true;
         $enabled = array_keys($enabled);
         set_config('enrol_plugins_enabled', implode(',', $enabled));
+        \core_plugin_manager::phpunit_reset();
     }
 
     protected function disable_plugin() {
@@ -49,6 +50,7 @@ final class flatfile_test extends \advanced_testcase {
         unset($enabled['flatfile']);
         $enabled = array_keys($enabled);
         set_config('enrol_plugins_enabled', implode(',', $enabled));
+        \core_plugin_manager::phpunit_reset();
     }
 
     public function test_basics(): void {

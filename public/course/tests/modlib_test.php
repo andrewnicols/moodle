@@ -74,6 +74,7 @@ final class modlib_test extends \advanced_testcase {
         $this->create_ai_provider([$actionname], \aiprovider_openai\provider::class);
         set_config('enabled', 1, $placement);
         set_config($actionname, 1, $placement);
+        \core_plugin_manager::phpunit_reset();
 
         $moduleinfo = (object) [
             'course' => $course->id,
