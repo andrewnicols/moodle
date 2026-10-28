@@ -271,6 +271,12 @@ class util {
         return []; // @codeCoverageIgnore
     }
 
+    /**
+     * Get a ReflectionMethod instance for the current request handler.
+     *
+     * @param ServerRequestInterface $request
+     * @return \ReflectionMethod|null
+     */
     public static function get_reflected_method_from_request(
         ServerRequestInterface $request,
     ): ?\ReflectionMethod {
