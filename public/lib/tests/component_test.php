@@ -109,6 +109,30 @@ final class component_test extends \advanced_testcase {
         unset($items);
     }
 
+    /**
+     * Verify the PHPUnit component cache reset restores the bootstrap baseline.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_phpunit_reset_restores_component_cache_baseline(): void {
+        global $CFG;
+
+        $plugintypes = component::get_plugin_types();
+        $this->add_mocked_plugintype('fake', "{$CFG->dirroot}/lib/tests/fixtures/fakeplugins/fake");
+        $this->add_mocked_plugin(
+            'fake',
+            'fullfeatured',
+            "{$CFG->dirroot}/lib/tests/fixtures/fakeplugins/fake/fullfeatured",
+        );
+        $this->assertArrayHasKey('fake', component::get_plugin_types());
+        $this->assertArrayHasKey('fullfeatured', component::get_plugin_list('fake'));
+
+        component::phpunit_reset();
+
+        $this->assertSame($plugintypes, component::get_plugin_types());
+        $this->assertArrayNotHasKey('fake', component::get_plugin_types());
+        $this->assertArrayNotHasKey('fake', component::get_plugin_list('fake'));
+    }
+
     public function test_deprecated_get_core_subsystems(): void {
         global $CFG;
 

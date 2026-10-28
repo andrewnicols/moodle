@@ -550,6 +550,7 @@ class phpunit_util extends \core\test\testing_util {
 
         // Refresh data in all tables, clear caches, etc.
         self::reset_all_data();
+        \core\component::phpunit_init();
 
         // Manually load the test_exception class here for legacy purposes.
 
