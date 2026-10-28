@@ -23,6 +23,10 @@
  * @covers \core_useragent
  */
 final class useragent_test extends advanced_testcase {
+    protected function setUp(): void {
+        parent::setUp();
+        $this->resetAfterTest(false);
+    }
 
     /**
      * Restores the user agent to the default one.
