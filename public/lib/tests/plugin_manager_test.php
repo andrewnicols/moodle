@@ -69,6 +69,104 @@ final class plugin_manager_test extends \advanced_testcase {
         testable_core_plugin_manager::reset_caches();
     }
 
+    public function test_phpunit_restore_restores_initial_caches(): void {
+        $this->resetAfterTest();
+
+        $pluginmanager = core_plugin_manager::instance();
+        $properties = [
+            'presentplugins',
+            'plugintypes',
+            'subpluginsinfo',
+        ];
+        $baseline = [];
+        foreach ($properties as $propertyname) {
+            $property = new \ReflectionProperty(\core\plugin_manager::class, $propertyname);
+            $baseline[$propertyname] = $property->getValue($pluginmanager);
+            $property->setValue($pluginmanager, null);
+        }
+
+        core_plugin_manager::phpunit_restore();
+        $pluginmanager = core_plugin_manager::instance();
+
+        foreach ($properties as $propertyname) {
+            $property = new \ReflectionProperty(\core\plugin_manager::class, $propertyname);
+            $this->assertEquals($baseline[$propertyname], $property->getValue($pluginmanager));
+        }
+    }
+
+    public function test_phpunit_restore_loads_current_enabled_plugins(): void {
+        $this->resetAfterTest();
+
+        core_plugin_manager::phpunit_restore();
+        set_config('auth', 'cas');
+
+        $this->assertArrayHasKey('cas', core_plugin_manager::instance()->get_enabled_plugins('auth'));
+    }
+
+    public function test_phpunit_restore_loads_current_installed_plugins(): void {
+        $this->resetAfterTest();
+
+        core_plugin_manager::phpunit_restore();
+        set_config('version', '1234567890', 'auth_cas');
+
+        $plugins = core_plugin_manager::instance()->get_installed_plugins('auth');
+        $this->assertArrayHasKey('cas', $plugins);
+        $this->assertEquals('1234567890', $plugins['cas']);
+    }
+
+    public function test_phpunit_restore_isolates_present_plugin_objects(): void {
+        $this->resetAfterTest();
+
+        core_plugin_manager::phpunit_restore();
+        $original = core_plugin_manager::instance()->get_present_plugins('mod')['forum'];
+        $version = $original->version;
+        $restored = null;
+
+        try {
+            core_plugin_manager::phpunit_init();
+            $original->version = 1;
+            core_plugin_manager::phpunit_restore();
+            $restored = core_plugin_manager::instance()->get_present_plugins('mod')['forum'];
+            $this->assertSame($version, $restored->version);
+
+            $restored->version = 2;
+            core_plugin_manager::phpunit_restore();
+            $this->assertSame($version, core_plugin_manager::instance()->get_present_plugins('mod')['forum']->version);
+        } finally {
+            $original->version = $version;
+            if ($restored !== null) {
+                $restored->version = $version;
+            }
+            core_plugin_manager::phpunit_restore();
+        }
+    }
+
+    /**
+     * Verify a full reset reloads plugin caches rather than restoring the bootstrap baseline.
+     */
+    public function test_phpunit_reset_can_reload_plugin_state(): void {
+        $this->resetAfterTest();
+
+        $component = 'aiplacement_courseassist';
+        set_config('enabled', 0, $component);
+        core_plugin_manager::phpunit_reset();
+        $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+        $this->assertFalse($plugininfo->is_enabled());
+
+        set_config('enabled', 1, $component);
+        core_plugin_manager::phpunit_reset();
+        $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+        $this->assertTrue($plugininfo->is_enabled());
+    }
+
+    public function test_phpunit_restore_preserves_child_class_singleton(): void {
+        $pluginmanager = testable_core_plugin_manager::instance();
+
+        core_plugin_manager::phpunit_restore();
+
+        $this->assertSame($pluginmanager, testable_core_plugin_manager::instance());
+    }
+
     /**
      * Make sure that the tearDown() really kills the singleton after this test.
      */
