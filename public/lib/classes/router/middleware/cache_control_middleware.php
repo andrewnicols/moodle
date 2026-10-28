@@ -60,7 +60,7 @@ class cache_control_middleware implements MiddlewareInterface {
             return $response;
         }
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable(timezone: new \DateTimeZone('UTC'));
         if ($cachekey > $now->getTimestamp()) {
             // The cache key is in the future, so we should not cache the response.
             return $response;
@@ -78,7 +78,7 @@ class cache_control_middleware implements MiddlewareInterface {
         }
 
         return $response
-            ->withHeader('Expires', $expiry->format('D, d M Y H:i:s e'))
+            ->withHeader('Expires', $expiry->format('D, d M Y H:i:s \G\M\T'))
             ->withHeader('Pragma', '')
             ->withHeader('Cache-Control', 'public, max-age=' . $expiryseconds . ', immutable')
             ->withHeader('Accept-Ranges', 'none');
