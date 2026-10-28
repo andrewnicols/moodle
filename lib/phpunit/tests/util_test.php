@@ -23,9 +23,114 @@ namespace core;
  * @category   test
  * @copyright  2015 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \phpunit_util::class
  */
 final class util_test extends \advanced_testcase {
     /**
+     * Reset must not recreate file caches that dataroot cleanup already removed.
+     */
+    public function test_reset_dataroot_does_not_recreate_file_stores(): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $cache = \cache::make('core', 'roledefs');
+        $cache->set('reset_purge', 'changed');
+        $definitionpath = $CFG->cachedir . '/cachestore_file/default_application/core_roledefs';
+        $this->assertDirectoryExists($definitionpath);
+
+        \phpunit_util::reset_dataroot();
+
+        $this->assertDirectoryDoesNotExist($definitionpath);
+        $this->assertFalse(\cache::make('core', 'roledefs')->get('reset_purge'));
+    }
+
+    /**
+     * Custom file paths and ad-hoc caches still need to be purged.
+     *
+     * @param bool $internal Whether the custom path is inside the cache directory.
+     * @dataProvider custom_cache_paths_provider
+     */
+    public function test_reset_dataroot_purges_custom_and_adhoc_caches(bool $internal): void {
+        $this->resetAfterTest();
+        $custompath = $internal ? make_cache_directory('reset_custom') : sys_get_temp_dir() . '/moodle-reset-purge-' . uniqid();
+        if (!$internal) {
+            mkdir($custompath);
+        }
+        try {
+            $config = \core_cache\factory::instance()->create_config_instance();
+            $config->add_store_instance('reset_external', 'file', ['path' => $custompath, 'prescan' => true]);
+            $config->phpunit_add_definition('phpunit/resetexternal', [
+                'mode' => \core_cache\store::MODE_APPLICATION,
+                'component' => 'phpunit',
+                'area' => 'resetexternal',
+            ], false);
+            $config->phpunit_add_definition_mapping('phpunit/resetexternal', 'reset_external', 1);
+            $cache = \cache::make('phpunit', 'resetexternal');
+            $this->assertTrue($cache->set('test', 'changed'));
+            $definitionpath = $custompath . '/phpunit_resetexternal';
+            $this->assertNotEmpty(glob($definitionpath . '/*/*.cache'));
+            $adhoc = \cache::make_from_params(\core_cache\store::MODE_SESSION, 'phpunit', 'resetadhoc');
+            $this->assertTrue($adhoc->set('test', 'changed'));
+
+            \phpunit_util::reset_dataroot();
+
+            if ($internal) {
+                $this->assertDirectoryDoesNotExist($definitionpath);
+            } else {
+                $this->assertDirectoryExists($definitionpath);
+            }
+            $this->assertEmpty(glob($definitionpath . '/*/*.cache'));
+            $this->assertFalse($adhoc->get('test'));
+        } finally {
+            if (is_dir($custompath)) {
+                remove_dir($custompath);
+            }
+        }
+    }
+
+    /**
+     * Custom paths can be deleted by dataroot cleanup or require a separate purge.
+     *
+     * @return array
+     */
+    public static function custom_cache_paths_provider(): array {
+        return [
+            'outside dataroot' => [false],
+            'inside cachedir' => [true],
+        ];
+    }
+
+    /**
+     * A default file store outside dataroot must still be purged.
+     */
+    public function test_reset_dataroot_purges_external_cachedir(): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $originalcachedir = $CFG->cachedir;
+        $externalpath = sys_get_temp_dir() . '/moodle-reset-purge-' . uniqid();
+        mkdir($externalpath);
+        try {
+            $CFG->cachedir = $externalpath;
+            \core_cache\factory::reset();
+            $cache = \cache::make('core', 'roledefs');
+            $this->assertTrue($cache->set('reset_purge', 'changed'));
+
+            \phpunit_util::reset_dataroot();
+
+            $this->assertFalse(\cache::make('core', 'roledefs')->get('reset_purge'));
+        } finally {
+            $CFG->cachedir = $originalcachedir;
+            \core_cache\factory::reset();
+            remove_dir($externalpath);
+        }
+    }
+
+    /**
+     * Test set_table_modified_by_sql.
+     *
+     * @param string $sql
+     * @param array $expectations
      * @dataProvider set_table_modified_by_sql_provider
      */
     public function test_set_table_modified_by_sql($sql, $expectations): void {
@@ -36,6 +141,11 @@ final class util_test extends \advanced_testcase {
         }
     }
 
+    /**
+     * Data provider for {@see test_set_table_modified_by_sql}.
+     *
+     * @return array[]
+     */
     public static function set_table_modified_by_sql_provider(): array {
         global $DB;
         $prefix = $DB->get_prefix();
