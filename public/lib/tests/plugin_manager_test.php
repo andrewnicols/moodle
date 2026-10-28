@@ -69,6 +69,59 @@ final class plugin_manager_test extends \advanced_testcase {
         testable_core_plugin_manager::reset_caches();
     }
 
+    public function test_phpunit_restore_restores_initial_caches(): void {
+        $this->resetAfterTest();
+
+        $pluginmanager = core_plugin_manager::instance();
+        $properties = [
+            'installedplugins',
+            'enabledplugins',
+            'presentplugins',
+            'plugintypes',
+            'subpluginsinfo',
+        ];
+        $baseline = [];
+        foreach ($properties as $propertyname) {
+            $property = new \ReflectionProperty(\core\plugin_manager::class, $propertyname);
+            $baseline[$propertyname] = $property->getValue($pluginmanager);
+            $property->setValue($pluginmanager, null);
+        }
+
+        core_plugin_manager::phpunit_restore();
+        $pluginmanager = core_plugin_manager::instance();
+
+        foreach ($properties as $propertyname) {
+            $property = new \ReflectionProperty(\core\plugin_manager::class, $propertyname);
+            $this->assertSame($baseline[$propertyname], $property->getValue($pluginmanager));
+        }
+    }
+
+    /**
+     * Verify a full reset reloads plugin caches rather than restoring the bootstrap baseline.
+     */
+    public function test_phpunit_reset_can_reload_plugin_state(): void {
+        $this->resetAfterTest();
+
+        $component = 'aiplacement_courseassist';
+        set_config('enabled', 0, $component);
+        core_plugin_manager::phpunit_reset();
+        $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+        $this->assertFalse($plugininfo->is_enabled());
+
+        set_config('enabled', 1, $component);
+        core_plugin_manager::phpunit_reset();
+        $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+        $this->assertTrue($plugininfo->is_enabled());
+    }
+
+    public function test_phpunit_restore_preserves_child_class_singleton(): void {
+        $pluginmanager = testable_core_plugin_manager::instance();
+
+        core_plugin_manager::phpunit_restore();
+
+        $this->assertSame($pluginmanager, testable_core_plugin_manager::instance());
+    }
+
     /**
      * Make sure that the tearDown() really kills the singleton after this test.
      */

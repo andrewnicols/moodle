@@ -415,7 +415,7 @@ class phpunit_util extends \core\test\testing_util {
 
         // Reset other singletons.
         if (class_exists(\core_plugin_manager::class)) {
-            \core_plugin_manager::reset_caches(true);
+            \core_plugin_manager::phpunit_restore();
         }
         if (class_exists(\core\update\checker::class)) {
             \core\update\checker::reset_caches(true);
@@ -551,6 +551,7 @@ class phpunit_util extends \core\test\testing_util {
         // Refresh data in all tables, clear caches, etc.
         self::reset_all_data();
         \core\component::phpunit_init();
+        \core_plugin_manager::phpunit_init();
 
         // Manually load the test_exception class here for legacy purposes.
 

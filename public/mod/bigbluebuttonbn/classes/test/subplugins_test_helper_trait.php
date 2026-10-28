@@ -85,6 +85,7 @@ trait subplugins_test_helper_trait {
 
         // Cache has been cleared so let's write it again.
         self::write_fake_component_cache($content);
+        core_plugin_manager::phpunit_reset();
 
     }
 
