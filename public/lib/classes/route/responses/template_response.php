@@ -27,9 +27,9 @@ use core\router\schema\{
 /**
  * A standard response for templates
  *
- * @package    core_user
+ * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class template_response extends \core\router\schema\response\response {
     /**
