@@ -23,6 +23,15 @@
  * @covers \core_useragent
  */
 final class useragent_test extends advanced_testcase {
+    /**
+     * Entirely disable reset between tests.
+     *
+     * These tests never use cache, CFG, etc.
+     */
+    #[\PHPUnit\Framework\Attributes\Before]
+    public function disable_reset(): void {
+        $this->resetAfterTest(false);
+    }
 
     /**
      * Restores the user agent to the default one.
