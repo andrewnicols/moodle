@@ -159,7 +159,7 @@ async function disableBadge(badgeId, badgeName, reportElement) {
         }
     };
 
-    const pendingPromise = new Pending('core_badges/enable');
+    const pendingPromise = new Pending('core_badges/disable');
     try {
         const result = await Ajax.call([request])[0];
         if (reportElement) {
