@@ -1,0 +1,21 @@
+issueNumber: MDL-90264
+notes:
+  core:
+    - message: >-
+        PHPUnit teardown now restores the plugin manager's initial cache baseline using
+        `\core\plugin_manager::phpunit_restore()`.
+
+
+        Calls to `\core\plugin_manager::reset_caches()` continue to fully
+        invalidate plugin manager caches.
+
+
+        Installed and enabled plugins are loaded lazily from the current configuration,
+        rather than restored from the baseline. Tests that change plugin configuration
+        or discovery state after loading plugin caches should invalidate those caches
+        with `\core\plugin_manager::phpunit_reset()` or `\core\plugin_manager::reset_caches()`.
+
+
+        Note: This is already performed when calling
+        `\advanced_testcase::add_mocked_plugintype()` and `\advanced_testcase::add_mocked_plugin()`.
+      type: changed
