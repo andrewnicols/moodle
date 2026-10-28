@@ -23,10 +23,8 @@ use core\tests\router\route_testcase;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Interfaces\CallableResolverInterface;
 
 /**
  * Tests for the Cache Control middleware.
@@ -34,20 +32,16 @@ use Slim\Interfaces\CallableResolverInterface;
  * @package    core
  * @category   test
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\router\middleware\cache_control_middleware
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(cache_control_middleware::class)]
 final class cache_control_middleware_test extends route_testcase {
-    /**
-     * Standard CORS headers are added.
-     *
-     * @dataProvider valid_cache_provider
-     * @dataProvider valid_cache_lifetime_provider
-     * @dataProvider invalid_method_cache_provider
-     * @dataProvider invalid_statuscode_cache_provider
-     * @dataProvider invalid_cache_keys_provider
-     * @dataProvider invalid_cache_lifetime_provider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_cache_provider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_cache_lifetime_provider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_method_cache_provider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_statuscode_cache_provider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_cache_keys_provider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_cache_lifetime_provider')]
     public function test_middleware(
         string $method,
         int $statuscode,
