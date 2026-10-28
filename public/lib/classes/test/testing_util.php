@@ -663,6 +663,10 @@ abstract class testing_util {
     public static function reset_dataroot() {
         global $CFG;
 
+        // Keep the test's configuration: dataroot cleanup also removes its configuration file.
+        $cachefactory = \core_cache\factory::instance();
+        $cacheconfig = $cachefactory->create_config_instance();
+
         // Do not delete automatically installed files.
         self::skip_original_data_files();
 
@@ -703,11 +707,13 @@ abstract class testing_util {
         make_backup_temp_directory('');
         make_cache_directory('');
         make_localcache_directory('');
-        // Purge all data from the caches. This is required for consistency between tests.
-        // Any file caches that happened to be within the data root will have already been clearer (because we just deleted cache)
-        // and now we will purge any other caches as well.  This must be done before the core_cache\factory::reset() as that
-        // removes all definitions of caches and purge does not have valid caches to operate on.
-        \core_cache\helper::purge_all();
+        // Let each plugin purge using the test's configuration before resetting the factory.
+        foreach ($cacheconfig->get_all_stores() as $store) {
+            $store['class']::purge_for_testing($store['name'], $cacheconfig);
+        }
+        foreach ($cachefactory->get_adhoc_caches_in_use() as $cache) {
+            $cache->purge();
+        }
         // Reset the cache API so that it recreates it's required directories as well.
         \core_cache\factory::reset();
     }
