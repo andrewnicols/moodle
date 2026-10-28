@@ -94,6 +94,8 @@ class component {
     protected static $filemap = null;
     /** @var int|float core version. */
     protected static $version = null;
+    /** @var array|null Component caches captured for PHPUnit teardown resets. */
+    protected static $phpunitcachebaseline = null;
     /** @var array list of the files to map. */
     protected static $filestomap = ['lib.php', 'settings.php'];
     /** @var array associative array of PSR-0 namespaces and corresponding paths. */
@@ -459,6 +461,51 @@ class component {
     public static function reset(): void {
         // The autoloader will re-initialise if plugintypes is null.
         self::$plugintypes = null;
+    }
+
+    /**
+     * Capture the initial component caches for PHPUnit.
+     */
+    public static function phpunit_init(): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            throw new coding_exception('Component cache baseline can only be captured in PHPUnit.');
+        }
+
+        self::init();
+        self::$phpunitcachebaseline = self::get_phpunit_resettable_caches();
+    }
+
+    /**
+     * Restore the initial component caches after a PHPUnit test.
+     */
+    public static function phpunit_reset(): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST || self::$phpunitcachebaseline === null) {
+            self::reset();
+            return;
+        }
+
+        foreach (self::$phpunitcachebaseline as $property => $value) {
+            self::${$property} = $value;
+        }
+    }
+
+    /**
+     * Return the component caches cleared by a normal reset.
+     *
+     * @return array
+     */
+    private static function get_phpunit_resettable_caches(): array {
+        return [
+            'plugintypes' => self::$plugintypes,
+            'plugins' => self::$plugins,
+            'subsystems' => self::$subsystems,
+            'parents' => self::$parents,
+            'subplugins' => self::$subplugins,
+            'apis' => self::$apis,
+            'classmap' => self::$classmap,
+            'classmaprenames' => self::$classmaprenames,
+            'filemap' => self::$filemap,
+        ];
     }
 
     /**

@@ -364,6 +364,7 @@ class phpunit_util extends testing_util {
 
         // refresh data in all tables, clear caches, etc.
         self::reset_all_data();
+        \core_component::phpunit_init();
     }
 
     /**

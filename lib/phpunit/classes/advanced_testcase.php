@@ -84,8 +84,8 @@ abstract class advanced_testcase extends base_testcase {
             $CFG = phpunit_util::get_global_backup('CFG');
             $DB = phpunit_util::get_global_backup('DB');
 
-            // We need to reset the autoloader.
-            \core_component::reset();
+            // Restore the component cache baseline after a test.
+            \core_component::phpunit_reset();
         }
 
         if (isset($e)) {
