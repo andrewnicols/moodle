@@ -249,8 +249,24 @@ function accesslib_reset_role_cache() {
     global $ACCESSLIB_PRIVATE;
 
     $ACCESSLIB_PRIVATE->cacheroledefs = array();
+    if (defined('MOODLE_PHPUNIT_PROFILE')) {
+        $cachestart = hrtime(true);
+    }
     $cache = cache::make('core', 'roledefs');
+    if (defined('MOODLE_PHPUNIT_PROFILE')) {
+        \core\tests\phpunit\performance_profiler::record_metric(
+            'roledefs_cache_instance',
+            (hrtime(true) - $cachestart) / 1_000_000_000,
+        );
+        $cachestart = hrtime(true);
+    }
     $cache->purge();
+    if (defined('MOODLE_PHPUNIT_PROFILE')) {
+        \core\tests\phpunit\performance_profiler::record_metric(
+            'roledefs_cache_purge',
+            (hrtime(true) - $cachestart) / 1_000_000_000,
+        );
+    }
 }
 
 /**

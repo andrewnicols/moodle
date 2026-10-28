@@ -660,8 +660,12 @@ abstract class testing_util {
     /**
      * Purge dataroot directory.
      */
-    public static function reset_dataroot() {
+    public static function reset_dataroot(string $resetmode = 'direct', bool $databasereset = false) {
         global $CFG;
+        $profileenabled = defined('MOODLE_PHPUNIT_PROFILE');
+        if ($profileenabled) {
+            $filesystemstart = hrtime(true);
+        }
 
         // Keep the test's configuration: dataroot cleanup also removes its configuration file.
         $cachefactory = \core_cache\factory::instance();
@@ -703,6 +707,15 @@ abstract class testing_util {
             closedir($handle);
         }
 
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'dataroot_filesystem_cleanup',
+                (hrtime(true) - $filesystemstart) / 1_000_000_000,
+                ['reset_mode' => $resetmode, 'database_reset' => $databasereset],
+            );
+            $cachestart = hrtime(true);
+        }
+
         make_temp_directory('');
         make_backup_temp_directory('');
         make_cache_directory('');
@@ -716,6 +729,14 @@ abstract class testing_util {
         }
         // Reset the cache API so that it recreates it's required directories as well.
         \core_cache\factory::reset();
+
+        if ($profileenabled) {
+            \core\tests\phpunit\performance_profiler::record_metric(
+                'dataroot_cache_reset',
+                (hrtime(true) - $cachestart) / 1_000_000_000,
+                ['reset_mode' => $resetmode, 'database_reset' => $databasereset],
+            );
+        }
     }
 
     /**
