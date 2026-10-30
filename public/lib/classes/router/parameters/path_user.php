@@ -29,7 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class path_user extends \core\router\schema\parameters\path_parameter implements
     mapped_property_parameter,
@@ -52,7 +52,7 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
 
         This can be the magic string 'current', or the user's id, idnumber, or username.
 
-        If specifying an id, the value should be in the format `id:[id]`.
+        If specifying an id, the value should be in the format `[id]`.
 
         If specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.
 

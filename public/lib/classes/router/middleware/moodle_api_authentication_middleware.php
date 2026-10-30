@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class moodle_api_authentication_middleware extends moodle_authentication_middleware {
     /** @var \League\OAuth2\Server\ResourceServer The OAuth2 Resource Server instance. */
@@ -92,6 +92,14 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
             if ($authenticatedrequest) {
                 // We have an authenticated request.
                 $request = $authenticatedrequest;
+
+                // Handlers rely on a null value meaning that the request was not authenticated with a scoped credential
+                // (for example a cookie session), so a scoped credential must always supply its granted scopes.
+                if ($request->getAttribute(scopeset::GRANTED_SCOPES) === null) {
+                    throw new \core\exception\coding_exception(
+                        'A request authenticated with an API key or OAuth2 must have its granted scopes set.',
+                    );
+                }
             } else if ($moodleroute->cookies !== false) {
                 // No authenticated request, but cookies are supported.
                 \core\session\manager::set_cookies_supported(true);
