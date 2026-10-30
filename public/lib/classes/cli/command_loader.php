@@ -19,6 +19,7 @@ namespace core\cli;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LazyCommand;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 /**
@@ -49,7 +50,26 @@ class command_loader implements \Symfony\Component\Console\CommandLoader\Command
             throw new CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
         }
 
-        return $this->container->get($this->commandmap[$name]);
+        $classname = $this->commandmap[$name];
+
+        // Where the AsCommand attribute is available, defer instantiation of the command (and its dependencies) until
+        // it is actually run. Listing commands, for example, only needs the name and description.
+        $attribute = \core\attribute_helper::instance($classname, AsCommand::class);
+        if (!$attribute) {
+            return $this->container->get($classname);
+        }
+
+        $names = explode('|', $attribute->name);
+        $hidden = $names[0] === '';
+        $primary = $hidden ? $names[1] : $names[0];
+
+        return new LazyCommand(
+            name: $primary,
+            aliases: array_values(array_filter(array_slice($names, $hidden ? 2 : 1))),
+            description: $attribute->description ?? '',
+            isHidden: $hidden,
+            commandFactory: fn (): Command => $this->container->get($classname),
+        );
     }
 
     #[\Override]

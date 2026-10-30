@@ -33,10 +33,22 @@ use Symfony\Component\Console\Output\OutputInterface;
     description: 'Destroy all user sessions without confirmation',
 )]
 class session_destroy_all extends Command {
+    /**
+     * Constructor for the session_destroy_all command.
+     *
+     * @param \core\session\manager $manager
+     */
+    public function __construct(
+        /** @var \core\session\manager The session manager */
+        protected \core\session\manager $manager,
+    ) {
+        parent::__construct();
+    }
+
     #[\Override()]
     public function execute(InputInterface $input, OutputInterface $output): int {
         $output->writeln('<info>Destroying all user sessions...</info>');
-        $result = \core\di::get(\core\session\manager::class)->destroy_all();
+        $result = $this->manager->destroy_all();
 
         if ($result) {
             $output->writeln('<info>All user sessions have been successfully destroyed.</info>');
