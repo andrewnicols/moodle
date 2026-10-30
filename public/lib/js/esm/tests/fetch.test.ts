@@ -189,10 +189,23 @@ describe('@moodle/lms/core/fetch', () => {
             expect(response).toBe(expected);
         });
 
-        it('rejects with statusText on error response', async() => {
-            mockFetch.mockResolvedValue(errorResponse(404, 'Not Found'));
+        it.each([
+            [400, 'Bad Request'],
+            [404, 'Not Found'],
+            [500, ''],
+        ])('rejects with the full response for HTTP %i', async(status, statusText) => {
+            const response = errorResponse(status, statusText);
+            mockFetch.mockResolvedValue(response);
 
-            await expect(Fetch.request('mod_example', 'missing')).rejects.toBe('Not Found');
+            await expect(Fetch.request('mod_example', 'missing')).rejects.toBe(response);
+            expect(completeStack).toContain('Requesting mod_example/missing with GET');
+        });
+
+        it('preserves network errors as the rejection reason', async() => {
+            const error = new TypeError('Failed to fetch');
+            mockFetch.mockRejectedValue(error);
+
+            await expect(Fetch.request('mod_example', 'get_items')).rejects.toBe(error);
         });
 
         it('registers and completes a Pending operation', async() => {

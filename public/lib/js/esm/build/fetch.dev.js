@@ -47,7 +47,7 @@ class RequestWrapper {
     if (response.ok) {
       this.#resolve(response);
     } else {
-      this.#reject(response.statusText);
+      this.#reject(response);
     }
   }
 }

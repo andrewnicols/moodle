@@ -1,0 +1,12 @@
+issueNumber: MDL-90324
+notes:
+  core:
+    - message: >
+        The `core/fetch` and `@moodle/lms/core/fetch` APIs now return a full
+        Response upon error.
+
+
+        The original implementation only ever returned the status text, but this
+        makes it impossible to determine useful information about the error,
+        such as HTTP status code.
+      type: changed

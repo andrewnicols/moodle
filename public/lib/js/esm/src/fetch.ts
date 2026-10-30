@@ -90,7 +90,7 @@ class RequestWrapper {
     #request: Request;
     #promise: Promise<Response>;
     #resolve!: (value: Response) => void;
-    #reject!: (reason: string) => void;
+    #reject!: (reason: Response) => void;
 
     constructor(request: Request) {
         this.#request = request;
@@ -112,7 +112,7 @@ class RequestWrapper {
         if (response.ok) {
             this.#resolve(response);
         } else {
-            this.#reject(response.statusText);
+            this.#reject(response);
         }
     }
 }
