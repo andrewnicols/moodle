@@ -29,7 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class path_user extends \core\router\schema\parameters\path_parameter implements
     mapped_property_parameter,
@@ -52,11 +52,13 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
 
         This can be the magic string 'current', or the user's id, idnumber, or username.
 
-        If specifying an id, the value should be in the format `id:[id]`.
+        If specifying an id, the value should be in the format `[id]`.
 
         If specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.
 
         If specifying a username, the value should be in the format `username:[username]`.
+
+        Deleted users are treated as not found.
         EOF;
         $extra['examples'] = [
             new example(
@@ -85,17 +87,15 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
      *
      * @param string $value A user id, idnumber, or username
      * @return object
-     * @throws not_found_exception If the user cannot be found
+     * @throws not_found_exception If the user cannot be found or has been deleted
      */
     protected function get_user_for_value(string $value): mixed {
         global $USER;
 
-        if ($value === 'current') {
-            return $USER;
-        }
-
         $data = null;
-        if (is_numeric($value)) {
+        if ($value === 'current') {
+            $data = $USER;
+        } else if (is_numeric($value)) {
             $data = user::get_user($value);
         } else if (str_starts_with($value, 'idnumber:')) {
             $data = user::get_user_by_idnumber(substr($value, strlen('idnumber:')));
@@ -103,8 +103,11 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
             $data = user::get_user_by_username(substr($value, strlen('username:')));
         }
 
-        if ($data) {
+        if ($data && empty($data->deleted)) {
             return $data;
+        }
+        if ($data) {
+            throw new not_found_exception('user', (string) $data->id);
         }
         throw new not_found_exception('user', $value);
     }
