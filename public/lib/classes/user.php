@@ -427,7 +427,7 @@ class user {
      * @param string $capability Required capability
      * @return array Array containing SQL and params, or two nulls if there are no courses
      */
-    protected static function get_enrolled_sql_on_courses_with_capability($capability) {
+    public static function get_enrolled_sql_on_courses_with_capability($capability) {
         // Get all courses where user have the capability.
         $courses = get_user_capability_course(
             $capability,
@@ -2035,8 +2035,11 @@ class user {
             $userfields = $defaultfields;
         }
 
+        // These fields may be requested, but are not returned unless they are asked for.
+        $optionalfields = ['firstnamephonetic', 'lastnamephonetic', 'middlename', 'alternatename', 'imagealt', 'deleted'];
+
         foreach ($userfields as $thefield) {
-            if (!in_array($thefield, $defaultfields)) {
+            if (!in_array($thefield, $defaultfields) && !in_array($thefield, $optionalfields)) {
                 throw new moodle_exception('invaliduserfield', 'error', '', $thefield);
             }
         }
@@ -2102,6 +2105,10 @@ class user {
             'fullname' => fullname($user, $canviewfullnames),
         ];
 
+        if (in_array('deleted', $userfields)) {
+            $userdetails['deleted'] = (bool) $user->deleted;
+        }
+
         $dummyusername = static::get_dummy_fullname($context, ['override' => $canviewfullnames]);
         if (
             in_array('firstname', $userfields) &&
@@ -2114,6 +2121,15 @@ class user {
                 ($canviewfullnames || core_text::strrpos($dummyusername, 'lastname') !== false)
         ) {
             $userdetails['lastname'] = $user->lastname;
+        }
+        foreach (['firstnamephonetic', 'lastnamephonetic', 'middlename', 'alternatename'] as $namefield) {
+            // These follow the same rules as the first and last name.
+            if (
+                in_array($namefield, $userfields) &&
+                    ($canviewfullnames || core_text::strrpos($dummyusername, $namefield) !== false)
+            ) {
+                $userdetails[$namefield] = $user->{$namefield};
+            }
         }
 
         if (in_array('username', $userfields)) {
@@ -2154,6 +2170,10 @@ class user {
             }
             $userpicture->size = 0;
             $userdetails['profileimageurlsmall'] = $userpicture->get_url($PAGE)->out(false);
+        }
+
+        if (in_array('imagealt', $userfields) && isset($user->imagealt) && $user->imagealt !== '') {
+            $userdetails['imagealt'] = $user->imagealt;
         }
 
         $hiddenfields = $canviewhiddenuserfields ? [] : array_flip(explode(',', $CFG->hiddenuserfields));
