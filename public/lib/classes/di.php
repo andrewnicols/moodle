@@ -136,12 +136,9 @@ class di {
             // The hook manager should be in the container.
             \core\hook\manager::class => $hookmanager,
 
-            // The database.
-            \moodle_database::class => function(): \moodle_database {
-                global $DB;
-
-                return $DB;
-            },
+            // The database. A proxy is used as the global $DB may be null at resolution time, or later replaced.
+            \moodle_database::class => \DI\get(\core\dml\database_proxy::class),
+            \core\dml\database_proxy::class => \DI\create(),
 
             // The string manager.
             \core_string_manager::class => fn() => get_string_manager(),

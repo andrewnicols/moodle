@@ -135,12 +135,24 @@ final class di_test extends \advanced_testcase {
     }
 
     /**
-     * Test that the container will return the $DB global as a moodle_database instance.
+     * Test that the container returns a proxy which always defers to the current $DB global.
      */
     public function test_fetch_moodle_database(): void {
         global $DB;
 
-        $this->assertEquals($DB, di::get(\moodle_database::class));
+        $proxy = di::get(\moodle_database::class);
+        $this->assertInstanceOf(\core\dml\database_proxy::class, $proxy);
+        $this->assertSame($DB->get_prefix(), $proxy->get_prefix());
+
+        // The proxy must follow a replaced $DB, and must fail clearly if $DB is not set.
+        $realdb = $DB;
+        try {
+            $DB = null;
+            $this->expectException(\coding_exception::class);
+            $proxy->get_prefix();
+        } finally {
+            $DB = $realdb;
+        }
     }
 
     /**

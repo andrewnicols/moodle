@@ -1,0 +1,11 @@
+issueNumber: MDL-90234
+notes:
+  core:
+    - message: >
+        Moodle now supports fetching the Moodle Database object using a
+        `\core\db\database_proxy` object.
+
+
+        This provides full compatibility with the `\moodle_database` object and
+        is injectable at any point in the Moodle instantiation.
+      type: improved
