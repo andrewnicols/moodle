@@ -1,6 +1,9 @@
 # AE-215 Tracker draft — fresh-slate user REST API
 
-> **Working draft only.** Nothing in this proposal has been implemented. The previous AE-215 branch was discovery/prototyping; treat every endpoint below as new work. The attached `openapi.json` is a proposed contract for review, not evidence of implementation.
+> **Mixed implementation/planning baseline.** The two user GET endpoints are implemented
+> on the local MDL-90234-main branch; their contracts in `openapi.json` have been aligned
+> with supplied generated output. Other endpoints remain proposals. See
+> `MDL-90030-child-1-list-retrieve-users.md` for the read slice and remaining schema gaps.
 
 ## Proposed title
 
@@ -8,7 +11,8 @@ Implement REST endpoints for user management
 
 ## Description
 
-Design and implement REST endpoints for managing Moodle users through the new routing system. This work starts from a fresh slate: none of the endpoints in the attached OpenAPI schema have been created.
+Design and implement REST endpoints for managing Moodle users through the new routing system.
+MDL-90234 delivers list/retrieve users; remaining operations are separate implementation slices.
 
 The endpoints should follow the Moodle REST style guide and Moodle's existing user lifecycle, visibility, authentication-plugin, capability and privacy rules. Deliver the API contracts, implementation, automated tests and developer documentation together. Do not expose account data or recovery outcomes to callers who are not entitled to see them.
 
@@ -17,7 +21,7 @@ The endpoints should follow the Moodle REST style guide and Moodle's existing us
 | Method and path | Purpose and endpoint-specific features |
 | --- | --- |
 | `GET /user/users` | List visible users. Use the standard collection envelope (`items` and `pagination`) with 1-based page, configurable page size (default 25, maximum 100), search and sorting by supported name fields. Apply visibility and self-only restrictions before pagination. Return `hasMore` based on one extra visible row; `totalItems` may be `null` when an exact count is not calculated. No ETag is proposed for the collection. |
-| `GET /user/users/{userId}` | Retrieve one visible user's core and profile representation. Accept `current`, a bare numeric ID, `idnumber:…` or `username:…`. Return `ETag`; support `If-None-Match` and `304 Not Modified`. Profile visibility rules apply; hidden or unavailable fields are represented as `null`, without revealing why. |
+| `GET /user/users/{userId}` | Retrieve one visible user's core representation (MDL-90234). Accept `current`, a bare numeric ID, `idnumber:…` or `username:…`. Return `ETag`; support `If-None-Match` and `304 Not Modified`. Visibility rules apply; hidden or unavailable fields are null. Extended profile fields are outside this slice. |
 | `PATCH /user/users/{userId}` | Update supplied core or profile fields; omitted fields remain unchanged. Field-level capabilities, visibility rules, validation and authentication-plugin locks apply. Return the updated representation and ETag. Optional `If-Match` protects against stale writes and returns `412` on mismatch. |
 | `GET /user/users/{userId}/custom-fields` | Retrieve visible custom profile fields keyed by configured shortname. Return `ETag`; support `If-None-Match` and `304`. |
 | `PUT /user/users/{userId}/custom-fields` | Replace editable custom-field values: omitted editable fields are cleared, subject to required-field validation; non-editable fields remain unchanged. Return the representation and ETag. Optional `If-Match` returns `412` on mismatch. |
@@ -42,7 +46,15 @@ The endpoints should follow the Moodle REST style guide and Moodle's existing us
 
 Implement the routes in the `core_user` API routing component using Moodle's route attributes and shared router facilities. Use the existing user path-parameter mapping for identifiers. Keep route methods thin: delegate visibility/representation, capability checks, validation, custom-field writes, account lifecycle and password operations to cohesive user-domain services.
 
-Use the router's collection response/schema support for `GET /user/users`. Fetch one extra result after applying visibility and filters to calculate `hasMore`; `totalItems` is nullable when an exact count is not calculated. `GET /user/users/{userId}` returns the full visible user representation, including profile fields subject to Moodle visibility rules; collection items use the same `User` schema. Profile fields are updated through `PATCH /user/users/{userId}` alongside core fields, with field-level permission and validation rules. Use shared conditional-request handling for ETags on the individual user and custom-field representations, and optional `If-Match` on supported writes/deletion. Do not add ETags to collection or write-only password resources.
+Use the router's collection response/schema support for `GET /user/users`. Fetch one extra
+result after applying visibility and filters to calculate `hasMore`; `totalItems` is nullable
+when an exact count is not calculated. MDL-90234 returns the same core `User` representation
+for collection items and single-user reads, including additional names, image alt, language,
+account status, idnumber and effective/preferred IANA timezones. Access timestamps and
+extended profile fields are excluded. Profile-field expansion and mutation remain separate
+work; their proposed request schemas have not been implemented by MDL-90234.
+Use shared conditional-request handling for ETags on individual user/custom-field resources
+and optional `If-Match` on supported writes/deletion. Do not add collection or password ETags.
 
 Define request and response schemas as named OpenAPI components, referenced by operations, so the full contracts are easy to inspect in Swagger UI. Keep examples at the operation level. Keep the attached OpenAPI document as the review baseline, then regenerate/update it from the implementation rather than treating the current hand-authored proposal as generated truth. Exercise the routes with router integration tests and test domain edge cases with focused unit tests.
 
@@ -57,7 +69,9 @@ Define request and response schemas as named OpenAPI components, referenced by o
 
 ## Proposed child issues for MDL-90030
 
-Each child issue should be independently reviewable and deliver its route(s), contract/schema, tests and required documentation as one vertical slice. All paths are new; the attached OpenAPI file is discovery output only.
+Each child issue should be independently reviewable and deliver its route(s), contract/schema,
+tests and required documentation as one vertical slice. The read slice is MDL-90234;
+the attached OpenAPI combines its built contract with proposals for the remaining slices.
 
 1. **List and retrieve users** — Implement `GET /user/users` and `GET /user/users/{userId}`. Deliver scoped/visibility-aware results, collection pagination/search/sort, nullable `totalItems`, `hasMore` and single-resource ETags/conditional GET.
 2. **Update user accounts** — Implement `PATCH /user/users/{userId}` for core and profile fields, with field-level capabilities/auth-plugin locks, validation, optional `If-Match`, and the updated ETagged representation.
