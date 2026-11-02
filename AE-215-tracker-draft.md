@@ -26,7 +26,7 @@ The endpoints should follow the Moodle REST style guide and Moodle's existing us
 | `GET /user/users/{userId}/custom-fields` | Retrieve visible custom profile fields keyed by configured shortname. Return `ETag`; support `If-None-Match` and `304`. |
 | `PUT /user/users/{userId}/custom-fields` | Replace editable custom-field values: omitted editable fields are cleared, subject to required-field validation; non-editable fields remain unchanged. Return the representation and ETag. Optional `If-Match` returns `412` on mismatch. |
 | `PATCH /user/users/{userId}/custom-fields` | Update only supplied custom-field values; omitted fields remain unchanged. Return the representation and ETag. Optional `If-Match` returns `412` on mismatch. |
-| `POST /user/users` | Create a Moodle user, optionally with initial profile/custom-field values. Support explicit or generated passwords for password-managed authentication, with optional generated-credential email delivery. Save the account and supplied initial fields consistently. Return `201`, a `Location` for the user resource, and a non-secret creation receipt; never return a password. |
+| `POST /user/users` | Create a Moodle user, optionally with initial standard profile values (custom fields excluded). Support explicit or generated passwords for password-managed authentication, with optional generated-credential email delivery. Save the account and supplied initial fields consistently. Return `201`, a `Location` for the user resource, and a non-secret creation receipt; never return a password. |
 | `DELETE /user/users/{userId}` | Delete a user through Moodle's normal deletion lifecycle, with protections for guest, self and site-administrator accounts. Require unrestricted delete permission. Optional `If-Match` returns `412` on mismatch; success returns `204`. This is account deletion, not a GDPR erasure operation. |
 | `PATCH /user/users/{userId}/password` | Set an explicit password for an eligible account using the supported authentication plugin and normal password policy. Administrative capability required; password is write-only and never returned. No ETag or conditional write. |
 | `POST /user/users/{userId}/password-reset` | Administrative temporary-password generation. Replaces the password immediately, requires a change at next login, and optionally emails the credential. Return an immediate non-secret outcome; email failure does not undo the password change. No reset-history resource, result lookup or ETag. |
@@ -58,6 +58,18 @@ separate work; its proposed request schemas have not been implemented by MDL-902
 Use shared conditional-request handling for ETags on individual user/custom-field resources
 and optional `If-Match` on supported writes/deletion. Do not add collection or password ETags.
 
+The MDL-90235 update and MDL-90240 creation contracts include writable username, idnumber,
+names/additional names, email, lang, calendarType, auth, confirmed, suspended, profileImageAlt and
+timeZonePreference. Only timeZonePreference accepts null to select server default;
+effective timeZone, id, fullName and picture URLs are read-only, and deleted is excluded
+from inputs. Standard profile values include descriptionFormat alongside description.
+PATCH takes these profile values at the top level; creation retains its nested profile
+object. Custom fields are separate work, not inputs or service dependencies for these slices.
+The shared read schema also includes calendarType, the stored calendartype preference
+(not the effective page calendar). Calendar preferences use installed calendar plugin
+names; an empty preference follows the site calendar. This is an additional contract
+requirement, not a claim that the earlier MDL-90234 generated snapshot already includes it.
+
 Define request and response schemas as named OpenAPI components, referenced by operations, so the full contracts are easy to inspect in Swagger UI. Keep examples at the operation level. Keep the attached OpenAPI document as the review baseline, then regenerate/update it from the implementation rather than treating the current hand-authored proposal as generated truth. Exercise the routes with router integration tests and test domain edge cases with focused unit tests.
 
 ## Blockers
@@ -78,7 +90,7 @@ the attached OpenAPI combines its built contract with proposals for the remainin
 1. **List and retrieve users** — Implement `GET /user/users` and `GET /user/users/{userId}`. Deliver scoped/visibility-aware results, collection pagination/search/sort, nullable `totalItems`, `hasMore` and single-resource ETags/conditional GET.
 2. **Update user accounts** — Implement `PATCH /user/users/{userId}` for core and profile fields, with field-level capabilities/auth-plugin locks, validation, optional `If-Match`, and the updated ETagged representation.
 3. **Read and update custom profile fields** — Implement custom-field GET/PUT/PATCH, including editable-field filtering, replacement versus partial-update semantics, required/unique-field validation and conditional requests.
-4. **Create user accounts** — Implement POST creation with initial profile/custom fields, supported authentication modes, explicit/generated password options, credential-email outcome handling, `201` receipt and `Location`.
+4. **Create user accounts** — Implement POST creation with initial standard profile fields (custom fields excluded), supported authentication modes, explicit/generated password options, credential-email outcome handling, `201` receipt and `Location`.
 5. **Delete user accounts** — Implement DELETE with scoped/capability checks, protected-account rules, normal Moodle deletion lifecycle, optional `If-Match` and `204`.
 6. **Manage user passwords administratively** — Implement explicit password update and generated temporary-password operations, including password policy, authentication-plugin support, forced-change behaviour, session lifecycle and non-secret results.
 7. **Request public password recovery** — Implement the generic public `POST /user/password-reset` flow, privacy-preserving responses and existing token redemption lifecycle. Coordinate rate-limit and abuse controls with AE-218; that work does not block this slice.

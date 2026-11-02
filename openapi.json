@@ -563,7 +563,7 @@
         "/user/users": {
             "post": {
                 "summary": "Create a user",
-                "description": "Provision one Moodle account, including optional profile and custom fields. This is **not self-registration** and does not create an external identity-provider account.\n\n### Permissions\n\nToken scope: `core_user:user:create`. All callers need system-level `moodle/user:create`; populating initial fields requires no additional read/update permission.\n\n### Passwords\n\n- For password-based authentication, supply `password` **or** `generatePassword: true`, never both.\n- Generated passwords require a change at first login. Email is sent after creation unless `sendPasswordEmail: false`.\n- With email suppressed, arrange access separately through password reset or credential provisioning.\n- Explicit passwords must meet site policy; no automatic email or forced change follows.\n- Authentication without Moodle-managed passwords rejects both password supply and generation. **Passwords are never returned.**\n\n### Creation and result\n\nValidate and save account, profile and custom fields atomically, applying defaults and required/unique field rules. Initial provisioning is distinct from later auth-plugin field locks. Follow Moodle's creation lifecycle, emitting `user_created` after the supplied data is saved.\n\nReturn `201` with an `{id, username}` receipt and numeric-id resource URL in `Location`. No ETag is returned; an authorised GET retrieves the representation and ETag. See the `201` response for email delivery outcomes.",
+                "description": "Provision one Moodle account, including optional standard profile fields. Custom profile fields are out of scope and customFields is rejected. This is **not self-registration** and does not create an external identity-provider account.\n\n### Permissions\n\nToken scope: `core_user:user:create`. All callers need system-level `moodle/user:create`; populating initial fields requires no additional read/update permission.\n\n### Passwords\n\n- For password-based authentication, supply `password` **or** `generatePassword: true`, never both.\n- Generated passwords require a change at first login. Email is sent after creation unless `sendPasswordEmail: false`.\n- With email suppressed, arrange access separately through password reset or credential provisioning.\n- Explicit passwords must meet site policy; no automatic email or forced change follows.\n- Authentication without Moodle-managed passwords rejects both password supply and generation. **Passwords are never returned.**\n\n### Creation and result\n\nValidate and save account and standard profile fields atomically, applying defaults and required/unique field rules. Initial provisioning is distinct from later auth-plugin field locks. Follow Moodle's creation lifecycle, emitting `user_created` after the supplied data is saved.\n\nUse lang for the stored language preference and timeZonePreference for the stored IANA timezone preference (null selects server default). The computed id, fullName, profileImageUrl, profileImageUrlSmall and effective timeZone are not inputs; deleted is also excluded.\n\nReturn `201` with an `{id, username}` receipt and numeric-id resource URL in `Location`. No ETag is returned; an authorised GET retrieves the representation and ETag. See the `201` response for email delivery outcomes.",
                 "tags": [
                     "core_user"
                 ],
@@ -600,21 +600,29 @@
                                 },
                                 "generatedPassword": {
                                     "summary": "Create an account and email a generated password",
-                                    "description": "Create a manual-authentication account with initial profile and custom field values. Generate an initial password and email it to the user, who must change it on first login. Email delivery is enabled by default.",
+                                    "description": "Create a manual-authentication account with initial standard profile values. Generate an initial password and email it to the user, who must change it on first login. Email delivery is enabled by default.",
                                     "value": {
                                         "username": "new.student",
                                         "firstName": "New",
                                         "lastName": "Student",
                                         "email": "new.student@example.invalid",
+                                        "idnumber": "STUDENT-001",
+                                        "lang": "en",
+                                        "calendarType": "gregorian",
+                                        "firstNamePhonetic": "Nyoo",
+                                        "lastNamePhonetic": "Stoo-dent",
+                                        "middleName": "Alex",
+                                        "alternateName": "New",
+                                        "profileImageAlt": "Student portrait",
+                                        "confirmed": true,
+                                        "suspended": false,
+                                        "timeZonePreference": null,
                                         "generatePassword": true,
                                         "profile": {
                                             "city": "Perth",
-                                            "country": "AU"
-                                        },
-                                        "customFields": {
-                                            "fields": {
-                                                "studentcode": "STUDENT-001"
-                                            }
+                                            "country": "AU",
+                                            "description": "<p>New student</p>",
+                                            "descriptionFormat": 1
                                         }
                                     }
                                 },
@@ -862,7 +870,7 @@
                 "x-implementation-status": "implemented-in-MDL-90234-main"
             },
             "patch": {
-                "description": "Update selected core user or profile fields. **Omitted fields remain unchanged.**\n\n- Email and suspension changes require `moodle/user:update`.\n- Suspending an account invalidates its active sessions.\n- Profile visibility rules govern reads; write permissions, field validation and authentication-plugin locks apply to updates.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
+                "description": "Update supplied account and standard profile fields. **Omitted fields remain unchanged.** Custom profile fields are out of scope and customFields is rejected.\n\n- Email, suspension and administrative username/idnumber/auth/confirmed changes require applicable account-edit capabilities, including `moodle/user:update`, even for self.\n- Suspending an account invalidates its active sessions.\n- Field-level/self-edit permissions, validation and source/target authentication-plugin locks apply. Changing auth cannot provision an external identity or implicitly set/reset a password.\n- Use lang for the stored language preference and timeZonePreference for a supported IANA timezone or null for server default. The effective timeZone is read-only, including forced site policy; the internal 99 sentinel is not accepted.\n- id, fullName and picture URLs are read-only; deleted is excluded from inputs. Clear optional text with an empty string; null is otherwise rejected.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply; self scope grants no administrative permission.\n\n**Concurrency:** optional `If-Match` against the same caller-visible representation as GET; a stale ETag returns `412`. Without it, the write is unconditional.",
                 "summary": "Update a user",
                 "x-implementation-status": "proposed",
                 "tags": [
@@ -920,7 +928,7 @@
                     }
                 },
                 "requestBody": {
-                    "description": "Supply at least one writable core or profile field. Omitted fields are unchanged; null, unknown and read-only fields are rejected with `422`.",
+                    "description": "Supply at least one writable account or standard profile field. Omitted fields are unchanged. Only timeZonePreference accepts null (server default); other null, unknown, read-only and customFields inputs are rejected with `422`. descriptionFormat specifies the Moodle content format when writing description.",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -934,7 +942,37 @@
                                     "value": {
                                         "firstName": "Alex",
                                         "lastName": "Student",
-                                        "timeZone": "Australia/Perth"
+                                        "timeZonePreference": "Australia/Perth"
+                                    }
+                                },
+                                "updateAccountDetails": {
+                                    "summary": "Update account identifiers, language and additional names",
+                                    "description": "Administrative fields require applicable account-edit permissions; self scope alone is insufficient.",
+                                    "value": {
+                                        "username": "alex.student",
+                                        "idnumber": "STUDENT-001",
+                                        "lang": "en",
+                                        "calendarType": "gregorian",
+                                        "auth": "manual",
+                                        "confirmed": true,
+                                        "firstNamePhonetic": "Al-ex",
+                                        "lastNamePhonetic": "Stoo-dent",
+                                        "middleName": "Morgan",
+                                        "alternateName": "Alex",
+                                        "profileImageAlt": "Alex smiling"
+                                    }
+                                },
+                                "followServerTimeZone": {
+                                    "summary": "Follow the server default timezone",
+                                    "value": {
+                                        "timeZonePreference": null
+                                    }
+                                },
+                                "updateDescription": {
+                                    "summary": "Update a formatted profile description",
+                                    "value": {
+                                        "description": "<p>A <strong>formatted</strong> profile.</p>",
+                                        "descriptionFormat": 1
                                     }
                                 },
                                 "updateEmail": {
@@ -1115,6 +1153,34 @@
                         "format": "email",
                         "description": "Must be unique where required by site policy."
                     },
+                    "idnumber": {
+                        "type": "string",
+                        "description": "Account identifier, following existing validation without a new uniqueness guarantee."
+                    },
+                    "firstNamePhonetic": {
+                        "type": "string"
+                    },
+                    "lastNamePhonetic": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "alternateName": {
+                        "type": "string"
+                    },
+                    "confirmed": {
+                        "type": "boolean",
+                        "description": "Account confirmation, not universal email verification. Omission uses normal provisioning defaults."
+                    },
+                    "suspended": {
+                        "type": "boolean",
+                        "description": "Initial suspension state. Omission uses normal provisioning defaults."
+                    },
+                    "profileImageAlt": {
+                        "type": "string",
+                        "description": "Profile image alternative text, not an image upload."
+                    },
                     "auth": {
                         "type": "string",
                         "default": "manual",
@@ -1136,13 +1202,20 @@
                         "default": true,
                         "description": "Controls email delivery when `generatePassword` is true; otherwise this property must be omitted. Defaults to true for generated passwords. Set false for bulk provisioning without credential emails. The generated password is never returned; arrange access separately."
                     },
-                    "timeZone": {
-                        "type": "string",
-                        "description": "Valid Moodle time zone. Defaults to the site's default when omitted."
+                    "timeZonePreference": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Supported IANA timezone preference, or null for server default. Omission follows server default. Do not send the internal 99 sentinel. Forced site timezone does not overwrite this preference."
                     },
-                    "language": {
+                    "lang": {
                         "type": "string",
                         "description": "Installed language code. Defaults to the site's default when omitted."
+                    },
+                    "calendarType": {
+                        "type": "string",
+                        "description": "Installed calendar type plugin name, such as gregorian. Omission uses normal site defaults; an empty preference follows the site calendar."
                     },
                     "profile": {
                         "type": "object",
@@ -1173,23 +1246,10 @@
                             },
                             "description": {
                                 "type": "string"
-                            }
-                        }
-                    },
-                    "customFields": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "required": [
-                            "fields"
-                        ],
-                        "description": "Initial custom profile fields. Apply configured defaults for omitted fields and validate required fields, uniqueness and field-type rules before committing account creation.",
-                        "properties": {
-                            "fields": {
-                                "type": "object",
-                                "description": "Values keyed by custom profile field shortname, matching the custom-fields resource.",
-                                "additionalProperties": {
-                                    "type": "string"
-                                }
+                            },
+                            "descriptionFormat": {
+                                "type": "integer",
+                                "description": "Moodle content format for the supplied description; validated against supported FORMAT_* values."
                             }
                         }
                     }
@@ -1352,6 +1412,10 @@
                     "lang": {
                         "type": "string"
                     },
+                    "calendarType": {
+                        "type": "string",
+                        "description": "Stored calendar type preference (calendartype), subject to user-field visibility. An empty preference follows the site calendar. This is not the effective page calendar."
+                    },
                     "confirmed": {
                         "type": "boolean"
                     },
@@ -1443,17 +1507,65 @@
             "UserUpdate": {
                 "type": "object",
                 "properties": {
+                    "username": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Nonblank username following site policy and uniqueness rules. Requires administrative account-edit permission."
+                    },
+                    "idnumber": {
+                        "type": "string",
+                        "description": "Account identifier. Requires administrative account-edit permission; no new uniqueness guarantee."
+                    },
                     "firstName": {
-                        "type": "string"
+                        "type": "string",
+                        "minLength": 1
                     },
                     "lastName": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "firstNamePhonetic": {
+                        "type": "string"
+                    },
+                    "lastNamePhonetic": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "alternateName": {
                         "type": "string"
                     },
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                     },
-                    "timeZone": {
-                        "type": "string"
+                    "lang": {
+                        "type": "string",
+                        "description": "Stored Moodle language preference, following installed-language validation."
+                    },
+                    "calendarType": {
+                        "type": "string",
+                        "description": "Installed calendar type plugin name, such as gregorian. Omission leaves it unchanged; an empty string clears the preference to follow the site calendar. Null is rejected."
+                    },
+                    "auth": {
+                        "type": "string",
+                        "description": "Supported account authentication plugin. Requires administrative account-edit permission and source/target plugin constraints."
+                    },
+                    "confirmed": {
+                        "type": "boolean",
+                        "description": "Account confirmation, not universal email verification. Requires administrative account-edit permission and normal confirmation lifecycle."
+                    },
+                    "profileImageAlt": {
+                        "type": "string",
+                        "description": "Profile image alternative text, not an image upload."
+                    },
+                    "timeZonePreference": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Supported IANA timezone preference, or null for server default. Omission leaves it unchanged. The internal 99 sentinel is not accepted; effective timeZone is read-only."
                     },
                     "suspended": {
                         "type": "boolean"
@@ -1481,6 +1593,10 @@
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "descriptionFormat": {
+                        "type": "integer",
+                        "description": "Moodle content format for the supplied description; validated against supported FORMAT_* values."
                     }
                 },
                 "additionalProperties": false,

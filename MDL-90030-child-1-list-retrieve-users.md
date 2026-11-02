@@ -41,6 +41,7 @@ The planning OpenAPI retains the readable component names `User` and `UserCollec
 | `description` | RAW (formatted content from the user-details API) |
 | `descriptionFormat` | INT (format of the returned description) |
 | `lang` | LANG |
+| `calendarType` | PLUGIN (stored `calendartype` preference) |
 | `auth` | AUTH |
 | `confirmed`, `suspended`, `deleted` | BOOL |
 | `profileImageUrl`, `profileImageUrlSmall` | URL |
@@ -61,6 +62,9 @@ format. The helper omits some empty values, which are returned as null; it prese
 other readable empty values, such as an empty department.
 
 `lang` is the stored Moodle language preference, not the effective page language.
+`calendarType` is the stored calendar plugin preference, not the effective page calendar;
+an empty preference follows the site calendar. It is an additional read-contract
+requirement beyond the earlier generated snapshot and must follow user-field visibility.
 `auth` identifies the account's authentication plugin, not the request's authentication
 method. `confirmed` is account confirmation, not a universal email-verification claim.
 Deleted users remain excluded, so returned users currently have `deleted: false`.
@@ -126,6 +130,7 @@ These remain review/verification criteria, not claims that every item has passed
 - [ ] Both read responses include city, country, institution, department, phone,
   mobilePhone, address, description and descriptionFormat, preserving self, authorised,
   restricted-viewer and course-context visibility rules, formatted content and empty/null values.
+- [ ] Both read responses include calendarType with appropriate preference visibility.
 - [ ] Timezone tests cover explicit zones, server default, legacy offsets, hidden values
   and a forced site timezone while preserving the stored preference.
 - [ ] ETag is documented on single-user 200 responses and preserved on 304 responses;
