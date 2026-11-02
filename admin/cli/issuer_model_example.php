@@ -27,8 +27,8 @@ define('CLI_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
-use core\model\manager;
 use core\oauth2\issuer_model;
+use core\oauth2\issuer_model_manager;
 
 [$options, $unrecognised] = cli_get_params([
     'help' => false,
@@ -58,17 +58,17 @@ HELP;
 }
 
 $issuer = new issuer_model();
-$issuer->name = ' Demonstration issuer ';
+$issuer->name = 'Demonstration issuer';
 $issuer->baseurl = 'https://example.invalid/';
 $issuer->clientid = 'demonstration-client';
 $issuer->enabled = false;
-$issuer->image = null;
+$issuer->image = '';
 $issuer->systememail = 'oauth@example.invalid';
 
 if ($issuer->name !== 'Demonstration issuer' || $issuer->validate() !== true) {
-    cli_error('The model failed hook or field validation.');
+    cli_error('The model failed field validation.');
 }
-cli_writeln('Normalised name: ' . $issuer->name);
+cli_writeln('Issuer name: ' . $issuer->name);
 cli_writeln('Cleaned base URL: ' . $issuer->get('baseurl'));
 cli_writeln('Enabled: ' . ($issuer->enabled ? 'yes' : 'no'));
 
@@ -80,8 +80,7 @@ if ($DB->record_exists('oauth2_issuer', ['name' => $issuer->name])) {
     cli_error('A demonstration issuer already exists.');
 }
 
-$issuer->sortorder = $DB->count_records('oauth2_issuer');
-$manager = new manager($DB);
+$manager = new issuer_model_manager($DB);
 $manager->save($issuer, (int) $USER->id);
 $loaded = $manager->get(issuer_model::class, $issuer->get('id'));
 

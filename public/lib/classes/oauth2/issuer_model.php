@@ -24,8 +24,9 @@ use core\param;
 /**
  * Example declared-property mapping for an OAuth2 issuer.
  *
- * This opt-in model maps the existing fields, not issuer's database-dependent
- * helpers or lifecycle behaviour. The caller supplies sortorder when inserting.
+ * Database-dependent helpers and sort-order preparation belong to issuer_model_manager.
+ * This is not a subtype of the legacy issuer: integrations requiring that concrete
+ * type still need an explicit adapter.
  *
  * @package    core
  * @copyright  2026 Andrew Nicols
@@ -33,14 +34,9 @@ use core\param;
  */
 #[table('oauth2_issuer')]
 class issuer_model extends model {
-    // PHPCS currently misparses property hook expressions as declarations.
-    // phpcs:disable PSR2.Classes.PropertyDeclaration, moodle.Commenting.VariableComment, moodle.PHP.MemberVarScope
-    /** @var string Issuer name, normalised on assignment. */
+    /** @var string Issuer name. */
     #[field(param::TEXT)]
-    public string $name {
-        set => trim($value);
-    }
-    // phpcs:enable
+    public string $name;
 
     /** @var string|null Image URL. */
     #[field(param::URL, nullable: true)]
@@ -94,9 +90,9 @@ class issuer_model extends model {
     #[field(param::RAW)]
     public string $alloweddomains = '';
 
-    /** @var int Display ordering, supplied by the calling application. */
+    /** @var int|null Display ordering, prepared by the manager before validation. */
     #[field(param::INT)]
-    public int $sortorder = 0;
+    public ?int $sortorder = 0;
 
     /** @var bool Whether account confirmation is required. */
     #[field(param::BOOL)]
@@ -113,6 +109,53 @@ class issuer_model extends model {
     /** @var string|null System account email. */
     #[field(param::EMAIL, nullable: true)]
     public ?string $systememail = null;
+
+    /**
+     * Match the legacy issuer's allowed-domain rules.
+     *
+     * @param string $email Email address.
+     * @return bool Whether the domain is allowed.
+     */
+    public function is_valid_login_domain(string $email): bool {
+        if (empty($this->get('alloweddomains'))) {
+            return true;
+        }
+        $parts = explode('@', $email, 2);
+        return \core\ip_utils::is_domain_in_allowed_list(
+            $parts[1] ?? '',
+            explode(',', $this->get('alloweddomains')),
+        );
+    }
+
+    /**
+     * Whether both cleaned credential fields are present.
+     *
+     * @return bool Configuration status.
+     */
+    public function is_configured(): bool {
+        return !empty($this->get('clientid')) && !empty($this->get('clientsecret'));
+    }
+
+    /**
+     * Format the configured display name with the system context.
+     *
+     * @return string Display name.
+     */
+    public function get_display_name(): string {
+        return format_string(
+            $this->get('loginpagename') ?: $this->get('name'),
+            options: ['context' => \core\context\system::instance()],
+        );
+    }
+
+    /**
+     * Get the system account email, treating an empty string as absent.
+     *
+     * @return string|null Email address.
+     */
+    public function get_system_email(): ?string {
+        return $this->get('systememail') ?: null;
+    }
 
     /**
      * Preserve the existing issuer's HTTPS-only base URL validation.
