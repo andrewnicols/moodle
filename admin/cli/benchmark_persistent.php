@@ -27,6 +27,10 @@ define('CLI_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
+use core\model;
+use core\model\attribute\field;
+use core\param;
+
 // Minimal array-backed model, without persistent's checks or database features.
 $arraymodel = new class { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
     /** @var array Model data. */
@@ -88,25 +92,25 @@ $propertymodels['template'] = new class {
     use PersistentBenchmarkAccessors;
 
     /** @var string Template name. */
-    private $shortname;
+    private string $shortname;
     /** @var string Template description. */
-    private $description;
+    private string $description;
     /** @var int Description format. */
-    private $descriptionformat;
+    private int $descriptionformat;
     /** @var int Due date. */
-    private $duedate;
+    private int $duedate;
     /** @var bool Visibility. */
-    private $visible;
+    private bool $visible;
     /** @var int Context ID. */
-    private $contextid;
+    private int $contextid;
     /** @var int Record ID. */
-    private $id;
+    private int $id;
     /** @var int Creation time. */
-    private $timecreated;
+    private int $timecreated;
     /** @var int Modification time. */
-    private $timemodified;
+    private int $timemodified;
     /** @var int Modifying user ID. */
-    private $usermodified;
+    private int $usermodified;
 };
 
 // phpcs:ignore moodle.Commenting.MissingDocblock.Class
@@ -114,19 +118,19 @@ $propertymodels['endpoint'] = new class {
     use PersistentBenchmarkAccessors;
 
     /** @var int Issuer ID. */
-    private $issuerid;
+    private int $issuerid;
     /** @var string Endpoint name. */
-    private $name;
+    private string $name;
     /** @var string Endpoint URL. */
-    private $url;
+    private string $url;
     /** @var int Record ID. */
-    private $id;
+    private int $id;
     /** @var int Creation time. */
-    private $timecreated;
+    private int $timecreated;
     /** @var int Modification time. */
-    private $timemodified;
+    private int $timemodified;
     /** @var int Modifying user ID. */
-    private $usermodified;
+    private int $usermodified;
 };
 
 // phpcs:ignore moodle.Commenting.MissingDocblock.Class
@@ -134,51 +138,144 @@ $propertymodels['issuer'] = new class {
     use PersistentBenchmarkAccessors;
 
     /** @var string Issuer name. */
-    private $name;
+    private string $name;
     /** @var string|null Image URL. */
-    private $image;
+    private ?string $image;
     /** @var string Client ID. */
-    private $clientid;
+    private string $clientid;
     /** @var string Client secret. */
-    private $clientsecret;
+    private string $clientsecret;
     /** @var string Base URL. */
-    private $baseurl;
+    private string $baseurl;
     /** @var bool Enabled. */
-    private $enabled;
+    private bool $enabled;
     /** @var int Login page visibility. */
-    private $showonloginpage;
+    private int $showonloginpage;
     /** @var bool Basic authentication. */
-    private $basicauth;
+    private bool $basicauth;
     /** @var string|null Supported scopes. */
-    private $scopessupported;
+    private ?string $scopessupported;
     /** @var string Login scopes. */
-    private $loginscopes;
+    private string $loginscopes;
     /** @var string Offline login scopes. */
-    private $loginscopesoffline;
+    private string $loginscopesoffline;
     /** @var string Login parameters. */
-    private $loginparams;
+    private string $loginparams;
     /** @var string Offline login parameters. */
-    private $loginparamsoffline;
+    private string $loginparamsoffline;
     /** @var string Allowed domains. */
-    private $alloweddomains;
+    private string $alloweddomains;
     /** @var int Sort order. */
-    private $sortorder;
+    private int $sortorder;
     /** @var bool Require confirmation. */
-    private $requireconfirmation;
+    private bool $requireconfirmation;
     /** @var string|null Service type. */
-    private $servicetype;
+    private ?string $servicetype;
     /** @var string|null Login page name. */
-    private $loginpagename;
+    private ?string $loginpagename;
     /** @var string|null System email. */
-    private $systememail;
+    private ?string $systememail;
     /** @var int Record ID. */
-    private $id;
+    private int $id;
     /** @var int Creation time. */
-    private $timecreated;
+    private int $timecreated;
     /** @var int Modification time. */
-    private $timemodified;
+    private int $timemodified;
     /** @var int Modifying user ID. */
-    private $usermodified;
+    private int $usermodified;
+};
+
+$coremodels['template'] = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+    /** @var string Template name. */
+    #[field(param::TEXT)]
+    protected string $shortname;
+    /** @var string Template description. */
+    #[field(param::CLEANHTML)]
+    protected string $description = '';
+    /** @var int Description format (HTML). */
+    #[field(param::INT, choices: [FORMAT_HTML, FORMAT_MOODLE, FORMAT_PLAIN, FORMAT_MARKDOWN])]
+    protected int $descriptionformat = 1;
+    /** @var int Due date. */
+    #[field(param::INT)]
+    protected int $duedate = 0;
+    /** @var bool Visibility. */
+    #[field(param::BOOL)]
+    protected bool $visible = true;
+    /** @var int Context ID. */
+    #[field(param::INT)]
+    protected int $contextid;
+};
+
+$coremodels['endpoint'] = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+    /** @var int Issuer ID. */
+    #[field(param::INT)]
+    protected int $issuerid;
+    /** @var string Endpoint name. */
+    #[field(param::ALPHANUMEXT)]
+    protected string $name;
+    /** @var string Endpoint URL. */
+    #[field(param::URL)]
+    protected string $url;
+};
+
+$coremodels['issuer'] = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+    /** @var string Issuer name. */
+    #[field(param::TEXT)]
+    protected string $name;
+    /** @var string|null Image URL. */
+    #[field(param::URL, nullable: true)]
+    protected ?string $image = null;
+    /** @var string Client ID. */
+    #[field(param::RAW_TRIMMED)]
+    protected string $clientid = '';
+    /** @var string Client secret. */
+    #[field(param::RAW_TRIMMED)]
+    protected string $clientsecret = '';
+    /** @var string Base URL. */
+    #[field(param::URL)]
+    protected string $baseurl = '';
+    /** @var bool Enabled. */
+    #[field(param::BOOL)]
+    protected bool $enabled = true;
+    /** @var int Login page visibility. */
+    #[field(param::INT)]
+    protected int $showonloginpage = 0;
+    /** @var bool Basic authentication. */
+    #[field(param::BOOL)]
+    protected bool $basicauth = false;
+    /** @var string|null Supported scopes. */
+    #[field(param::RAW, nullable: true)]
+    protected ?string $scopessupported = null;
+    /** @var string Login scopes. */
+    #[field(param::RAW)]
+    protected string $loginscopes = 'openid profile email';
+    /** @var string Offline login scopes. */
+    #[field(param::RAW)]
+    protected string $loginscopesoffline = 'openid profile email';
+    /** @var string Login parameters. */
+    #[field(param::RAW)]
+    protected string $loginparams = '';
+    /** @var string Offline login parameters. */
+    #[field(param::RAW)]
+    protected string $loginparamsoffline = '';
+    /** @var string Allowed domains. */
+    #[field(param::RAW)]
+    protected string $alloweddomains = '';
+    /** @var int Sort order. */
+    #[field(param::INT)]
+    protected int $sortorder = 0;
+    /** @var bool Require confirmation. */
+    #[field(param::BOOL)]
+    protected bool $requireconfirmation = true;
+    /** @var string|null Service type. */
+    #[field(param::ALPHANUM, nullable: true)]
+    protected ?string $servicetype = null;
+    /** @var string|null Login page name. */
+    #[field(param::TEXT, nullable: true)]
+    protected ?string $loginpagename = null;
+    /** @var string|null System email. */
+    #[field(param::EMAIL, nullable: true)]
+    protected ?string $systememail = null;
 };
 
 /**
@@ -285,7 +382,7 @@ if ($unrecognised) {
 }
 if ($options['help']) {
     echo <<<'HELP'
-Compare an existing persistent with two simple models holding the same fields.
+Compare an existing persistent, two simple models and core\model with the same fields.
 No records are read from or written to the database by the benchmark.
 
 Options:
@@ -317,6 +414,9 @@ memory. Peak memory covers construction/population only. Methods and cached sche
 are shared per class, not charged per object. Simple models deliberately omit
 validation, sanitisation, defaults, change tracking and database functionality:
 they are a lower-bound storage comparison, not equivalent replacements.
+The core_model row uses the real attribute-backed model with cleaned getters,
+not the unchecked simple-property implementation. Validation and DML are not timed.
+The properties row also uses native PHP types, but has no cleaning or validation.
 
 HELP;
     exit(0);
@@ -349,6 +449,7 @@ $classes = [
     'persistent' => $persistents[$options['model']],
     'array' => $arraymodel::class,
     'properties' => $propertymodels[$options['model']]::class,
+    'core_model' => $coremodels[$options['model']]::class,
 ];
 $records = [];
 $expectedchecksum = 0;
@@ -407,10 +508,18 @@ sort($defined);
 if ($properties !== $defined) {
     cli_error('The fixture must cover exactly the current persistent properties.');
 }
-$declared = array_keys((new ReflectionClass($classes['properties']))->getDefaultProperties());
+$declared = array_map(
+    static fn(ReflectionProperty $property): string => $property->getName(),
+    (new ReflectionClass($classes['properties']))->getProperties(),
+);
 sort($declared);
 if ($properties !== $declared) {
     cli_error('The simple model must declare exactly the fixture properties.');
+}
+$mapped = array_keys((array) $coremodels[$options['model']]->to_record());
+sort($mapped);
+if ($properties !== $mapped) {
+    cli_error('The core model must map exactly the fixture properties.');
 }
 
 foreach ($classes as $class) {
