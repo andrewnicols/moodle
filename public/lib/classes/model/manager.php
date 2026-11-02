@@ -32,7 +32,7 @@ use moodle_database;
  * @copyright  2026 Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class manager {
+class manager {
     /** @var array Cached table names per model class. */
     private static array $tables = [];
 
@@ -43,7 +43,7 @@ final class manager {
      */
     public function __construct(
         /** @var moodle_database Database connection. */
-        private readonly moodle_database $db,
+        protected readonly moodle_database $db,
     ) {
     }
 
@@ -80,6 +80,25 @@ final class manager {
     }
 
     /**
+     * Prepare domain-specific values before checking current model data.
+     *
+     * @param model $model Model to validate.
+     * @return true|array Validation result.
+     */
+    public function validate(model $model): true|array {
+        $this->prepare_validation($model);
+        return $model->validate();
+    }
+
+    /**
+     * Extend the manager for lifecycle rules requiring database access.
+     *
+     * @param model $model Model being validated.
+     */
+    protected function prepare_validation(model $model): void {
+    }
+
+    /**
      * Insert or update a valid model, maintaining the four standard audit fields.
      *
      * Validation is never cached, including after public property writes. The caller
@@ -90,7 +109,7 @@ final class manager {
      */
     public function save(model $model, int $userid): void {
         $table = $this->table($model::class);
-        $valid = $model->validate();
+        $valid = $this->validate($model);
         if ($valid !== true) {
             throw new \invalid_parameter_exception('Invalid model fields: ' . implode(', ', array_keys($valid)));
         }

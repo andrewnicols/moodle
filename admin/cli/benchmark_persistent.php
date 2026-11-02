@@ -206,77 +206,8 @@ $coremodels['template'] = new class extends model { // phpcs:ignore moodle.Comme
     protected int $contextid;
 };
 
-$coremodels['endpoint'] = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
-    /** @var int Issuer ID. */
-    #[field(param::INT)]
-    protected int $issuerid;
-    /** @var string Endpoint name. */
-    #[field(param::ALPHANUMEXT)]
-    protected string $name;
-    /** @var string Endpoint URL. */
-    #[field(param::URL)]
-    protected string $url;
-};
-
-$coremodels['issuer'] = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
-    /** @var string Issuer name. */
-    #[field(param::TEXT)]
-    protected string $name;
-    /** @var string|null Image URL. */
-    #[field(param::URL, nullable: true)]
-    protected ?string $image = null;
-    /** @var string Client ID. */
-    #[field(param::RAW_TRIMMED)]
-    protected string $clientid = '';
-    /** @var string Client secret. */
-    #[field(param::RAW_TRIMMED)]
-    protected string $clientsecret = '';
-    /** @var string Base URL. */
-    #[field(param::URL)]
-    protected string $baseurl = '';
-    /** @var bool Enabled. */
-    #[field(param::BOOL)]
-    protected bool $enabled = true;
-    /** @var int Login page visibility. */
-    #[field(param::INT)]
-    protected int $showonloginpage = 0;
-    /** @var bool Basic authentication. */
-    #[field(param::BOOL)]
-    protected bool $basicauth = false;
-    /** @var string|null Supported scopes. */
-    #[field(param::RAW, nullable: true)]
-    protected ?string $scopessupported = null;
-    /** @var string Login scopes. */
-    #[field(param::RAW)]
-    protected string $loginscopes = 'openid profile email';
-    /** @var string Offline login scopes. */
-    #[field(param::RAW)]
-    protected string $loginscopesoffline = 'openid profile email';
-    /** @var string Login parameters. */
-    #[field(param::RAW)]
-    protected string $loginparams = '';
-    /** @var string Offline login parameters. */
-    #[field(param::RAW)]
-    protected string $loginparamsoffline = '';
-    /** @var string Allowed domains. */
-    #[field(param::RAW)]
-    protected string $alloweddomains = '';
-    /** @var int Sort order. */
-    #[field(param::INT)]
-    protected int $sortorder = 0;
-    /** @var bool Require confirmation. */
-    #[field(param::BOOL)]
-    protected bool $requireconfirmation = true;
-    /** @var string|null Service type. */
-    #[field(param::ALPHANUM, nullable: true)]
-    protected ?string $servicetype = null;
-    /** @var string|null Login page name. */
-    #[field(param::TEXT, nullable: true)]
-    protected ?string $loginpagename = null;
-    /** @var string|null System email. */
-    #[field(param::EMAIL, nullable: true)]
-    protected ?string $systememail = null;
-};
+$coremodels['endpoint'] = new \core\oauth2\endpoint_model();
+$coremodels['issuer'] = new \core\oauth2\issuer_model();
 
 /**
  * Measure one retained batch, checking its data and the absence of database I/O.
@@ -286,6 +217,7 @@ $coremodels['issuer'] = new class extends model { // phpcs:ignore moodle.Comment
  * @param bool $populate Whether to populate all fields through setters.
  * @param int $reads Number of full getter scans.
  * @param int $expectedchecksum Expected checksum of one getter scan.
+ * @param bool $validate Measure first validation for OAuth2 models, separately from construction and reads.
  * @return array Measurements.
  */
 function persistent_benchmark_sample(
@@ -294,10 +226,12 @@ function persistent_benchmark_sample(
     bool $populate,
     int $reads,
     int $expectedchecksum,
+    bool $validate = false,
 ): array {
     global $DB;
 
     gc_collect_cycles();
+    $manager = new \core\oauth2\issuer_model_manager($DB);
     $properties = array_keys($records[0]);
     $objects = array_fill(0, count($records), null);
     $queries = $DB->perf_get_queries();
@@ -317,6 +251,7 @@ function persistent_benchmark_sample(
     $peakbytes = memory_get_peak_usage(false) - $before;
 
     $readms = 0;
+    $validationms = 0;
     if ($populate) {
         $checksum = 0;
         $start = hrtime(true);
@@ -341,6 +276,16 @@ function persistent_benchmark_sample(
                 }
             }
         }
+        if ($validate && ($objects[0] instanceof \core\persistent || $objects[0] instanceof model)) {
+            $start = hrtime(true);
+            foreach ($objects as $object) {
+                $valid = $object instanceof \core\oauth2\issuer_model ? $manager->validate($object) : $object->validate();
+                if ($valid !== true) {
+                    throw new coding_exception("Invalid benchmark fixture for {$class}: " . implode(', ', array_keys($valid)));
+                }
+            }
+            $validationms = (hrtime(true) - $start) / 1e6;
+        }
     }
     if ($DB->perf_get_queries() !== $queries) {
         throw new coding_exception("Unexpected database I/O for {$class}.");
@@ -349,6 +294,7 @@ function persistent_benchmark_sample(
     return [
         'buildms' => $buildms,
         'readms' => $readms,
+        'validationms' => $validationms,
         'bytes' => $bytes,
         'peakbytes' => $peakbytes,
     ];
@@ -414,8 +360,12 @@ memory. Peak memory covers construction/population only. Methods and cached sche
 are shared per class, not charged per object. Simple models deliberately omit
 validation, sanitisation, defaults, change tracking and database functionality:
 they are a lower-bound storage comparison, not equivalent replacements.
-The core_model row uses the real attribute-backed model with cleaned getters,
-not the unchecked simple-property implementation. Validation and DML are not timed.
+The OAuth2 core_model rows use the actual endpoint_model and issuer_model classes,
+including their domain validators. Their first validation is timed separately;
+IDs are nonzero and sortorder is set, avoiding insert-time queries. This is not a
+save/CRUD benchmark. The template core_model remains a field-only control: it does
+not implement competency lifecycle rules and its validation is not benchmarked.
+All rows measure construction and cleaned getters as before; DML is not timed.
 The properties row also uses native PHP types, but has no cleaning or validation.
 
 HELP;
@@ -524,7 +474,7 @@ if ($properties !== $mapped) {
 
 foreach ($classes as $class) {
     persistent_benchmark_sample($class, $records, false, 1, $expectedchecksum);
-    persistent_benchmark_sample($class, $records, true, 1, $expectedchecksum);
+    persistent_benchmark_sample($class, $records, true, 1, $expectedchecksum, $options['model'] !== 'template');
 }
 
 $results = [];
@@ -540,11 +490,12 @@ foreach (['empty' => false, 'populated' => true] as $scenario => $populate) {
                 $populate,
                 $options['reads'],
                 $expectedchecksum,
+                $options['model'] !== 'template',
             );
         }
     }
     foreach ($classes as $name => $class) {
-        foreach (['buildms', 'readms', 'bytes', 'peakbytes'] as $metric) {
+        foreach (['buildms', 'readms', 'validationms', 'bytes', 'peakbytes'] as $metric) {
             $results[$scenario][$name][$metric] = persistent_benchmark_summary(array_column($samples[$name], $metric));
         }
     }
@@ -580,11 +531,12 @@ cli_writeln("Persistent: {$classes['persistent']}; fields: " . count($properties
 cli_writeln('Warm-cache medians; build/read brackets show min..max milliseconds.');
 cli_writeln('Retained/peak KiB exclude inputs, shared strings and the preallocated object list. See --help.');
 printf(
-    "%-10s %-12s %27s %27s %13s %11s %11s\n",
+    "%-10s %-12s %27s %27s %27s %13s %11s %11s\n",
     'Scenario',
     'Model',
     'Build ms [min..max]',
     'Read ms [min..max]',
+    'Validate ms [min..max]',
     'Retained KiB',
     'B/object',
     'Peak KiB',
@@ -592,16 +544,18 @@ printf(
 foreach ($results as $scenario => $models) {
     foreach ($models as $name => $metrics) {
         $times = [];
-        foreach (['buildms', 'readms'] as $metric) {
+        foreach (['buildms', 'readms', 'validationms'] as $metric) {
             $summary = $metrics[$metric];
             $times[] = sprintf('%.3f [%.3f..%.3f]', $summary['median'], $summary['min'], $summary['max']);
         }
         printf(
-            "%-10s %-12s %27s %27s %13.2f %11.1f %11.2f\n",
+            "%-10s %-12s %27s %27s %27s %13.2f %11.1f %11.2f\n",
             $scenario,
             $name,
             $times[0],
             $scenario === 'populated' ? $times[1] : '-',
+            $scenario === 'populated' && $options['model'] !== 'template'
+                && in_array($name, ['persistent', 'core_model']) ? $times[2] : '-',
             $metrics['bytes']['median'] / 1024,
             $metrics['bytes']['median'] / $options['count'],
             $metrics['peakbytes']['median'] / 1024,
