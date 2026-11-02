@@ -21,7 +21,7 @@ The endpoints should follow the Moodle REST style guide and Moodle's existing us
 | Method and path | Purpose and endpoint-specific features |
 | --- | --- |
 | `GET /user/users` | List visible users. Use the standard collection envelope (`items` and `pagination`) with 1-based page, configurable page size (default 25, maximum 100), search and sorting by supported name fields. Apply visibility and self-only restrictions before pagination. Return `hasMore` based on one extra visible row; `totalItems` may be `null` when an exact count is not calculated. No ETag is proposed for the collection. |
-| `GET /user/users/{userId}` | Retrieve one visible user's core representation (MDL-90234). Accept `current`, a bare numeric ID, `idnumber:…` or `username:…`. Return `ETag`; support `If-None-Match` and `304 Not Modified`. Visibility rules apply; hidden or unavailable fields are null. Extended profile fields are outside this slice. |
+| `GET /user/users/{userId}` | Retrieve one visible user's core and standard profile representation (MDL-90234), shared with collection items. Accept `current`, a bare numeric ID, `idnumber:…` or `username:…`. Return `ETag`; support `If-None-Match` and `304 Not Modified`. Visibility rules apply; hidden or unavailable fields are null. Custom profile fields are outside this slice. |
 | `PATCH /user/users/{userId}` | Update supplied core or profile fields; omitted fields remain unchanged. Field-level capabilities, visibility rules, validation and authentication-plugin locks apply. Return the updated representation and ETag. Optional `If-Match` protects against stale writes and returns `412` on mismatch. |
 | `GET /user/users/{userId}/custom-fields` | Retrieve visible custom profile fields keyed by configured shortname. Return `ETag`; support `If-None-Match` and `304`. |
 | `PUT /user/users/{userId}/custom-fields` | Replace editable custom-field values: omitted editable fields are cleared, subject to required-field validation; non-editable fields remain unchanged. Return the representation and ETag. Optional `If-Match` returns `412` on mismatch. |
@@ -50,9 +50,11 @@ Use the router's collection response/schema support for `GET /user/users`. Fetch
 result after applying visibility and filters to calculate `hasMore`; `totalItems` is nullable
 when an exact count is not calculated. MDL-90234 returns the same core `User` representation
 for collection items and single-user reads, including additional names, image alt, language,
-account status, idnumber and effective/preferred IANA timezones. Access timestamps and
-extended profile fields are excluded. Profile-field expansion and mutation remain separate
-work; their proposed request schemas have not been implemented by MDL-90234.
+account status, idnumber and effective/preferred IANA timezones. Both read responses also
+include top-level city, country, institution, department, phone, mobilePhone, address,
+description and descriptionFormat, following existing user-details visibility and formatted
+output rules. Access timestamps and custom profile fields are excluded. Mutation remains
+separate work; its proposed request schemas have not been implemented by MDL-90234.
 Use shared conditional-request handling for ETags on individual user/custom-field resources
 and optional `If-Match` on supported writes/deletion. Do not add collection or password ETags.
 

@@ -1317,6 +1317,38 @@
                     "email": {
                         "type": "string"
                     },
+                    "city": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string",
+                        "description": "ISO 3166-1 alpha-2 country code."
+                    },
+                    "institution": {
+                        "type": "string"
+                    },
+                    "department": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "The visible phone1 value."
+                    },
+                    "mobilePhone": {
+                        "type": "string",
+                        "description": "The visible phone2 value."
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Profile description formatted by the user-details API, with its format given by descriptionFormat."
+                    },
+                    "descriptionFormat": {
+                        "type": "integer",
+                        "description": "Moodle content format of the returned description."
+                    },
                     "lang": {
                         "type": "string"
                     },

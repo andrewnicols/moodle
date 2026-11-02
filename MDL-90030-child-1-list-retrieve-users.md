@@ -35,6 +35,11 @@ The planning OpenAPI retains the readable component names `User` and `UserCollec
 | `idnumber` | RAW |
 | `fullName`, `firstName`, `lastName`, `firstNamePhonetic`, `lastNamePhonetic`, `middleName`, `alternateName` | NOTAGS |
 | `email` | EMAIL |
+| `city`, `institution`, `department`, `address` | TEXT |
+| `country` | ALPHA (ISO 3166-1 alpha-2) |
+| `phone`, `mobilePhone` | NOTAGS (`phone1` and `phone2` respectively) |
+| `description` | RAW (formatted content from the user-details API) |
+| `descriptionFormat` | INT (format of the returned description) |
 | `lang` | LANG |
 | `auth` | AUTH |
 | `confirmed`, `suspended`, `deleted` | BOOL |
@@ -48,6 +53,13 @@ Hidden or unavailable values are explicit nulls. Visibility is delegated to
 to self or viewers with `moodle/user:viewalldetails`. Idnumber also follows the
 configured identity-field rules. Email follows Moodle's email-display and visibility rules.
 
+Standard profile fields are top-level properties in both single-user responses and
+collection items. Preserve the user-details helper's hidden-field, identity-field and
+course-context visibility rules. In particular, self access alone does not grant phone
+identity-field visibility. Preserve formatted description content and its corresponding
+format. The helper omits some empty values, which are returned as null; it preserves
+other readable empty values, such as an empty department.
+
 `lang` is the stored Moodle language preference, not the effective page language.
 `auth` identifies the account's authentication plugin, not the request's authentication
 method. `confirmed` is account confirmation, not a universal email-verification claim.
@@ -58,8 +70,8 @@ forced site timezone. `timeZonePreference` is the normalised stored preference, 
 for the server default (`99`). Legacy offsets are normalised, e.g. `8.0` becomes
 `Etc/GMT-8`. Both fields are null when hidden.
 
-`firstAccess` and `lastAccess` are excluded. Extended profile fields, custom fields,
-creation and mutation belong to separate issues, not this read slice.
+`firstAccess` and `lastAccess` are excluded. Custom profile fields, creation and
+mutation belong to separate issues, not this read slice.
 
 ## Conditional requests and pagination
 
@@ -110,11 +122,15 @@ These remain review/verification criteria, not claims that every item has passed
   totalItems is null when not calculated and hasMore reflects another visible result.
 - [ ] Identifier forms resolve consistently; invisible users return 404.
 - [ ] Response tests cover idnumber, language, confirmation/auth visibility, additional
-  names and image alt; access timestamps and extended profile fields are absent.
+  names and image alt; access timestamps and custom profile fields are absent.
+- [ ] Both read responses include city, country, institution, department, phone,
+  mobilePhone, address, description and descriptionFormat, preserving self, authorised,
+  restricted-viewer and course-context visibility rules, formatted content and empty/null values.
 - [ ] Timezone tests cover explicit zones, server default, legacy offsets, hidden values
   and a forced site timezone while preserving the stored preference.
 - [ ] ETag is documented on single-user 200 responses and preserved on 304 responses;
-  the collection has no ETag.
+  the collection has no ETag. Changes to visible standard profile values change the
+  single-user representation's ETag.
 - [ ] Conditional-header tests cover quoted tags, weak/strong comparison, lists,
   wildcard and malformed syntax with invalid_parameter_exception.
 - [ ] Header component references resolve and quoting guidance is visible in Swagger UI.
