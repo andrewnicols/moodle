@@ -65,13 +65,13 @@ if ($issuerid === false || is_bool($options['issuerid'])) {
 
 $endpoint = new endpoint_model();
 $endpoint->issuerid = $issuerid;
-$endpoint->name = ' demonstration_endpoint ';
+$endpoint->name = 'demonstration_endpoint';
 $endpoint->url = 'https://example.invalid/authorize';
 
 if ($endpoint->name !== 'demonstration_endpoint' || $endpoint->validate() !== true) {
-    cli_error('The model failed hook or field validation.');
+    cli_error('The model failed field validation.');
 }
-cli_writeln('Normalised name: ' . $endpoint->name);
+cli_writeln('Endpoint name: ' . $endpoint->name);
 cli_writeln('Cleaned URL: ' . $endpoint->get('url'));
 
 if (!$options['save']) {

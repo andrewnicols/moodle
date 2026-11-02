@@ -36,16 +36,25 @@ class endpoint_model extends model {
     #[field(param::INT)]
     public int $issuerid;
 
-    // PHPCS currently misparses property hook expressions as declarations.
-    // phpcs:disable PSR2.Classes.PropertyDeclaration, moodle.Commenting.VariableComment, moodle.PHP.MemberVarScope
-    /** @var string Endpoint name, normalised on assignment. */
+    /** @var string Endpoint name. */
     #[field(param::ALPHANUMEXT)]
-    public string $name {
-        set => trim($value);
-    }
-    // phpcs:enable
+    public string $name;
 
     /** @var string Endpoint URL. */
     #[field(param::URL)]
     public string $url;
+
+    /**
+     * Apply the existing endpoint's case-sensitive HTTPS-only rule.
+     *
+     * @param string $property Field name.
+     * @param mixed $value Raw value.
+     * @return true|\lang_string Validation result.
+     */
+    protected function validate_value(string $property, mixed $value): true|\lang_string {
+        if ($property === 'url' && !str_starts_with($value, 'https://')) {
+            return new \lang_string('sslonlyaccess', 'error');
+        }
+        return true;
+    }
 }
