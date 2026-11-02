@@ -55,29 +55,10 @@ $arraymodel = new class { // phpcs:ignore moodle.Commenting.MissingDocblock.Clas
     }
 };
 
-// The same template data stored in declared properties rather than a hash table.
-$propertymodel = new class { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
-    /** @var string Template name. */
-    private $shortname;
-    /** @var string Template description. */
-    private $description;
-    /** @var int Description format. */
-    private $descriptionformat;
-    /** @var int Due date. */
-    private $duedate;
-    /** @var bool Visibility. */
-    private $visible;
-    /** @var int Context ID. */
-    private $contextid;
-    /** @var int Record ID. */
-    private $id;
-    /** @var int Creation time. */
-    private $timecreated;
-    /** @var int Modification time. */
-    private $timemodified;
-    /** @var int Modifying user ID. */
-    private $usermodified;
-
+/**
+ * Unchecked access to declared model properties.
+ */
+trait PersistentBenchmarkAccessors {
     /**
      * Set a property.
      *
@@ -99,6 +80,105 @@ $propertymodel = new class { // phpcs:ignore moodle.Commenting.MissingDocblock.C
     public function get(string $property): mixed {
         return $this->{$property};
     }
+}
+
+// The same model data stored in declared properties rather than a hash table.
+// phpcs:ignore moodle.Commenting.MissingDocblock.Class
+$propertymodels['template'] = new class {
+    use PersistentBenchmarkAccessors;
+
+    /** @var string Template name. */
+    private $shortname;
+    /** @var string Template description. */
+    private $description;
+    /** @var int Description format. */
+    private $descriptionformat;
+    /** @var int Due date. */
+    private $duedate;
+    /** @var bool Visibility. */
+    private $visible;
+    /** @var int Context ID. */
+    private $contextid;
+    /** @var int Record ID. */
+    private $id;
+    /** @var int Creation time. */
+    private $timecreated;
+    /** @var int Modification time. */
+    private $timemodified;
+    /** @var int Modifying user ID. */
+    private $usermodified;
+};
+
+// phpcs:ignore moodle.Commenting.MissingDocblock.Class
+$propertymodels['endpoint'] = new class {
+    use PersistentBenchmarkAccessors;
+
+    /** @var int Issuer ID. */
+    private $issuerid;
+    /** @var string Endpoint name. */
+    private $name;
+    /** @var string Endpoint URL. */
+    private $url;
+    /** @var int Record ID. */
+    private $id;
+    /** @var int Creation time. */
+    private $timecreated;
+    /** @var int Modification time. */
+    private $timemodified;
+    /** @var int Modifying user ID. */
+    private $usermodified;
+};
+
+// phpcs:ignore moodle.Commenting.MissingDocblock.Class
+$propertymodels['issuer'] = new class {
+    use PersistentBenchmarkAccessors;
+
+    /** @var string Issuer name. */
+    private $name;
+    /** @var string|null Image URL. */
+    private $image;
+    /** @var string Client ID. */
+    private $clientid;
+    /** @var string Client secret. */
+    private $clientsecret;
+    /** @var string Base URL. */
+    private $baseurl;
+    /** @var bool Enabled. */
+    private $enabled;
+    /** @var int Login page visibility. */
+    private $showonloginpage;
+    /** @var bool Basic authentication. */
+    private $basicauth;
+    /** @var string|null Supported scopes. */
+    private $scopessupported;
+    /** @var string Login scopes. */
+    private $loginscopes;
+    /** @var string Offline login scopes. */
+    private $loginscopesoffline;
+    /** @var string Login parameters. */
+    private $loginparams;
+    /** @var string Offline login parameters. */
+    private $loginparamsoffline;
+    /** @var string Allowed domains. */
+    private $alloweddomains;
+    /** @var int Sort order. */
+    private $sortorder;
+    /** @var bool Require confirmation. */
+    private $requireconfirmation;
+    /** @var string|null Service type. */
+    private $servicetype;
+    /** @var string|null Login page name. */
+    private $loginpagename;
+    /** @var string|null System email. */
+    private $systememail;
+    /** @var int Record ID. */
+    private $id;
+    /** @var int Creation time. */
+    private $timecreated;
+    /** @var int Modification time. */
+    private $timemodified;
+    /** @var int Modifying user ID. */
+    private $usermodified;
 };
 
 /**
@@ -196,6 +276,7 @@ function persistent_benchmark_summary(array $values): array {
     'trials' => 21,
     'reads' => 10,
     'debug' => 'none',
+    'model' => 'template',
     'json' => false,
 ], ['h' => 'help']);
 
@@ -204,7 +285,7 @@ if ($unrecognised) {
 }
 if ($options['help']) {
     echo <<<'HELP'
-Compare core_competency\template with two simple models holding the same ten fields.
+Compare an existing persistent with two simple models holding the same fields.
 No records are read from or written to the database by the benchmark.
 
 Options:
@@ -212,17 +293,21 @@ Options:
   --trials=N        Measured trials per model and scenario (default: 21).
   --reads=N         Full scans of all populated fields per trial (default: 10).
   --debug=MODE      none or developer, applied after bootstrap (default: none).
+  --model=MODEL     template (10 fields), endpoint (7), or issuer (23).
+                    Defaults to template; endpoint/issuer are core\oauth2 classes.
   --json            Output environment and measurement summaries as JSON.
   -h, --help        Show this help.
 
 Run each debug mode in a fresh process, with Xdebug disabled:
   XDEBUG_MODE=off php admin/cli/benchmark_persistent.php --debug=none
   XDEBUG_MODE=off php admin/cli/benchmark_persistent.php --debug=developer
+  XDEBUG_MODE=off php admin/cli/benchmark_persistent.php --model=endpoint --count=10000
+  XDEBUG_MODE=off php admin/cli/benchmark_persistent.php --model=issuer --count=10000
 
 Classes, property definitions, getter dependencies and full batches are warmed up
 before measurement. Model order rotates between trials. Times exclude bootstrap,
 input creation, correctness checks and database I/O. Empty batches isolate object
-allocation; populated batches measure construction plus ten setters per object.
+allocation; populated batches measure construction plus a setter for every field.
 Read times include the checksum loop and all fields, including get() sanitisation.
 
 Memory uses memory_get_usage(false), not allocator pages or process RSS. It excludes
@@ -246,27 +331,65 @@ foreach (['count', 'trials', 'reads'] as $option) {
 if (!in_array($options['debug'], ['none', 'developer'], true)) {
     cli_error('--debug must be none or developer.');
 }
+if (!is_string($options['model']) || !array_key_exists($options['model'], $propertymodels)) {
+    cli_error('--model must be template, endpoint or issuer.');
+}
 
 $CFG->debug = $options['debug'] === 'developer' ? DEBUG_DEVELOPER : DEBUG_NONE;
 $CFG->debugdeveloper = $options['debug'] === 'developer';
 $CFG->debugdisplay = false;
 error_reporting($CFG->debug);
 
+$persistents = [
+    'template' => \core_competency\template::class,
+    'endpoint' => \core\oauth2\endpoint::class,
+    'issuer' => \core\oauth2\issuer::class,
+];
 $classes = [
-    'persistent' => \core_competency\template::class,
+    'persistent' => $persistents[$options['model']],
     'array' => $arraymodel::class,
-    'properties' => $propertymodel::class,
+    'properties' => $propertymodels[$options['model']]::class,
 ];
 $records = [];
 $expectedchecksum = 0;
 for ($index = 0; $index < $options['count']; $index++) {
-    $record = [
-        'shortname' => sprintf('Learning plan %06d', $index),
-        'description' => sprintf('<p>Example learning plan template %06d.</p>', $index),
-        'descriptionformat' => (int) FORMAT_HTML,
-        'duedate' => 0,
-        'visible' => true,
-        'contextid' => 1,
+    $record = match ($options['model']) {
+        'template' => [
+            'shortname' => sprintf('Learning plan %06d', $index),
+            'description' => sprintf('<p>Example learning plan template %06d.</p>', $index),
+            'descriptionformat' => (int) FORMAT_HTML,
+            'duedate' => 0,
+            'visible' => true,
+            'contextid' => 1,
+        ],
+        'endpoint' => [
+            'issuerid' => 1,
+            'name' => sprintf('endpoint_%06d', $index),
+            'url' => sprintf('https://example.invalid/oauth2/%06d', $index),
+        ],
+        'issuer' => [
+            'name' => sprintf('Example issuer %06d', $index),
+            'image' => null,
+            'clientid' => sprintf('example-client-%06d', $index),
+            'clientsecret' => '',
+            'baseurl' => sprintf('https://example.invalid/issuer/%06d', $index),
+            'enabled' => true,
+            'showonloginpage' => \core\oauth2\issuer::EVERYWHERE,
+            'basicauth' => false,
+            'scopessupported' => null,
+            'loginscopes' => 'openid profile email',
+            'loginscopesoffline' => 'openid profile email offline_access',
+            'loginparams' => '',
+            'loginparamsoffline' => '',
+            'alloweddomains' => 'example.invalid',
+            'sortorder' => $index,
+            'requireconfirmation' => true,
+            'servicetype' => null,
+            'loginpagename' => null,
+            'systememail' => null,
+        ],
+    };
+    $record += [
         'id' => $index + 1,
         'timecreated' => 1700000000,
         'timemodified' => 1700000000,
@@ -278,11 +401,16 @@ for ($index = 0; $index < $options['count']; $index++) {
     }
 }
 $properties = array_keys($records[0]);
-$defined = array_keys(\core_competency\template::properties_definition());
+$defined = array_keys($classes['persistent']::properties_definition());
 sort($properties);
 sort($defined);
 if ($properties !== $defined) {
-    cli_error('The fixture must cover exactly the current template properties.');
+    cli_error('The fixture must cover exactly the current persistent properties.');
+}
+$declared = array_keys((new ReflectionClass($classes['properties']))->getDefaultProperties());
+sort($declared);
+if ($properties !== $declared) {
+    cli_error('The simple model must declare exactly the fixture properties.');
 }
 
 foreach ($classes as $class) {
@@ -339,6 +467,7 @@ cli_writeln(sprintf(
     $environment['jit'],
 ));
 cli_writeln("Objects: {$options['count']}; trials: {$options['trials']}; getter scans/trial: {$options['reads']}");
+cli_writeln("Persistent: {$classes['persistent']}; fields: " . count($properties));
 cli_writeln('Warm-cache medians; build/read brackets show min..max milliseconds.');
 cli_writeln('Retained/peak KiB exclude inputs, shared strings and the preallocated object list. See --help.');
 printf(
