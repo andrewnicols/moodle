@@ -59,7 +59,7 @@ Use shared conditional-request handling for ETags on individual user/custom-fiel
 and optional `If-Match` on supported writes/deletion. Do not add collection or password ETags.
 
 The MDL-90235 update and MDL-90240 creation contracts include writable username, idnumber,
-names/additional names, email, lang, calendarType, auth, confirmed, suspended, profileImageAlt and
+names/additional names, email, language, calendarType, authenticationMethod, confirmed, suspended, profileImageAlt and
 timeZonePreference. Only timeZonePreference accepts null to select server default;
 effective timeZone, id, fullName and picture URLs are read-only, and deleted is excluded
 from inputs. Standard profile values include descriptionFormat alongside description.

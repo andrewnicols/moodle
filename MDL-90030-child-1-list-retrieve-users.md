@@ -27,6 +27,8 @@ supported by the runtime; the supplied generated operations only list OAuth secu
 
 Collection items and single-user responses share `core_user\route\schema\user_object`.
 The planning OpenAPI retains the readable component names `User` and `UserCollection`.
+The public properties `language` and `authenticationMethod` map to Moodle's internal
+`lang` and `auth` fields; this naming change is not yet applied to the PHP prototype.
 
 | Fields | Schema parameter type |
 | --- | --- |
@@ -40,9 +42,9 @@ The planning OpenAPI retains the readable component names `User` and `UserCollec
 | `phone`, `mobilePhone` | NOTAGS (`phone1` and `phone2` respectively) |
 | `description` | RAW (formatted content from the user-details API) |
 | `descriptionFormat` | INT (format of the returned description) |
-| `lang` | LANG |
+| `language` | LANG |
 | `calendarType` | PLUGIN (stored `calendartype` preference) |
-| `auth` | AUTH |
+| `authenticationMethod` | AUTH |
 | `confirmed`, `suspended`, `deleted` | BOOL |
 | `profileImageUrl`, `profileImageUrlSmall` | URL |
 | `profileImageAlt` | TEXT |
@@ -61,11 +63,11 @@ identity-field visibility. Preserve formatted description content and its corres
 format. The helper omits some empty values, which are returned as null; it preserves
 other readable empty values, such as an empty department.
 
-`lang` is the stored Moodle language preference, not the effective page language.
+`language` is the stored Moodle language preference, not the effective page language.
 `calendarType` is the stored calendar plugin preference, not the effective page calendar;
 an empty preference follows the site calendar. It is an additional read-contract
 requirement beyond the earlier generated snapshot and must follow user-field visibility.
-`auth` identifies the account's authentication plugin, not the request's authentication
+`authenticationMethod` identifies the account's authentication plugin, not the request's authentication
 method. `confirmed` is account confirmation, not a universal email-verification claim.
 Deleted users remain excluded, so returned users currently have `deleted: false`.
 
@@ -125,7 +127,7 @@ These remain review/verification criteria, not claims that every item has passed
 - [ ] Pagination validates page >= 1, pagesize 1–100 and supported sort fields;
   totalItems is null when not calculated and hasMore reflects another visible result.
 - [ ] Identifier forms resolve consistently; invisible users return 404.
-- [ ] Response tests cover idnumber, language, confirmation/auth visibility, additional
+- [ ] Response tests cover idnumber, language, confirmation/authenticationMethod visibility, additional
   names and image alt; access timestamps and custom profile fields are absent.
 - [ ] Both read responses include city, country, institution, department, phone,
   mobilePhone, address, description and descriptionFormat, preserving self, authorised,

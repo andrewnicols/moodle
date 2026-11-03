@@ -563,7 +563,7 @@
         "/user/users": {
             "post": {
                 "summary": "Create a user",
-                "description": "Provision one Moodle account, including optional standard profile fields. Custom profile fields are out of scope and customFields is rejected. This is **not self-registration** and does not create an external identity-provider account.\n\n### Permissions\n\nToken scope: `core_user:user:create`. All callers need system-level `moodle/user:create`; populating initial fields requires no additional read/update permission.\n\n### Passwords\n\n- For password-based authentication, supply `password` **or** `generatePassword: true`, never both.\n- Generated passwords require a change at first login. Email is sent after creation unless `sendPasswordEmail: false`.\n- With email suppressed, arrange access separately through password reset or credential provisioning.\n- Explicit passwords must meet site policy; no automatic email or forced change follows.\n- Authentication without Moodle-managed passwords rejects both password supply and generation. **Passwords are never returned.**\n\n### Creation and result\n\nValidate and save account and standard profile fields atomically, applying defaults and required/unique field rules. Initial provisioning is distinct from later auth-plugin field locks. Follow Moodle's creation lifecycle, emitting `user_created` after the supplied data is saved.\n\nUse lang for the stored language preference and timeZonePreference for the stored IANA timezone preference (null selects server default). The computed id, fullName, profileImageUrl, profileImageUrlSmall and effective timeZone are not inputs; deleted is also excluded.\n\nReturn `201` with an `{id, username}` receipt and numeric-id resource URL in `Location`. No ETag is returned; an authorised GET retrieves the representation and ETag. See the `201` response for email delivery outcomes.",
+                "description": "Provision one Moodle account, including optional standard profile fields. Custom profile fields are out of scope and customFields is rejected. This is **not self-registration** and does not create an external identity-provider account.\n\n### Permissions\n\nToken scope: `core_user:user:create`. All callers need system-level `moodle/user:create`; populating initial fields requires no additional read/update permission.\n\n### Passwords\n\n- For password-based authentication, supply `password` **or** `generatePassword: true`, never both.\n- Generated passwords require a change at first login. Email is sent after creation unless `sendPasswordEmail: false`.\n- With email suppressed, arrange access separately through password reset or credential provisioning.\n- Explicit passwords must meet site policy; no automatic email or forced change follows.\n- Authentication without Moodle-managed passwords rejects both password supply and generation. **Passwords are never returned.**\n\n### Creation and result\n\nValidate and save account and standard profile fields atomically, applying defaults and required/unique field rules. Initial provisioning is distinct from later auth-plugin field locks. Follow Moodle's creation lifecycle, emitting `user_created` after the supplied data is saved.\n\nUse language for the stored language preference and timeZonePreference for the stored IANA timezone preference (null selects server default). The computed id, fullName, profileImageUrl, profileImageUrlSmall and effective timeZone are not inputs; deleted is also excluded.\n\nReturn `201` with an `{id, username}` receipt and numeric-id resource URL in `Location`. No ETag is returned; an authorised GET retrieves the representation and ETag. See the `201` response for email delivery outcomes.",
                 "tags": [
                     "core_user"
                 ],
@@ -595,7 +595,7 @@
                                         "firstName": "Directory",
                                         "lastName": "Student",
                                         "email": "directory.student@example.invalid",
-                                        "auth": "ldap"
+                                        "authenticationMethod": "ldap"
                                     }
                                 },
                                 "generatedPassword": {
@@ -607,7 +607,7 @@
                                         "lastName": "Student",
                                         "email": "new.student@example.invalid",
                                         "idnumber": "STUDENT-001",
-                                        "lang": "en",
+                                        "language": "en",
                                         "calendarType": "gregorian",
                                         "firstNamePhonetic": "Nyoo",
                                         "lastNamePhonetic": "Stoo-dent",
@@ -870,7 +870,7 @@
                 "x-implementation-status": "implemented-in-MDL-90234-main"
             },
             "patch": {
-                "description": "Update supplied account and standard profile fields. **Omitted fields remain unchanged.** Custom profile fields are out of scope and customFields is rejected.\n\n- Email, suspension and administrative username/idnumber/auth/confirmed changes require applicable account-edit capabilities, including `moodle/user:update`, even for self.\n- Suspending an account invalidates its active sessions.\n- Field-level/self-edit permissions, validation and source/target authentication-plugin locks apply. Changing auth cannot provision an external identity or implicitly set/reset a password.\n- Use lang for the stored language preference and timeZonePreference for a supported IANA timezone or null for server default. The effective timeZone is read-only, including forced site policy; the internal 99 sentinel is not accepted.\n- id, fullName and picture URLs are read-only; deleted is excluded from inputs. Clear optional text with an empty string; null is otherwise rejected.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply; self scope grants no administrative permission.\n\n**Concurrency:** optional `If-Match` against the same caller-visible representation as GET; a stale ETag returns `412`. Without it, the write is unconditional.",
+                "description": "Update supplied account and standard profile fields. **Omitted fields remain unchanged.** Custom profile fields are out of scope and customFields is rejected.\n\n- Email, suspension and administrative username/idnumber/authenticationMethod/confirmed changes require applicable account-edit capabilities, including `moodle/user:update`, even for self.\n- Suspending an account invalidates its active sessions.\n- Field-level/self-edit permissions, validation and source/target authentication-plugin locks apply. Changing authenticationMethod cannot provision an external identity or implicitly set/reset a password.\n- Use language for the stored language preference and timeZonePreference for a supported IANA timezone or null for server default. The effective timeZone is read-only, including forced site policy; the internal 99 sentinel is not accepted.\n- id, fullName and picture URLs are read-only; deleted is excluded from inputs. Clear optional text with an empty string; null is otherwise rejected.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply; self scope grants no administrative permission.\n\n**Concurrency:** optional `If-Match` against the same caller-visible representation as GET; a stale ETag returns `412`. Without it, the write is unconditional.",
                 "summary": "Update a user",
                 "x-implementation-status": "proposed",
                 "tags": [
@@ -951,9 +951,9 @@
                                     "value": {
                                         "username": "alex.student",
                                         "idnumber": "STUDENT-001",
-                                        "lang": "en",
+                                        "language": "en",
                                         "calendarType": "gregorian",
-                                        "auth": "manual",
+                                        "authenticationMethod": "manual",
                                         "confirmed": true,
                                         "firstNamePhonetic": "Al-ex",
                                         "lastNamePhonetic": "Stoo-dent",
@@ -1181,7 +1181,7 @@
                         "type": "string",
                         "description": "Profile image alternative text, not an image upload."
                     },
-                    "auth": {
+                    "authenticationMethod": {
                         "type": "string",
                         "default": "manual",
                         "description": "A supported authentication plugin installed on the site. External authentication provisions the Moodle record only."
@@ -1209,7 +1209,7 @@
                         ],
                         "description": "Supported IANA timezone preference, or null for server default. Omission follows server default. Do not send the internal 99 sentinel. Forced site timezone does not overwrite this preference."
                     },
-                    "lang": {
+                    "language": {
                         "type": "string",
                         "description": "Installed language code. Defaults to the site's default when omitted."
                     },
@@ -1288,7 +1288,7 @@
                     {
                         "if": {
                             "properties": {
-                                "auth": {
+                                "authenticationMethod": {
                                     "const": "manual"
                                 }
                             }
@@ -1409,7 +1409,7 @@
                         "type": "integer",
                         "description": "Moodle content format of the returned description."
                     },
-                    "lang": {
+                    "language": {
                         "type": "string"
                     },
                     "calendarType": {
@@ -1419,7 +1419,7 @@
                     "confirmed": {
                         "type": "boolean"
                     },
-                    "auth": {
+                    "authenticationMethod": {
                         "type": "string"
                     },
                     "profileImageUrl": {
@@ -1540,7 +1540,7 @@
                         "type": "string",
                         "format": "email"
                     },
-                    "lang": {
+                    "language": {
                         "type": "string",
                         "description": "Stored Moodle language preference, following installed-language validation."
                     },
@@ -1548,7 +1548,7 @@
                         "type": "string",
                         "description": "Installed calendar type plugin name, such as gregorian. Omission leaves it unchanged; an empty string clears the preference to follow the site calendar. Null is rejected."
                     },
-                    "auth": {
+                    "authenticationMethod": {
                         "type": "string",
                         "description": "Supported account authentication plugin. Requires administrative account-edit permission and source/target plugin constraints."
                     },
