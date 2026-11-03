@@ -41,8 +41,13 @@ final class user_model extends model {
     #[expose(param::INT, readonly: true)]
     public int $id = 0;
 
-    /** @var int Unmapped inherited audit slot; the user table has no usermodified column. */
-    protected int $usermodified = 0;
+    /** @var int Creation time. */
+    #[field(param::INT)]
+    protected int $timecreated = 0;
+
+    /** @var int Modification time. */
+    #[field(param::INT)]
+    protected int $timemodified = 0;
 
     /** @var string Username. */
     #[field(param::USERNAME)]

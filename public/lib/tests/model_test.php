@@ -31,6 +31,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(field::class)]
 final class model_test extends \advanced_testcase {
     /**
+     * Only the record ID is implicitly mapped by the base class.
+     */
+    public function test_base_fields_only_include_id(): void {
+        $model = new class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+        };
+        $model->from_record((object) ['id' => 12, 'timecreated' => 123, 'timemodified' => 456, 'usermodified' => 7]);
+        $this->assertSame(['id' => 12], (array) $model->to_record());
+        $this->assertTrue($model->validate());
+    }
+
+    /**
      * Create a model with raw, boolean, nullable and required fields.
      *
      * @return model Test model.
@@ -84,9 +95,6 @@ final class model_test extends \advanced_testcase {
             'enabled' => false,
             'status' => 'draft',
             'id' => 0,
-            'timecreated' => 0,
-            'timemodified' => 0,
-            'usermodified' => 0,
         ], (array) $model->to_record());
         $this->assertTrue($model->validate());
     }

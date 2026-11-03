@@ -34,6 +34,18 @@ use core\param;
  */
 #[table('oauth2_issuer')]
 class issuer_model extends model {
+    /** @var int Creation time. */
+    #[field(param::INT)]
+    protected int $timecreated = 0;
+
+    /** @var int Modification time. */
+    #[field(param::INT)]
+    protected int $timemodified = 0;
+
+    /** @var int Modifying user ID. */
+    #[field(param::INT)]
+    protected int $usermodified = 0;
+
     /** @var string Issuer name. */
     #[field(param::TEXT)]
     public string $name;

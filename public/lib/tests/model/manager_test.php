@@ -67,6 +67,15 @@ final class manager_test extends \advanced_testcase {
      */
     private function make_model(): model {
         return new #[table('core_model_test')] class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+            /** @var int Creation time. */
+            #[field(param::INT)]
+            protected int $timecreated = 0;
+            /** @var int Modification time. */
+            #[field(param::INT)]
+            protected int $timemodified = 0;
+            /** @var int Modifying user ID. */
+            #[field(param::INT)]
+            protected int $usermodified = 0;
             /** @var mixed Required alphanumeric name. */
             #[field(param::ALPHANUM)]
             public mixed $name;
@@ -105,6 +114,36 @@ final class manager_test extends \advanced_testcase {
     }
 
     /**
+     * Models without audit mappings can be created, updated and deleted.
+     */
+    public function test_crud_without_audit_fields(): void {
+        global $DB;
+        $table = new xmldb_table('core_model_noaudit_test');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $DB->get_manager()->create_table($table);
+        try {
+            // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+            $model = new #[table('core_model_noaudit_test')] class extends model {
+                /** @var string Name. */
+                #[field(param::TEXT)]
+                public string $name = 'First';
+            };
+            $manager = new manager($DB);
+            $manager->save($model, 12);
+            $this->assertGreaterThan(0, $model->get('id'));
+            $this->assertEqualsCanonicalizing(['id', 'name'], array_keys((array) $model->to_record()));
+            $model->name = 'Second';
+            $manager->save($model, 34);
+            $this->assertSame('Second', $manager->get($model::class, $model->get('id'))->get('name'));
+            $this->assertTrue($manager->delete($model));
+        } finally {
+            $DB->get_manager()->drop_table($table);
+        }
+    }
+
+    /**
      * An invalid direct write must be revalidated and never reach the database.
      */
     public function test_invalid_mutation_does_not_write(): void {
@@ -128,6 +167,15 @@ final class manager_test extends \advanced_testcase {
     public function test_crud_uses_raw_id(): void {
         global $DB;
         $model = new #[table('core_model_test')] class extends model { // phpcs:ignore moodle.Commenting.MissingDocblock.Class
+            /** @var int Creation time. */
+            #[field(param::INT)]
+            protected int $timecreated = 0;
+            /** @var int Modification time. */
+            #[field(param::INT)]
+            protected int $timemodified = 0;
+            /** @var int Modifying user ID. */
+            #[field(param::INT)]
+            protected int $usermodified = 0;
             // PHPCS currently misparses property hook expressions as declarations.
             // phpcs:disable PSR2.Classes.PropertyDeclaration, moodle.Commenting.VariableComment, moodle.PHP.MemberVarScope
             /** @var int ID with a computed public representation. */

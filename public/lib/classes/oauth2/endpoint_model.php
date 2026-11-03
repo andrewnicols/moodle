@@ -32,6 +32,18 @@ use core\param;
  */
 #[table('oauth2_endpoint')]
 class endpoint_model extends model {
+    /** @var int Creation time. */
+    #[field(param::INT)]
+    protected int $timecreated = 0;
+
+    /** @var int Modification time. */
+    #[field(param::INT)]
+    protected int $timemodified = 0;
+
+    /** @var int Modifying user ID. */
+    #[field(param::INT)]
+    protected int $usermodified = 0;
+
     /** @var int Issuer owning the endpoint. */
     #[field(param::INT)]
     public int $issuerid;

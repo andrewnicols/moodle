@@ -99,7 +99,7 @@ class manager {
     }
 
     /**
-     * Insert or update a valid model, maintaining the four standard audit fields.
+     * Insert or update a valid model, maintaining explicitly mapped audit fields.
      *
      * Validation is never cached, including after public property writes. The caller
      * supplies the acting user explicitly; the model has no hidden session dependency.
@@ -113,14 +113,21 @@ class manager {
         if ($valid !== true) {
             throw new \invalid_parameter_exception('Invalid model fields: ' . implode(', ', array_keys($valid)));
         }
-        $id = $model->to_record()->id;
+        $mapped = $model->to_record();
+        $id = $mapped->id;
         if ($id < 0 || $userid < 0) {
             throw new \invalid_parameter_exception('Model and acting user IDs must not be negative.');
         }
         $now = time();
-        $model->set('timemodified', $now)->set('usermodified', $userid);
+        foreach (['timemodified' => $now, 'usermodified' => $userid] as $name => $value) {
+            if (property_exists($mapped, $name)) {
+                $model->set($name, $value);
+            }
+        }
         if (!$id) {
-            $model->set('timecreated', $now);
+            if (property_exists($mapped, 'timecreated')) {
+                $model->set('timecreated', $now);
+            }
             $record = $model->to_record();
             unset($record->id);
             $model->set('id', $this->db->insert_record($table, $record));

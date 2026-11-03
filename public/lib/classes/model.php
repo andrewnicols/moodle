@@ -51,18 +51,6 @@ abstract class model {
     #[field(param::INT)]
     protected int $id = 0;
 
-    /** @var int Creation time. */
-    #[field(param::INT)]
-    protected int $timecreated = 0;
-
-    /** @var int Modification time. */
-    #[field(param::INT)]
-    protected int $timemodified = 0;
-
-    /** @var int Modifying user ID. */
-    #[field(param::INT)]
-    protected int $usermodified = 0;
-
     /**
      * Get cached schema metadata, checking unsupported declarations once per class.
      *
