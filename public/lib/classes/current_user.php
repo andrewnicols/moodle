@@ -16,7 +16,6 @@
 
 namespace core;
 
-use DateTimeZone;
 use stdClass;
 
 /**
