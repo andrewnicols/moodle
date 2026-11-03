@@ -222,7 +222,7 @@ class user {
             $mnethostid = $CFG->mnet_localhost_id;
         }
 
-        return $DB->get_record('user', [
+        return $DB->get_records('user', [
             'idnumber' => $idnumber,
             'mnethostid' => $mnethostid,
         ], $fields, $strictness);
