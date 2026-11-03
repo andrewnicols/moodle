@@ -91,6 +91,33 @@ final class path_user_test extends route_testcase {
         $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
+    public function test_multiple_users_with_same_idnumber(): void {
+        $this->resetAfterTest();
+
+        $idnumber = '000117-user';
+        $user = $this->getDataGenerator()->create_user((object) [
+            'idnumber' => $idnumber,
+        ]);
+        $user = $this->getDataGenerator()->create_user((object) [
+            'idnumber' => $idnumber,
+        ]);
+
+        $param = new path_user();
+
+        $request = new ServerRequest('GET', '/user');
+
+        $errorlog = make_request_directory() . '/errorlog.txt';
+        $original = ini_set('error_log', $errorlog);
+        try {
+            $param->add_attributes_for_parameter_value($request, "idnumber:{$idnumber}");
+        } catch (\Exception $e) {
+            $this->assertMatchesRegularExpression('/Multiple users found with idnumber: /', file_get_contents($errorlog));
+            $this->assertInstanceOf(not_found_exception::class, $e);
+        } finally {
+            ini_set('error_log', $original);
+        }
+    }
+
     public function test_username(): void {
         $this->resetAfterTest();
 

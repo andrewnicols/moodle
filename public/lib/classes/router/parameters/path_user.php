@@ -90,7 +90,7 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
      * @throws not_found_exception If the user cannot be found or has been deleted
      */
     protected function get_user_for_value(string $value): mixed {
-        global $USER;
+        global $CFG, $USER;
 
         $data = null;
         if ($value === 'current') {
@@ -98,7 +98,26 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
         } else if (is_numeric($value)) {
             $data = user::get_user($value);
         } else if (str_starts_with($value, 'idnumber:')) {
-            $data = user::get_user_by_idnumber(substr($value, strlen('idnumber:')));
+            // Unfortunately there is a bug that allows multiple users to have the same idnumber in Moodle.
+            // We fetch all users here for now until MDL-90363 is resolved.
+
+            // Because we use the username as the search criteria, we must also restrict our search based on mnet host.
+            $users = \core\di::get(\core\dml\database_proxy::class)
+                ->get_records('user', [
+                    'idnumber' => substr($value, strlen('idnumber:')),
+                    'mnethostid' => $CFG->mnet_localhost_id,
+                ]);
+
+            if (count($users) === 1) {
+                $data = reset($users);
+            } else if (count($users) > 1) {
+                // If there are no users, or more than one user with the same idnumber, we cannot determine a unique user.
+                // Act as though no user was found instead.
+                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
+                error_log(
+                    "Multiple users found with idnumber: " . substr($value, strlen('idnumber:'))
+                );
+            }
         } else if (str_starts_with($value, 'username:')) {
             $data = user::get_user_by_username(substr($value, strlen('username:')));
         }
