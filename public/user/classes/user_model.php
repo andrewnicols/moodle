@@ -24,7 +24,7 @@ use core\param;
 /**
  * Read-only database projection demonstrating model-backed user exposure.
  *
- * This maps identity, name and timezone columns, not the complete user table.
+ * Maps user-table columns for the existing profile visibility and formatting APIs.
  * No table attribute is provided: generic manager writes are intentionally disabled.
  * In-memory edits are supported; user persistence must use the existing user APIs.
  *
@@ -65,24 +65,133 @@ final class user_model extends model {
     public string $lastname = '';
 
     /** @var string Phonetic first name. */
-    #[field(param::NOTAGS)]
-    public string $firstnamephonetic = '';
+    #[field(param::NOTAGS, nullable: true)]
+    public ?string $firstnamephonetic = '';
 
     /** @var string Phonetic last name. */
-    #[field(param::NOTAGS)]
-    public string $lastnamephonetic = '';
+    #[field(param::NOTAGS, nullable: true)]
+    public ?string $lastnamephonetic = '';
 
     /** @var string Middle name. */
-    #[field(param::NOTAGS)]
-    public string $middlename = '';
+    #[field(param::NOTAGS, nullable: true)]
+    public ?string $middlename = '';
 
     /** @var string Alternate name. */
-    #[field(param::NOTAGS)]
-    public string $alternatename = '';
+    #[field(param::NOTAGS, nullable: true)]
+    public ?string $alternatename = '';
 
     /** @var string Stored timezone, including the server-default sentinel. */
     #[field(param::RAW)]
     public string $timezone = '99';
+
+    /** @var string Authentication plugin. */
+    #[field(param::RAW)]
+    public string $auth = 'manual';
+    /** @var int Confirmation flag, kept in database form for legacy callbacks. */
+    #[field(param::INT)]
+    public int $confirmed = 0;
+    /** @var int Policy acceptance flag. */
+    #[field(param::INT)]
+    public int $policyagreed = 0;
+    /** @var int Deletion flag. */
+    #[field(param::INT)]
+    public int $deleted = 0;
+    /** @var int Suspension flag. */
+    #[field(param::INT)]
+    public int $suspended = 0;
+    /** @var int MNet host. */
+    #[field(param::INT)]
+    public int $mnethostid = 0;
+    /** @var string Password hash, never exposed in the representation. */
+    #[field(param::RAW)]
+    protected string $password = '';
+    /** @var string External identifier. */
+    #[field(param::RAW)]
+    public string $idnumber = '';
+    /** @var string Email address. */
+    #[field(param::RAW)]
+    public string $email = '';
+    /** @var int Email delivery disabled flag. */
+    #[field(param::INT)]
+    public int $emailstop = 0;
+    /** @var string Phone number. */
+    #[field(param::RAW)]
+    public string $phone1 = '';
+    /** @var string Alternate phone number. */
+    #[field(param::RAW)]
+    public string $phone2 = '';
+    /** @var string Institution. */
+    #[field(param::RAW)]
+    public string $institution = '';
+    /** @var string Department. */
+    #[field(param::RAW)]
+    public string $department = '';
+    /** @var string Address. */
+    #[field(param::RAW)]
+    public string $address = '';
+    /** @var string City. */
+    #[field(param::RAW)]
+    public string $city = '';
+    /** @var string Country. */
+    #[field(param::RAW)]
+    public string $country = '';
+    /** @var string Language preference. */
+    #[field(param::RAW)]
+    public string $lang = 'en';
+    /** @var string Calendar preference. */
+    #[field(param::RAW)]
+    public string $calendartype = 'gregorian';
+    /** @var string Theme preference. */
+    #[field(param::RAW)]
+    public string $theme = '';
+    /** @var int First access time. */
+    #[field(param::INT)]
+    public int $firstaccess = 0;
+    /** @var int Last access time. */
+    #[field(param::INT)]
+    public int $lastaccess = 0;
+    /** @var int Previous login time. */
+    #[field(param::INT)]
+    public int $lastlogin = 0;
+    /** @var int Current login time. */
+    #[field(param::INT)]
+    public int $currentlogin = 0;
+    /** @var string Last IP address. */
+    #[field(param::RAW)]
+    public string $lastip = '';
+    /** @var string Account secret, never exposed in the representation. */
+    #[field(param::RAW)]
+    protected string $secret = '';
+    /** @var int Profile picture revision. */
+    #[field(param::INT)]
+    public int $picture = 0;
+    /** @var string|null Profile description. */
+    #[field(param::RAW, nullable: true)]
+    public ?string $description = null;
+    /** @var int Description format. */
+    #[field(param::INT)]
+    public int $descriptionformat = 1;
+    /** @var int Mail format. */
+    #[field(param::INT)]
+    public int $mailformat = 1;
+    /** @var int Mail digest preference. */
+    #[field(param::INT)]
+    public int $maildigest = 0;
+    /** @var int Email visibility preference. */
+    #[field(param::INT)]
+    public int $maildisplay = 2;
+    /** @var int Forum subscription preference. */
+    #[field(param::INT)]
+    public int $autosubscribe = 1;
+    /** @var int Forum tracking preference. */
+    #[field(param::INT)]
+    public int $trackforums = 0;
+    /** @var int Trust flags. */
+    #[field(param::INT)]
+    public int $trustbitmask = 0;
+    /** @var string|null Picture alternate text. */
+    #[field(param::RAW, nullable: true)]
+    public ?string $imagealt = null;
 
     // PHPCS currently misparses property hook expressions as declarations.
     // phpcs:disable PSR2.Classes.PropertyDeclaration, moodle.Commenting.VariableComment, moodle.PHP.MemberVarScope

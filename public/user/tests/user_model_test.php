@@ -30,25 +30,66 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[CoversClass(user_model::class)]
+#[CoversClass(\core_user\local\user_representation::class)]
 final class user_model_test extends \advanced_testcase {
+    /**
+     * Model-backed representation matches the legacy policy for each viewing context.
+     */
+    public function test_representation_matches_legacy_policy(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $PAGE->set_context(\core\context\system::instance());
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $teacher = $generator->create_and_enrol($course, 'editingteacher');
+        $student = $generator->create_and_enrol($course, 'student', [
+            'firstname' => 'Alice',
+            'lastname' => 'Example',
+            'timezone' => '99',
+            'description' => null,
+            'imagealt' => null,
+            'middlename' => null,
+        ]);
+        $model = (new user_model())->from_record($student);
+        $representation = \core\di::get(\core_user\local\user_representation::class);
+        $fields = (new \ReflectionClass($representation))->getConstant('FIELDS');
+        foreach (['admin', 'self', 'teacher'] as $viewer) {
+            if ($viewer === 'admin') {
+                $this->setAdminUser();
+            } else {
+                $this->setUser($viewer === 'self' ? $student : $teacher);
+            }
+            foreach ([null, $course] as $viewcourse) {
+                $details = \core\user::get_user_details($student, $viewcourse, $fields);
+                $expected = $details === null ? null : (new \core_user\local\user_object($details))->to_array();
+                $this->assertSame($expected, $representation->get_core($model, $viewcourse), $viewer);
+            }
+        }
+    }
+
     /**
      * Hydrate a real user, export only mapped columns and describe exposed getters.
      */
     public function test_hydration_and_exposure(): void {
+        global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
-        $user = $this->getDataGenerator()->create_user(['firstname' => 'Alice', 'lastname' => 'Example']);
+        $created = $this->getDataGenerator()->create_user(['firstname' => 'Alice', 'lastname' => 'Example']);
+        $user = $DB->get_record('user', ['id' => $created->id], '*', MUST_EXIST);
         $model = (new user_model())->from_record($user);
         $this->assertInstanceOf(\core\model::class, $model);
         $this->assertTrue($model->validate());
         $record = $model->to_record();
+        $this->assertEquals($user, $record);
         foreach ($record as $name => $value) {
             $this->assertEquals($user->{$name}, $value, $name);
         }
-        foreach (['fullname', 'effectivetimezone', 'timezonepreference', 'password', 'usermodified'] as $name) {
+        foreach (['fullname', 'effectivetimezone', 'timezonepreference', 'usermodified'] as $name) {
             $this->assertFalse(property_exists($record, $name), $name);
         }
         $payload = representation::to_array($model);
+        $this->assertArrayNotHasKey('password', $payload);
+        $this->assertArrayNotHasKey('secret', $payload);
         $this->assertSame(\core\user::get_fullname($user), $payload['fullName']);
         $this->assertArrayNotHasKey('timezone', $payload);
         $schema = (new representation_schema(user_model::class))->get_openapi_description(new specification());
@@ -90,7 +131,7 @@ final class user_model_test extends \advanced_testcase {
     }
 
     /**
-     * The generic manager cannot persist this partial user projection.
+     * The generic manager cannot persist this read-only user projection.
      */
     public function test_generic_writes_disabled(): void {
         global $DB;
@@ -99,7 +140,7 @@ final class user_model_test extends \advanced_testcase {
         $before = $DB->perf_get_queries();
         try {
             (new manager($DB))->save($model, 1);
-            $this->fail('A partial user projection was persisted.');
+            $this->fail('A read-only user projection was persisted.');
         } catch (\core\exception\coding_exception $e) {
             $this->assertStringContainsString('table attribute', $e->getMessage());
         }

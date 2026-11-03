@@ -34,6 +34,7 @@ use core_user\local\user_scope_check_trait;
 use core_user\local\visible_user_finder;
 use core_user\route\responses\user_collection_response;
 use core_user\route\responses\user_response;
+use core_user\user_model;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -115,7 +116,7 @@ class users {
         $items = [];
         $courses = null;
         foreach ($result['users'] as $user) {
-            $item = $this->representation->get_core_visible($user, $courses);
+            $item = $this->representation->get_core_visible((new user_model())->from_record($user), $courses);
             if ($item !== null) {
                 $items[] = $item;
             }
@@ -162,7 +163,7 @@ class users {
 
         $this->require_read_scope_for($request, $userId);
 
-        $item = $this->representation->get_core_visible($userId);
+        $item = $this->representation->get_core_visible((new user_model())->from_record($userId));
         if ($item === null) {
             // Do not reveal the existence of users which the current user cannot see.
             throw new not_found_exception('user', (string) $userId->id);

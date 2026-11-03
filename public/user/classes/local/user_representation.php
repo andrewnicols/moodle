@@ -18,6 +18,7 @@ namespace core_user\local;
 
 use core\current_user;
 use core\user;
+use core_user\user_model;
 use stdClass;
 
 /**
@@ -82,12 +83,12 @@ class user_representation {
     /**
      * Get the core representation of a user.
      *
-     * @param stdClass $user A full user record
+     * @param user_model $user A hydrated user model
      * @param stdClass|null $course A course in which the current user is viewing the user
      * @return array|null The representation, or null if the current user cannot see this user
      */
-    public function get_core(stdClass $user, ?stdClass $course = null): ?array {
-        $details = user::get_user_details($user, $course, self::FIELDS);
+    public function get_core(user_model $user, ?stdClass $course = null): ?array {
+        $details = user::get_user_details($user->to_record(), $course, self::FIELDS);
         if ($details === null) {
             return null;
         }
@@ -98,23 +99,23 @@ class user_representation {
     /**
      * Get the core representation of a user, looking for any course through which the current user may view them.
      *
-     * @param stdClass $user A full user record
+     * @param user_model $user A hydrated user model
      * @param stdClass[]|null $courses Courses where the current user has viewdetails, if already known
      * @return array|null The representation, or null if the current user cannot see this user
      */
-    public function get_core_visible(stdClass $user, ?array &$courses = null): ?array {
+    public function get_core_visible(user_model $user, ?array &$courses = null): ?array {
         return $this->find_visible($user, $courses, $this->get_core(...));
     }
 
     /**
      * Find a course (if needed) in which the user is visible, and build a representation in it.
      *
-     * @param stdClass $user
+     * @param user_model $user
      * @param stdClass[]|null $courses
      * @param callable $builder Called with the user and an optional course
      * @return array|null
      */
-    private function find_visible(stdClass $user, ?array &$courses, callable $builder): ?array {
+    private function find_visible(user_model $user, ?array &$courses, callable $builder): ?array {
         $item = $builder($user);
         if ($item !== null) {
             return $item;
@@ -123,7 +124,7 @@ class user_representation {
         // The user may only be visible through a course-level capability.
         $courses ??= $this->finder->get_courses_with_viewdetails();
         foreach ($courses as $course) {
-            if (is_enrolled(\core\context\course::instance($course->id), $user)) {
+            if (is_enrolled(\core\context\course::instance($course->id), $user->id)) {
                 return $builder($user, $course);
             }
         }
