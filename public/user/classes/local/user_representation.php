@@ -92,39 +92,7 @@ class user_representation {
             return null;
         }
 
-        return [
-            'id' => (int) $details['id'],
-            'username' => $details['username'] ?? null,
-            'idnumber' => $details['idnumber'] ?? null,
-            'fullName' => $details['fullname'],
-            'firstName' => $details['firstname'] ?? null,
-            'lastName' => $details['lastname'] ?? null,
-            'firstNamePhonetic' => $details['firstnamephonetic'] ?? null,
-            'lastNamePhonetic' => $details['lastnamephonetic'] ?? null,
-            'middleName' => $details['middlename'] ?? null,
-            'alternateName' => $details['alternatename'] ?? null,
-            'email' => $details['email'] ?? null,
-            'city' => $details['city'] ?? null,
-            'country' => $details['country'] ?? null,
-            'institution' => $details['institution'] ?? null,
-            'department' => $details['department'] ?? null,
-            'phone' => $details['phone1'] ?? null,
-            'mobilePhone' => $details['phone2'] ?? null,
-            'address' => $details['address'] ?? null,
-            'description' => $details['description'] ?? null,
-            'descriptionFormat' => isset($details['descriptionformat']) ? (int) $details['descriptionformat'] : null,
-            'language' => $details['lang'] ?? null,
-            'calendarType' => $details['calendartype'] ?? null,
-            'confirmed' => isset($details['confirmed']) ? (bool) $details['confirmed'] : null,
-            'authenticationMethod' => $details['auth'] ?? null,
-            'profileImageUrl' => $details['profileimageurl'] ?? null,
-            'profileImageUrlSmall' => $details['profileimageurlsmall'] ?? null,
-            'profileImageAlt' => $details['imagealt'] ?? null,
-            'timeZone' => isset($details['timezone']) ? $this->normalise_timezone($details['timezone']) : null,
-            'timeZonePreference' => $this->get_timezone_preference($details['timezone'] ?? null),
-            'suspended' => $details['suspended'] ?? null,
-            'deleted' => $details['deleted'],
-        ];
+        return (new user_object($details))->to_array();
     }
 
     /**
@@ -161,32 +129,5 @@ class user_representation {
         }
 
         return null;
-    }
-
-    /**
-     * Get the timezone which the user has chosen, as an IANA name.
-     *
-     * @param string|null $timezone The stored value
-     * @return string|null Null if the user follows the server timezone (stored as 99), or the value is hidden
-     */
-    private function get_timezone_preference(?string $timezone): ?string {
-        if ($timezone === null || $timezone === '' || $timezone === '99') {
-            return null;
-        }
-
-        return \core_date::normalise_timezone($timezone);
-    }
-
-    /**
-     * Normalise a stored timezone to an IANA time zone database name (BCP 175 / RFC 6557), such as Australia/Perth.
-     *
-     * Moodle stores 99 for "use the server timezone", and may still hold legacy numeric offsets. Both resolve to the
-     * zone which Moodle actually uses for the user.
-     *
-     * @param string $timezone The stored value
-     * @return string
-     */
-    private function normalise_timezone(string $timezone): string {
-        return \core_date::get_user_timezone((object) ['timezone' => $timezone]);
     }
 }

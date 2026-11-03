@@ -16,10 +16,7 @@
 
 namespace core_user\route\schema;
 
-use core\param;
-use core\router\schema\objects\scalar_type;
-use core\router\schema\objects\schema_object;
-use core\router\schema\referenced_object;
+use core\router\schema\objects\representation_schema;
 
 /**
  * The schema of the key information about a user.
@@ -28,47 +25,13 @@ use core\router\schema\referenced_object;
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_object extends schema_object implements referenced_object {
+class user_object extends representation_schema {
     /**
      * Constructor.
      *
      * @param mixed[] ...$extra
      */
     public function __construct(...$extra) {
-        $extra['content'] = [
-            'id' => new scalar_type(param::INT, required: true),
-            'username' => new scalar_type(param::USERNAME),
-            'idnumber' => new scalar_type(param::RAW),
-            'fullName' => new scalar_type(param::NOTAGS, required: true),
-            'firstName' => new scalar_type(param::NOTAGS),
-            'lastName' => new scalar_type(param::NOTAGS),
-            'firstNamePhonetic' => new scalar_type(param::NOTAGS),
-            'lastNamePhonetic' => new scalar_type(param::NOTAGS),
-            'middleName' => new scalar_type(param::NOTAGS),
-            'alternateName' => new scalar_type(param::NOTAGS),
-            'email' => new scalar_type(param::EMAIL),
-            'city' => new scalar_type(param::TEXT),
-            'country' => new scalar_type(param::ALPHA),
-            'institution' => new scalar_type(param::TEXT),
-            'department' => new scalar_type(param::TEXT),
-            'phone' => new scalar_type(param::NOTAGS),
-            'mobilePhone' => new scalar_type(param::NOTAGS),
-            'address' => new scalar_type(param::TEXT),
-            'description' => new scalar_type(param::RAW),
-            'descriptionFormat' => new scalar_type(param::INT),
-            'language' => new scalar_type(param::LANG),
-            'calendarType' => new scalar_type(param::PLUGIN),
-            'confirmed' => new scalar_type(param::BOOL),
-            'authenticationMethod' => new scalar_type(param::AUTH),
-            'profileImageUrl' => new scalar_type(param::URL),
-            'profileImageUrlSmall' => new scalar_type(param::URL),
-            'profileImageAlt' => new scalar_type(param::TEXT),
-            'timeZone' => new scalar_type(param::TIMEZONE),
-            'timeZonePreference' => new scalar_type(param::TIMEZONE),
-            'suspended' => new scalar_type(param::BOOL),
-            'deleted' => new scalar_type(param::BOOL),
-        ];
-
-        parent::__construct(...$extra);
+        parent::__construct(\core_user\local\user_object::class, ...$extra);
     }
 }
