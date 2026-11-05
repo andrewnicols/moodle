@@ -135,7 +135,7 @@ class Fetch {
   /**
    * Get the singleton instance of the batch processor.
    *
-   * Note: The singleton instance is configured to automatically execute the batch 50ms after the final request
+   * Note: The singleton instance is configured to automatically execute the batch 50ms after the initial request in the group
    * is added.
    *
    * @returns The singleton {@link Fetch} batcher instance.
@@ -304,6 +304,10 @@ class Fetch {
    * If only a single request has been queued, it is sent directly rather than wrapped in a batch request.
    */
   async execute() {
+    if (this.#delayTimer !== null) {
+      clearTimeout(this.#delayTimer);
+      this.#delayTimer = null;
+    }
     const requestMap = this.#requestMap;
     this.#requestMap = /* @__PURE__ */ new Map();
     if (requestMap.size === 0) {
@@ -422,7 +426,7 @@ class Fetch {
    */
   #queueExecution() {
     if (this.#delayTimer) {
-      clearTimeout(this.#delayTimer);
+      return;
     }
     this.#delayTimer = setTimeout(() => this.execute(), this.#autoBatchTimeout);
   }
