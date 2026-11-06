@@ -49,10 +49,6 @@ define('PHPUNIT_TEST', true);
 define('CACHE_DISABLE_ALL', false);
 define('MOODLE_INTERNAL', true);
 
-require_once($CFG->libdir . '/dmllib.php');
-require_once($CFG->libdir . '/phpunit/lib.php');
-
-
 require_once($CFG->libdir . '/setuplib.php');        // Functions that MUST be loaded first.
 
 // Load up standard libraries.
@@ -72,3 +68,6 @@ require_once($CFG->libdir . '/sessionlib.php');      // All session and cookie r
 require_once($CFG->libdir . '/editorlib.php');       // All text editor related functions and classes.
 require_once($CFG->libdir . '/messagelib.php');      // Messagelib functions.
 require_once($CFG->libdir . '/modinfolib.php');      // Cached information on course-module instances.
+
+// Load PHPUnit library for testing.
+require_once($CFG->libdir . '/phpunit/lib.php');
