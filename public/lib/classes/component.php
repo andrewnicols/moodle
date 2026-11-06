@@ -54,6 +54,22 @@ define('ANY_VERSION', 'any');
  * Collection of components related methods.
  */
 class component {
+    /**
+     * @var int Debug level for normal debugging.
+     *
+     * Note: This is a copy of the DEBUG_NORMAL constant from setuplib.php.
+     * We cannot guarantee that setuplib.php has been included.
+     */
+    private const DEBUG_NORMAL = E_ERROR | E_PARSE | E_WARNING | E_NOTICE;
+
+    /**
+     * @var int Debug level for developer debugging.
+     *
+     * Note: This is a copy of the DEBUG_DEVELOPER constant from setuplib.php.
+     * We cannot guarantee that setuplib.php has been included.
+     */
+    private const DEBUG_DEVELOPER = E_ALL;
+
     /** @var array list of ignored directories in plugin type roots - watch out for auth/db exception */
     protected static $ignoreddirs = [
         'CVS' => true,
@@ -268,7 +284,7 @@ class component {
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
             $debugging = "Class '%s' has been renamed for the autoloader and is now deprecated. Please use '%s' instead.";
-            self::debugging(sprintf($debugging, $classname, $newclassname));
+            self::debugging(sprintf($debugging, $classname, $newclassname), self::DEBUG_DEVELOPER);
 
             if (preg_match('#\\\null(\\\|$)#', $classname)) {
                 throw new coding_exception("Cannot alias $classname to $newclassname");
@@ -781,8 +797,9 @@ $cache = ' . var_export($cache, true) . ';
             $illegaltypes = array_intersect(self::$supportsubplugins, array_keys($plugintypesmap[$key]));
             if (!empty($illegaltypes)) {
                 self::debugging(
-                    "Deprecation of a plugin type which supports subplugins is not supported. These plugin types will " .
-                        "continue to be treated as active."
+                    "Deprecation of a plugin type which supports subplugins is not supported. "
+                        . "These plugin types will continue to be treated as active.",
+                    self::DEBUG_DEVELOPER,
                 );
                 foreach ($illegaltypes as $plugintype) {
                     $plugintypesmap['plugintypes'][$plugintype] = $plugintypesmap[$key][$plugintype];
@@ -974,7 +991,7 @@ $cache = ' . var_export($cache, true) . ';
                 error_log("$ownerdir/db/subplugins.json is invalid ($jsonerror)");
             }
 
-            if (self::debugging('')) {
+            if (self::debugging()) {
                 if (property_exists($subpluginsjson, 'subplugintypes') && property_exists($subpluginsjson, 'plugintypes')) {
                     $subplugintypes = (array) $subpluginsjson->subplugintypes;
                     $plugintypes = (array) $subpluginsjson->plugintypes;
@@ -1569,7 +1586,7 @@ $cache = ' . var_export($cache, true) . ';
             debugging(
                 'qtype_random was removed from core, and random questions now use question set references. '
                     . 'You must not use the name qtype_random for another plugin, as the questions will not work correctly.',
-                DEBUG_DEVELOPER,
+                self::DEBUG_DEVELOPER,
             );
             return false;
         } else {
@@ -2152,13 +2169,15 @@ $cache = ' . var_export($cache, true) . ';
      * Note: This class can be used before the debugging function is available.
      *
      * @param string $message
+     * @param int $level The debugging level.
      * @return bool Whether a debugging message was emitted.
      */
     private static function debugging(
-        string $message,
+        string $message = '',
+        int $level = self::DEBUG_NORMAL,
     ): bool {
-        if (function_exists('debugging') && debugging()) {
-            return debugging($message, DEBUG_DEVELOPER);
+        if (function_exists('debugging')) {
+            return debugging($message, $level);
         } else {
             if ($message !== '') {
                 error_log($message);
