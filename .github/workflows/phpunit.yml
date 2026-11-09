@@ -79,7 +79,7 @@ jobs:
           coverage: none
 
       - name: Checking out code from ${{ env.GITHUB_REF_SLUG }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setting up PHPUnit
         env:
