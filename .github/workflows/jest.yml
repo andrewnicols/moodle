@@ -1,0 +1,34 @@
+name: Core
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - MOODLE_[0-9]+_STABLE
+    tags-ignore:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  workflow_dispatch:
+    inputs:
+      jest_options:
+        description: Additional options to apply to Jest
+        required: false
+        default: ''
+
+jobs:
+  Jest:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v6
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running Jest tests
+        run: npm test -- ${{ inputs.jest_options }}

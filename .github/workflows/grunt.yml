@@ -1,0 +1,46 @@
+name: Core
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - MOODLE_[0-9]+_STABLE
+    tags-ignore:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  workflow_dispatch:
+    inputs:
+      grunt_extra_options:
+        description: Additional options to apply to Grunt
+        required: false
+        default: ''
+
+env:
+  php: 8.4
+
+jobs:
+  Grunt:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v6
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running grunt
+        run: npx grunt ${{ inputs.grunt_extra_options }}
+
+      - name: Looking for uncommitted changes
+        # Add all files to the git index and then run diff --cached to see all changes.
+        # This ensures that we get the status of all files, including new files.
+        # We ignore npm-shrinkwrap.json to make the tasks immune to npm changes.
+        run: |
+          git add .
+          git reset -- npm-shrinkwrap.json
+          git diff --cached --exit-code
