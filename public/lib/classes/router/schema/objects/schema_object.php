@@ -98,9 +98,14 @@ class schema_object extends type_base {
         ?string $path = null,
     ): ?\stdClass {
         $data = (object) [
+            'description' => $this->description,
             'type' => 'object',
             'properties' => (object) [],
         ];
+
+        if (empty($this->description)) {
+            unset($data->description);
+        }
 
         foreach ($this->content as $name => $content) {
             $data->properties->{$name} = $content->get_openapi_schema(
