@@ -31,11 +31,14 @@ abstract class type_base extends openapi_base {
      * Note: We do not implement the $example, because it has been deprecated in OpenApi 3.0.
      *
      * @param array $examples
+     * @param string|null $description The description of the schema object
      * @param mixed[] ...$extra
      */
     public function __construct(
         /** @var array Any examples that may be present for the type */
         protected array $examples = [],
+        /** @var string|null The description of the type */
+        protected ?string $description = null,
         ...$extra,
     ) {
         parent::__construct(...$extra);
@@ -47,6 +50,9 @@ abstract class type_base extends openapi_base {
         ?string $path = null,
     ): ?\stdClass {
         $data = (object) [];
+        if (!empty($this->description)) {
+            $data->description = $this->description;
+        }
 
         if (count($this->examples)) {
             $data->examples = [];
