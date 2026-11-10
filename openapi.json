@@ -542,7 +542,7 @@
                         "$ref": "#/components/parameters/core--router--parameters--path_user"
                     },
                     {
-                        "$ref": "#/components/headers/core--router--schema--parameters--if_none_match"
+                        "$ref": "#/components/parameters/core--router--schema--parameters--if_none_match"
                     }
                 ],
                 "responses": {
@@ -1758,6 +1758,14 @@
                     "minimum": 1,
                     "default": 1
                 }
+            },
+            "core--router--schema--parameters--if_none_match": {
+                "description": "An optional ETag, as previously returned by this resource. Include the literal double quotes, for example `\"abc123\"`. If it matches the current ETag, an empty 304 Not Modified response is returned.",
+                "name": "If-None-Match",
+                "in": "header",
+                "schema": {
+                    "type": "string"
+                }
             }
         },
         "examples": {},
@@ -1781,16 +1789,6 @@
             },
             "core--router--schema--parameters--etag": {
                 "description": "The entity-tag of this representation. Preserve the double quotes when sending it in an If-Match or If-None-Match request header.",
-                "name": "ETag",
-                "in": "header",
-                "schema": {
-                    "type": "string"
-                }
-            },
-            "core--router--schema--parameters--if_none_match": {
-                "description": "An optional ETag, as previously returned by this resource. Include the literal double quotes, for example `\"abc123\"`. If it matches the current ETag, an empty 304 Not Modified response is returned.",
-                "name": "If-None-Match",
-                "in": "header",
                 "schema": {
                     "type": "string"
                 }
