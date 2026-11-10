@@ -51,10 +51,6 @@ class header_language extends \core\router\schema\parameters\header_object imple
 
         $extra['examples'] = [
             new example(
-                name: 'Site default',
-                value: null,
-            ),
-            new example(
                 name: 'English',
                 value: 'en',
             ),
