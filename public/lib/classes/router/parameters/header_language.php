@@ -27,7 +27,9 @@ use core\router\schema\referenced_object;
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class header_language extends \core\router\schema\parameters\header_object implements referenced_object {
+class header_language extends \core\router\schema\parameters\request_header_object implements
+    referenced_object
+{
     /**
      * Create a new path_component parameter.
      *
