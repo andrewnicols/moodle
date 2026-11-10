@@ -19,6 +19,7 @@ namespace core\router;
 use core\param;
 use core\router\response\empty_response;
 use core\router\route;
+use core\router\schema\operationid;
 use core\router\schema\parameters\header_object;
 use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;
@@ -36,6 +37,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[CoversClass(route::class)]
+#[CoversClass(operationid::class)]
 final class route_test extends route_testcase {
     /**
      * Test that the Attribute is configured correctly.
@@ -122,6 +124,30 @@ final class route_test extends route_testcase {
         );
         $child->set_parent($route);
         $this->assertEquals(['GET', 'POST', 'PUT'], $child->get_methods());
+    }
+
+    public function test_operationid_attribute_is_collected_from_method(): void {
+        $classinfo = new \ReflectionClass(new class {
+            /**
+             * Test route handler.
+             */
+            #[route(path: '/users')]
+            #[operationid('getUsers')]
+            public function handle(): void {
+            }
+        });
+        $methodinfo = $classinfo->getMethod('handle');
+
+        $route = route::from_reflection($classinfo, $methodinfo);
+        $this->assertSame('getUsers', $route->operationid->id);
+
+        $route = route::from_reflection($classinfo, $methodinfo, collectsiblings: false);
+        $this->assertNull($route->operationid);
+    }
+
+    public function test_operationid_attribute_must_not_be_empty(): void {
+        $this->expectException(\core\exception\coding_exception::class);
+        new operationid('');
     }
 
     /**

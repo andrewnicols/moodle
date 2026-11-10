@@ -56,6 +56,9 @@ class specification implements
     /** @var callable[] A list of common responses that are frequently found in paths */
     protected array $commonresponses = [];
 
+    /** @var array<string, array{method: string, path: string}> The paths which use each operation ID */
+    protected array $operationids = [];
+
     /**
      * Constructor to configure base information.
      */
@@ -340,12 +343,16 @@ class specification implements
      * @param string $component The Moodle component
      * @param route $route The route which handles this request
      * @param \core\router\scope\scopeset[] $scopesets,
+     * @param string|null $operationname The name of the route handler
+     * @param string|null $classname The fully qualified route handler class
      * @return specification
      */
     public function add_path(
         string $component,
         route $route,
         array $scopesets = [],
+        ?string $operationname = null,
+        ?string $classname = null,
     ): self {
         // Compile the final path, complete with component prefix.
         $path = "/";
@@ -355,7 +362,7 @@ class specification implements
         // Helper to add the path to the specification.
         // Note: We use this helper because OpenAPI does not support optional parameters.
         // Therefore we must handle that in Moodle, adding path variants with and without each optional parameter.
-        $addpath = function (string $path) use ($route, $component, $scopesets) {
+        $addpath = function (string $path) use ($route, $component, $scopesets, $operationname, $classname) {
             $path = str_replace(
                 [
                     // Remove the optional parameters delimiters from the path.
@@ -377,6 +384,8 @@ class specification implements
                 component: $component,
                 path: $path,
                 scopesets: $scopesets,
+                operationname: $operationname,
+                classname: $classname,
             );
 
             if (!property_exists($this->data->paths, $path)) {
@@ -384,6 +393,21 @@ class specification implements
             }
 
             foreach ((array) $pathdocs as $method => $methoddata) {
+                if (isset($methoddata->operationId)) {
+                    $operationid = $methoddata->operationId;
+                    if (isset($this->operationids[$operationid])) {
+                        $existing = $this->operationids[$operationid];
+                        throw new coding_exception(
+                            "Duplicate OpenAPI operationId '{$operationid}' for {$existing['method']} "
+                            . "{$existing['path']} and {$method} {$path}.",
+                        );
+                    }
+                    $this->operationids[$operationid] = [
+                        'method' => $method,
+                        'path' => $path,
+                    ];
+                }
+
                 // Copy each of the pathdocs into place.
                 $this->data->paths->{$path}->{$method} = $methoddata;
             }
@@ -567,6 +591,8 @@ class specification implements
      * @param string $component
      * @param string $path
      * @param \core\router\scope\scopeset[] $scopesets
+     * @param string|null $operationname
+     * @param string|null $classname The fully qualified route handler class
      * @return stdClass
      */
     public function get_openapi_schema_for_route(
@@ -574,6 +600,8 @@ class specification implements
         string $component,
         string $path,
         array $scopesets = [],
+        ?string $operationname = null,
+        ?string $classname = null,
     ): stdClass {
         $data = (object) [
             'description' => $route->description,
@@ -642,9 +670,72 @@ class specification implements
         $methods = $route->get_methods(['GET']);
 
         foreach ($methods as $method) {
-            $methoddata[strtolower($method)] = $data;
+            $operation = clone $data;
+            $operation->operationId = $this->get_operation_id(
+                route: $route,
+                component: $component,
+                method: $method,
+                path: $path,
+                operationname: $operationname,
+                methods: $methods,
+                classname: $classname,
+            );
+            $methoddata[strtolower($method)] = $operation;
         }
 
         return (object) $methoddata;
+    }
+
+    /**
+     * Generate a namespaced operation ID for a route.
+     *
+     * @param route $route
+     * @param string $component
+     * @param string $method
+     * @param string $path
+     * @param string|null $operationname
+     * @param array $methods
+     * @param string|null $classname The fully qualified route handler class
+     * @return string
+     */
+    protected function get_operation_id(
+        route $route,
+        string $component,
+        string $method,
+        string $path,
+        ?string $operationname,
+        array $methods,
+        ?string $classname,
+    ): string {
+        $componentname = str_replace(' ', '', ucwords(str_replace('_', ' ', $component)));
+        $namespace = '';
+        if ($classname !== null) {
+            $namespace = ltrim($classname, '\\');
+            $prefix = $component . '\\route\\api\\';
+            if (str_starts_with($namespace, $prefix)) {
+                $namespace = substr($namespace, strlen($prefix));
+            }
+            $namespace = str_replace(' ', '', ucwords(str_replace(['\\', '_'], ' ', $namespace)));
+        }
+        $operationname = $route->operationid?->id ?? $operationname ?? $route->get_path();
+        $operationname = str_replace(
+            ' ',
+            '',
+            ucwords(str_replace(['_', '-', '/', '{', '}'], ' ', $operationname)),
+        );
+        $httpmethod = count($methods) > 1 ? ucfirst(strtolower($method)) : '';
+        $operationid = lcfirst($componentname . $namespace . $httpmethod . $operationname);
+
+        preg_match_all('/\{([^}:]+)(?::[^}]+)?\}/', $path, $pathparameters);
+        foreach (array_values(array_unique($pathparameters[1])) as $index => $pathparameter) {
+            $operationid .= $index === 0 ? 'With' : 'And';
+            $operationid .= str_replace(
+                ' ',
+                '',
+                ucwords(str_replace(['_', '-'], ' ', $pathparameter)),
+            );
+        }
+
+        return $operationid;
     }
 }
