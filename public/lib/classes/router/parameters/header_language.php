@@ -53,10 +53,6 @@ class header_language extends \core\router\schema\parameters\request_header_obje
 
         $extra['examples'] = [
             new example(
-                name: 'Site default',
-                value: null,
-            ),
-            new example(
                 name: 'English',
                 value: 'en',
             ),
