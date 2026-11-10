@@ -19,7 +19,9 @@ namespace core\router\schema\parameters;
 use core\exception\invalid_parameter_exception;
 use core\param;
 use core\router\schema\parameter;
+use core\router\schema\specification;
 use Psr\Http\Message\ServerRequestInterface;
+use stdClass;
 
 /**
  * A Header Object.
@@ -102,5 +104,19 @@ class header_object extends parameter {
         // This parameter is optional and there is no default.
         // Fill a null value.
         return $request->withHeader($this->name, null);
+    }
+
+    #[\Override]
+    public function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): ?stdClass {
+        $data = parent::get_openapi_description($api, $path);
+
+        // Response headers are not allowed a name or 'in'.
+        unset($data->in);
+        unset($data->name);
+
+        return $data;
     }
 }
