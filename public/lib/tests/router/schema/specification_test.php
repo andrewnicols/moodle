@@ -156,6 +156,11 @@ final class specification_test extends route_testcase {
         $this->assertObjectHasProperty('paths', $schema);
         $this->assertObjectHasProperty('components', $schema);
         $this->assertObjectHasProperty('security', $schema);
+        $this->assertEquals([
+            (object) ['oauth2' => []],
+            (object) ['api_key' => []],
+            (object) ['cookie' => []],
+        ], $schema->security);
         $this->assertObjectHasProperty('externalDocs', $schema);
 
         // Calculated parameters should only be set once.
@@ -473,13 +478,28 @@ final class specification_test extends route_testcase {
             scopesets: $scopesets,
         );
 
-        $this->assertCount(2, $requestschema->get->security);
+        $this->assertCount(4, $requestschema->get->security);
         $this->assertSame(['oauth2' => $scopesets[0]->requiredscopes], $requestschema->get->security[0]);
         $this->assertSame(['oauth2' => $scopesets[1]->requiredscopes], $requestschema->get->security[1]);
+        $this->assertSame(['api_key' => []], $requestschema->get->security[2]);
+        $this->assertSame(['cookie' => []], $requestschema->get->security[3]);
 
         $this->assertStringContainsString('Required OAuth scopes:', $requestschema->get->description);
         $this->assertStringContainsString('fake_oauth2scope:resource:read', $requestschema->get->description);
         $this->assertStringContainsString('fake_oauth2scope:resource:write', $requestschema->get->description);
+
+        $customroute = new route(path: '/custom', security: [['custom' => []]]);
+        $customschema = $spec->get_openapi_schema_for_route(
+            route: $customroute,
+            component: '',
+            path: '/custom',
+            scopesets: $scopesets,
+        );
+        $this->assertSame([
+            ['custom' => []],
+            ['oauth2' => $scopesets[0]->requiredscopes],
+            ['oauth2' => $scopesets[1]->requiredscopes],
+        ], $customschema->get->security);
     }
 
     /**

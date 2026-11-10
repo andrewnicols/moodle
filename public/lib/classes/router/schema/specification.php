@@ -106,7 +106,11 @@ class specification implements
             'security' => [
                 (object) [
                     'oauth2' => [],
+                ],
+                (object) [
                     'api_key' => [],
+                ],
+                (object) [
                     'cookie' => [],
                 ],
             ],
@@ -600,6 +604,12 @@ class specification implements
                 $data->security[] = ['oauth2' => $scopeset->requiredscopes];
                 $data->description .= "- " . get_string('openapi_required_scope_allof', 'admin') . "\n";
                 $data->description .= "  - " . implode("\n  - ", $scopeset->requiredscopes) . "\n";
+            }
+
+            if ($route->security === null) {
+                // Operation security replaces document security; retain the non-OAuth authentication alternatives.
+                $data->security[] = ['api_key' => []];
+                $data->security[] = ['cookie' => []];
             }
         }
 
