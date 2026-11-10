@@ -16,6 +16,7 @@
 
 namespace core\router\schema\objects;
 
+use core\exception\coding_exception;
 use core\param;
 use core\router\schema\specification;
 
@@ -32,7 +33,7 @@ class array_of_things extends type_base {
     /**
      * An array of things.
      *
-     * @param string|type_base|param|null $thingtype The OpenAPI type, or null if any type is allowed.
+     * @param string|type_base|param|null $thingtype An OpenAPI type, schema provider class, validator, or null.
      * @param mixed[] ...$extra
      */
     public function __construct(
@@ -48,7 +49,7 @@ class array_of_things extends type_base {
         specification $api,
         ?string $path = null,
     ): ?\stdClass {
-        return $this->get_schema();
+        return $this->get_schema($api, $path);
     }
 
     /**
@@ -56,10 +57,10 @@ class array_of_things extends type_base {
      *
      * @return \stdClass
      */
-    public function get_schema(): \stdClass {
+    public function get_schema(?specification $api = null, ?string $path = null): \stdClass {
         return (object) [
             'type' => 'object',
-            'additionalProperties' => $this->get_additional_properties($this->thingtype),
+            'additionalProperties' => $this->get_additional_properties($this->thingtype, $api, $path),
         ];
     }
 
@@ -73,10 +74,23 @@ class array_of_things extends type_base {
             return $data;
         }
 
-        if (is_a($this->thingtype, type_base::class)) {
+        if ($this->thingtype instanceof type_base) {
             $validator = fn ($value) => $this->thingtype->validate_data($value);
+        } else if (is_string($this->thingtype) && is_a($this->thingtype, data_validator::class, true)) {
+            $type = $this->thingtype;
+            $validator = fn ($value) => $type::validate_data($value);
         } else {
             if (is_string($this->thingtype)) {
+                if (is_a($this->thingtype, openapi_schema_provider::class, true)) {
+                    throw new coding_exception(
+                        "The class {$this->thingtype} must implement data_validator to validate its values.",
+                    );
+                }
+                if (class_exists($this->thingtype)) {
+                    throw new coding_exception(
+                        "The class {$this->thingtype} must implement data_validator to validate its values.",
+                    );
+                }
                 $param = param::from($this->thingtype);
             } else {
                 $param = $this->thingtype;
@@ -85,8 +99,8 @@ class array_of_things extends type_base {
             $validator = fn ($value) => $param->validate_param($value);
         }
 
-        foreach ($data as $value) {
-            $validator($value);
+        foreach ($data as $key => $value) {
+            $data[$key] = $validator($value);
         }
         return $data;
     }

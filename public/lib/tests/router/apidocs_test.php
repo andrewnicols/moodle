@@ -36,5 +36,17 @@ final class apidocs_test extends \advanced_testcase {
 
         $this->assertTrue($result->hasHeader('Content-Type'));
         $this->assertEquals(['application/json'], $result->getHeader('Content-Type'));
+
+        $schema = json_decode((string) $result->getBody());
+
+        $bankproperties = $schema->paths->{'/question/banks'}->get->responses->{'200'}
+            ->content->{'application/json'}->schema->properties->banks->additionalProperties->properties;
+        $this->assertObjectHasProperty('name', $bankproperties);
+        $this->assertSame('object', $bankproperties->cminfo->type);
+
+        $categoryproperties = $schema->paths->{'/question/categories'}->get->responses->{'200'}
+            ->content->{'application/json'}->schema->properties->categories->additionalProperties->properties;
+        $this->assertSame('integer', $categoryproperties->id->type);
+        $this->assertSame('string', $categoryproperties->name->type);
     }
 }

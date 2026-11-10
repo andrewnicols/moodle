@@ -16,6 +16,8 @@
 
 namespace core\router\schema\objects;
 
+use core\exception\coding_exception;
+use core\param;
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
 
@@ -63,21 +65,43 @@ abstract class type_base extends openapi_base {
     /**
      * Get the additional OpenAPI properties if relevant.
      *
-     * @param string|null|type_base $type
-     * @return bool|array
+     * @param string|type_base|param|null $type
+     * @param specification|null $api
+     * @param string|null $path
+     * @return bool|array|\stdClass
      */
-    protected function get_additional_properties(string|null|type_base $type): bool|array {
+    protected function get_additional_properties(
+        string|null|type_base|param $type,
+        ?specification $api = null,
+        ?string $path = null,
+    ): bool|array|\stdClass {
         // The additionalProperties are described here:
         // https://spec.openapis.org/oas/v3.1.0#schema-object-examples.
         if ($type === null) {
             return true;
         }
 
-        if (is_a($type, self::class)) {
+        if ($type instanceof self) {
             // This type is a reference to another schema object.
             return [
                 '$ref' => $type->get_reference(),
             ];
+        }
+
+        if ($type instanceof param) {
+            return $this->get_schema_from_type($type);
+        }
+
+        if (is_string($type) && is_a($type, openapi_schema_provider::class, true)) {
+            if ($api === null) {
+                throw new coding_exception('A specification is required to describe an OpenAPI schema provider.');
+            }
+
+            return $type::get_openapi_description($api, $path);
+        }
+
+        if (is_string($type) && class_exists($type)) {
+            throw new coding_exception("The class {$type} must implement openapi_schema_provider to be used as a schema.");
         }
 
         // TODO MDL-82243: Validate against supported OpenAPI types.

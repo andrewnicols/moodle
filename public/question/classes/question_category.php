@@ -17,6 +17,8 @@
 namespace core_question;
 
 use core\context;
+use core\router\schema\objects\openapi_schema_provider;
+use core\router\schema\specification;
 use JsonSerializable;
 use stdClass;
 
@@ -30,7 +32,7 @@ use stdClass;
  * @author    Mark Johnson <mark.johnson@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_category implements JsonSerializable {
+class question_category implements JsonSerializable, openapi_schema_provider {
     /**
      * Set properties and format strings.
      *
@@ -84,6 +86,32 @@ class question_category implements JsonSerializable {
             'parent' => $this->parent,
             'sortorder' => $this->sortorder,
             'idnumber' => $this->idnumber,
+        ];
+    }
+
+    /**
+     * Describe the category returned by jsonSerialize().
+     *
+     * @param specification $api
+     * @param string|null $path
+     * @return stdClass
+     */
+    public static function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): stdClass {
+        return (object) [
+            'type' => 'object',
+            'properties' => (object) [
+                'id' => (object) ['type' => 'integer'],
+                'name' => (object) ['type' => 'string'],
+                'contextid' => (object) ['type' => 'integer'],
+                'info' => (object) ['type' => 'string'],
+                'stamp' => (object) ['type' => 'string'],
+                'parent' => (object) ['type' => 'integer'],
+                'sortorder' => (object) ['type' => 'integer'],
+                'idnumber' => (object) ['type' => 'integer'],
+            ],
         ];
     }
 }

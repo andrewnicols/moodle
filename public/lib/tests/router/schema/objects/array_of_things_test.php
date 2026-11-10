@@ -32,6 +32,57 @@ use core\tests\router\route_testcase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\router\schema\objects\type_base::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\router\schema\openapi_base::class)]
 final class array_of_things_test extends route_testcase {
+    public function test_schema_provider_class(): void {
+        $provider = new class implements openapi_schema_provider, data_validator {
+            public static function get_openapi_description(
+                specification $api,
+                ?string $path = null,
+            ): \stdClass {
+                return (object) [
+                    'type' => 'string',
+                    'format' => 'email',
+                ];
+            }
+
+            public static function validate_data(mixed $data): mixed {
+                if (!is_string($data)) {
+                    throw new \invalid_parameter_exception('Expected a string.');
+                }
+
+                return strtolower($data);
+            }
+        };
+        $object = new array_of_things(thingtype: get_class($provider));
+
+        $schema = $object->get_openapi_description(new specification());
+        $this->assertEquals(
+            (object) [
+                'type' => 'string',
+                'format' => 'email',
+            ],
+            $schema->additionalProperties,
+        );
+        $this->assertSame(
+            ['first' => 'one@example.invalid'],
+            $object->validate_data(['first' => 'ONE@EXAMPLE.INVALID']),
+        );
+    }
+
+    public function test_schema_provider_without_validator_cannot_validate_data(): void {
+        $provider = new class implements openapi_schema_provider {
+            public static function get_openapi_description(
+                specification $api,
+                ?string $path = null,
+            ): \stdClass {
+                return (object) ['type' => 'string'];
+            }
+        };
+        $object = new array_of_things(thingtype: get_class($provider));
+
+        $this->expectException(\core\exception\coding_exception::class);
+        $object->validate_data(['first' => 'one@example.invalid']);
+    }
+
     public function test_referenced_object(): void {
         $object = new class ( // phpcs:ignore
             thingtype: 'integer',

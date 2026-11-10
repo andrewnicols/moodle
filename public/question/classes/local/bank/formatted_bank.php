@@ -17,7 +17,10 @@
 namespace core_question\local\bank;
 
 use core\context;
+use core\router\schema\objects\openapi_schema_provider;
+use core\router\schema\specification;
 use core_course\cm_info;
+use core_question\question_category;
 use JsonSerializable;
 
 /**
@@ -28,7 +31,7 @@ use JsonSerializable;
  * @author    Mark Johnson <mark.johnson@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class formatted_bank implements JsonSerializable {
+class formatted_bank implements JsonSerializable, openapi_schema_provider {
     /**
      * Constructor
      *
@@ -91,6 +94,36 @@ class formatted_bank implements JsonSerializable {
      */
     public function jsonSerialize(): \stdClass {
         return $this->get_formatted();
+    }
+
+    /**
+     * Describe the formatted bank returned by jsonSerialize().
+     *
+     * @param specification $api
+     * @param string|null $path
+     * @return \stdClass
+     */
+    public static function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): \stdClass {
+        return (object) [
+            'type' => 'object',
+            'properties' => (object) [
+                'name' => (object) ['type' => 'string'],
+                'modid' => (object) ['type' => 'integer'],
+                'contextid' => (object) ['type' => 'integer'],
+                'coursenamebankname' => (object) ['type' => 'string'],
+                'cminfo' => (object) ['type' => 'object'],
+                'questioncategories' => (object) [
+                    'type' => 'array',
+                    'items' => question_category::get_openapi_description($api, $path),
+                ],
+                'shared' => (object) ['type' => 'boolean'],
+                'recent' => (object) ['type' => 'boolean'],
+                'current' => (object) ['type' => 'boolean'],
+            ],
+        ];
     }
 
     /**
