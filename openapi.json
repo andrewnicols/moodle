@@ -10,12 +10,6 @@
         },
         "version": "2026101200"
     },
-    "servers": [
-        {
-            "url": "https://sm.mandarin.nicols.uk/api/rest/v2",
-            "description": "Example"
-        }
-    ],
     "paths": {
         "/user/password-reset": {
             "post": {
@@ -109,7 +103,7 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
+                        "$ref": "#/components/parameters/core--router--parameters--path_user"
                     }
                 ],
                 "security": [
@@ -182,7 +176,7 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
+                        "$ref": "#/components/parameters/core--router--parameters--path_user"
                     }
                 ],
                 "security": [
@@ -274,290 +268,6 @@
                         "$ref": "#/components/responses/ValidationFailure"
                     }
                 }
-            }
-        },
-        "/user/users/{userId}/custom-fields": {
-            "get": {
-                "description": "Fetch a user's visible custom profile fields.\n\n**Token scope:** `core_user:user:read` for other users, or `core_user:user:read:self` for yourself. Moodle visibility rules also apply.",
-                "summary": "Fetch user custom fields",
-                "x-implementation-status": "proposed",
-                "tags": [
-                    "core_user"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
-                    },
-                    {
-                        "name": "If-None-Match",
-                        "in": "header",
-                        "description": "An optional ETag, as previously returned by this resource. If it matches the current ETag, an empty 304 Not Modified response is returned.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserCustomFields"
-                                }
-                            }
-                        },
-                        "headers": {
-                            "ETag": {
-                                "$ref": "#/components/headers/ETag"
-                            }
-                        }
-                    },
-                    "304": {
-                        "$ref": "#/components/responses/core--router--response--not_modified_response"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthenticated"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationFailure"
-                    }
-                },
-                "security": [
-                    {
-                        "oauth2": [
-                            "core_user:user:read:self"
-                        ]
-                    },
-                    {
-                        "oauth2": [
-                            "core_user:user:read"
-                        ]
-                    },
-                    {
-                        "api_key": []
-                    },
-                    {
-                        "cookie": []
-                    }
-                ]
-            },
-            "put": {
-                "description": "Replace a user's editable custom profile fields.\n\n- **Omitted editable fields are cleared.** Include all required fields.\n- Fields you cannot edit remain unchanged.\n- Field validation and authentication-plugin locks apply.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
-                "summary": "Replace user custom fields",
-                "x-implementation-status": "proposed",
-                "tags": [
-                    "core_user"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
-                    },
-                    {
-                        "name": "If-Match",
-                        "in": "header",
-                        "description": "An optional ETag, as previously returned by this resource. If supplied, the change is only applied if it matches the current ETag of the resource, otherwise the request fails with a 412 Precondition Failed response. If omitted, the change is applied unconditionally.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserCustomFields"
-                                }
-                            }
-                        },
-                        "headers": {
-                            "ETag": {
-                                "$ref": "#/components/headers/ETag"
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthenticated"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "409": {
-                        "$ref": "#/components/responses/UniquenessConflict"
-                    },
-                    "412": {
-                        "$ref": "#/components/responses/core--router--response--precondition_failed_response"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationFailure"
-                    }
-                },
-                "requestBody": {
-                    "description": "The `fields` object is required. Values must be strings; null values and unknown or read-only request members are rejected. Field shortnames must be recognised. An empty map clears editable fields for PUT (subject to required-field validation) and makes no changes for PATCH.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserCustomFieldsUpdate"
-                            },
-                            "examples": {
-                                "replaceCustomFields": {
-                                    "summary": "Replace editable custom fields",
-                                    "description": "Set the studentcode and programme fields using their configured shortnames. Other editable fields are cleared; fields the caller cannot edit are unchanged. Include every editable required field to avoid a validation error. These example fields must exist on the site.",
-                                    "value": {
-                                        "fields": {
-                                            "studentcode": "STUDENT-001",
-                                            "programme": "Computer Science"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "oauth2": [
-                            "core_user:user:update:self"
-                        ]
-                    },
-                    {
-                        "oauth2": [
-                            "core_user:user:update"
-                        ]
-                    },
-                    {
-                        "api_key": []
-                    },
-                    {
-                        "cookie": []
-                    }
-                ]
-            },
-            "patch": {
-                "description": "Update selected custom profile fields. **Omitted fields remain unchanged.**\n\nField validation, edit permissions and authentication-plugin locks apply.\n\n**Token scope:** `core_user:user:update` for other users, or `core_user:user:update:self` for yourself. Moodle capabilities also apply.\n\n**Concurrency:** optional `If-Match`; a stale ETag returns `412`. Without it, the write is unconditional.",
-                "summary": "Update user custom fields",
-                "x-implementation-status": "proposed",
-                "tags": [
-                    "core_user"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
-                    },
-                    {
-                        "name": "If-Match",
-                        "in": "header",
-                        "description": "An optional ETag, as previously returned by this resource. If supplied, the change is only applied if it matches the current ETag of the resource, otherwise the request fails with a 412 Precondition Failed response. If omitted, the change is applied unconditionally.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserCustomFields"
-                                }
-                            }
-                        },
-                        "headers": {
-                            "ETag": {
-                                "$ref": "#/components/headers/ETag"
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthenticated"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "409": {
-                        "$ref": "#/components/responses/UniquenessConflict"
-                    },
-                    "412": {
-                        "$ref": "#/components/responses/core--router--response--precondition_failed_response"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationFailure"
-                    }
-                },
-                "requestBody": {
-                    "description": "The `fields` object is required. Values must be strings; null values and unknown or read-only request members are rejected. Field shortnames must be recognised. An empty map clears editable fields for PUT (subject to required-field validation) and makes no changes for PATCH.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserCustomFieldsUpdate"
-                            },
-                            "examples": {
-                                "updateOneCustomField": {
-                                    "summary": "Update one custom field",
-                                    "description": "Change only the programme field, identified by its configured shortname. All omitted custom fields retain their current values. The field must exist and be editable by the caller.",
-                                    "value": {
-                                        "fields": {
-                                            "programme": "Data Science"
-                                        }
-                                    }
-                                },
-                                "clearOptionalCustomField": {
-                                    "summary": "Clear an optional custom field",
-                                    "description": "Clear the optional programme field by supplying an empty string. Other custom fields remain unchanged. Required fields cannot be cleared, and the field type must accept an empty value.",
-                                    "value": {
-                                        "fields": {
-                                            "programme": ""
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "oauth2": [
-                            "core_user:user:update:self"
-                        ]
-                    },
-                    {
-                        "oauth2": [
-                            "core_user:user:update"
-                        ]
-                    },
-                    {
-                        "api_key": []
-                    },
-                    {
-                        "cookie": []
-                    }
-                ]
             }
         },
         "/user/users": {
@@ -717,10 +427,10 @@
                     {
                         "name": "sort",
                         "in": "query",
-                        "description": "A comma-separated list of fields to sort by. Prefix a field with `-` for descending order. Sortable fields: firstname, lastname.",
+                        "description": "A comma-separated list of fields to sort by. Prefix a field with `-` for descending order. Sortable fields: firstName, lastName.",
                         "schema": {
                             "type": "string",
-                            "pattern": "^-?(firstname|lastname)(,-?(firstname|lastname))*$"
+                            "pattern": "^-?(firstName|lastName)(,-?(firstName|lastName))*$"
                         }
                     }
                 ],
@@ -752,6 +462,12 @@
                         "oauth2": [
                             "core_user:user:read"
                         ]
+                    },
+                    {
+                        "api_key": []
+                    },
+                    {
+                        "cookie": []
                     }
                 ],
                 "x-implementation-status": "implemented-in-MDL-90234-main"
@@ -767,7 +483,7 @@
                 "x-implementation-status": "proposed",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
+                        "$ref": "#/components/parameters/core--router--parameters--path_user"
                     },
                     {
                         "name": "If-Match",
@@ -823,7 +539,7 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--fe5eea65"
+                        "$ref": "#/components/parameters/core--router--parameters--path_user"
                     },
                     {
                         "$ref": "#/components/headers/core--router--schema--parameters--if_none_match"
@@ -845,14 +561,14 @@
                             }
                         }
                     },
+                    "304": {
+                        "$ref": "#/components/responses/core--router--response--not_modified_response"
+                    },
                     "400": {
                         "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     },
                     "404": {
                         "$ref": "#/components/responses/core--router--response--not_found_response"
-                    },
-                    "304": {
-                        "$ref": "#/components/responses/core--router--response--not_modified_response"
                     }
                 },
                 "security": [
@@ -865,6 +581,13 @@
                         "oauth2": [
                             "core_user:user:read"
                         ]
+                    },
+                    {
+                        "api_key": []
+                    },
+                    {
+                        "cookie": []
+
                     }
                 ],
                 "x-implementation-status": "implemented-in-MDL-90234-main"
@@ -878,7 +601,7 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core--router--parameters--path_user--8aeb17ea"
+                        "$ref": "#/components/parameters/core--router--parameters--path_user"
                     },
                     {
                         "name": "If-Match",
@@ -1040,6 +763,7 @@
     "components": {
         "schemas": {
             "PasswordUpdate": {
+                "description": "A new password, which describes whether a password reset is required at next login",
                 "type": "object",
                 "additionalProperties": false,
                 "required": [
@@ -1059,6 +783,7 @@
                 }
             },
             "PasswordGeneration": {
+                "description": "Options for generating a new password for a user.",
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
@@ -1070,6 +795,7 @@
                 }
             },
             "PasswordResetResult": {
+                "description": "The result of a password reset operation.",
                 "type": "object",
                 "additionalProperties": false,
                 "required": [
@@ -1094,6 +820,7 @@
                 }
             },
             "PasswordResetEmailRequest": {
+                "description": "Request to send a password reset email to a user.",
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
@@ -1123,6 +850,7 @@
                 ]
             },
             "UserCreation": {
+                "description": "Request to create a new user account.",
                 "type": "object",
                 "x-implementation-status": "proposed",
                 "additionalProperties": false,
@@ -1316,6 +1044,7 @@
                 ]
             },
             "UserCreationReceipt": {
+                "description": "The receipt returned after successfully creating a new user account.",
                 "type": "object",
                 "x-implementation-status": "proposed",
                 "additionalProperties": false,
@@ -1342,6 +1071,7 @@
                 }
             },
             "User": {
+                "description": "A user account in the system.",
                 "type": "object",
                 "properties": {
                     "id": {
@@ -1446,6 +1176,7 @@
                 }
             },
             "Pagination": {
+                "description": "A representation of the pagination",
                 "type": "object",
                 "properties": {
                     "page": {
@@ -1474,6 +1205,7 @@
                 ]
             },
             "UserCollection": {
+                "description": "A collection of user accounts, including pagination information.",
                 "type": "object",
                 "properties": {
                     "items": {
@@ -1484,27 +1216,12 @@
                     },
                     "pagination": {
                         "type": "object",
-                        "properties": {
-                            "page": {
-                                "type": "integer"
-                            },
-                            "pageSize": {
-                                "type": "integer"
-                            },
-                            "totalItems": {
-                                "type": [
-                                    "integer",
-                                    "null"
-                                ]
-                            },
-                            "hasMore": {
-                                "type": "boolean"
-                            }
-                        }
+                        "$ref": "#/components/schemas/Pagination"
                     }
                 }
             },
             "UserUpdate": {
+                "description": "Request to update an existing user account.",
                 "type": "object",
                 "properties": {
                     "username": {
@@ -1602,30 +1319,8 @@
                 "additionalProperties": false,
                 "minProperties": 1
             },
-            "UserCustomFields": {
-                "type": "object",
-                "properties": {
-                    "fields": {
-                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                    }
-                },
-                "required": [
-                    "fields"
-                ]
-            },
-            "UserCustomFieldsUpdate": {
-                "type": "object",
-                "properties": {
-                    "fields": {
-                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
-                    }
-                },
-                "additionalProperties": false,
-                "required": [
-                    "fields"
-                ]
-            },
             "PasswordResetEmailResponse": {
+                "description": "The response from a password reset request where the new password is emailed to the user, indicating whether the request was successfully processed.",
                 "type": "object",
                 "additionalProperties": false,
                 "required": [
@@ -1680,6 +1375,7 @@
                 }
             },
             "core--router--schema--objects--stacktrace": {
+                "description": "A stack trace providing details about the sequence of function calls leading to an error.",
                 "examples": [
                     {
                         "value": [
@@ -1753,12 +1449,6 @@
                     }
                 }
             },
-            "core--router--schema--objects--array_of_strings": {
-                "type": "object",
-                "additionalProperties": {
-                    "type": "string"
-                }
-            },
             "ValidationProblem": {
                 "allOf": [
                     {
@@ -1813,6 +1503,7 @@
                 "description": "Well-formed input failed validation. Collect independent errors where practical, without guaranteeing an exhaustive list. Never echo passwords or recovery tokens."
             },
             "UniquenessProblem": {
+                "description": "Indicates a uniqueness constraint violation, such as a username, email, or custom field that must be unique.",
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/Problem"
@@ -2023,185 +1714,10 @@
             }
         },
         "parameters": {
-            "core_admin--route--parameters--oauth2--server--path_client": {
-                "name": "client",
-                "in": "path",
-                "description": "The client ID, which is the ID of the OAuth2 Server client in the database.",
-                "schema": {
-                    "type": "integer"
-                },
-                "examples": {
-                    "A client ID": {
-                        "value": 54
-                    }
-                },
-                "required": true
-            },
-            "core--router--parameters--query_course": {
-                "name": "course",
-                "in": "query",
-                "description": "The course identifier.\n\nThis can be the id of the course, the idnumber of the course, or the shortname of the course.\n\nIf specifying a course idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a course shortname, the value should be in the format `name:[shortname]`.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^(\\d+|idnumber:.+|name:.+)$"
-                },
-                "examples": {
-                    "A course id": {
-                        "value": 54
-                    },
-                    "A course specified by its idnumber": {
-                        "value": "idnumber:000117-physics-101-1"
-                    },
-                    "A course specified by its shortname": {
-                        "value": "name:000117-phys101-0"
-                    }
-                }
-            },
-            "core--router--parameters--query_coursemodule--2ec689e7": {
-                "name": "currentmodule",
-                "in": "query",
-                "description": "The course module identifier.\n\nThis can be the id of the course module or the idnumber of the course module.\n\nIf specifying a course module idnumber, the value should be in the format `idnumber:[idnumber]`.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^(\\d+|idnumber:.+)$"
-                },
-                "examples": {
-                    "A course module id": {
-                        "value": 54
-                    },
-                    "A course module specified by its idnumber": {
-                        "value": "idnumber:000117-physics-101-1"
-                    }
-                }
-            },
-            "core--router--parameters--query_coursemodule": {
-                "name": "coursemodule",
-                "in": "query",
-                "description": "The course module identifier.\n\nThis can be the id of the course module or the idnumber of the course module.\n\nIf specifying a course module idnumber, the value should be in the format `idnumber:[idnumber]`.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^(\\d+|idnumber:.+)$"
-                },
-                "examples": {
-                    "A course module id": {
-                        "value": 54
-                    },
-                    "A course module specified by its idnumber": {
-                        "value": "idnumber:000117-physics-101-1"
-                    }
-                }
-            },
             "core--router--parameters--path_user": {
-                "name": "user",
-                "in": "path",
-                "description": "The user identifier.\n\nThis can be the magic string 'current', or the user's id, idnumber, or username.\n\nIf specifying an id, the value should be in the format `[id]` (for example `42`).\n\nIf specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a username, the value should be in the format `username:[username]`.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^(current|\\d+|idnumber:.+|username:.+)$"
-                },
-                "examples": {
-                    "The current user": {
-                        "value": "current"
-                    },
-                    "A user specified by their user id": {
-                        "value": "94853"
-                    },
-                    "A user specified by their idnumber": {
-                        "value": "idnumber:some-student-idnumber               "
-                    },
-                    "A user specified by their username": {
-                        "value": "username:lyona1"
-                    }
-                },
-                "required": true
-            },
-            "core--router--parameters--path_user--8aeb17ea": {
                 "name": "userId",
                 "in": "path",
-                "description": "The user identifier.\n\nThis can be the magic string 'current', or the user's id, idnumber, or username.\n\nIf specifying an id, the value should be in the format `[id]` (for example `42`).\n\nIf specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a username, the value should be in the format `username:[username]`.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^(current|\\d+|idnumber:.+|username:.+)$"
-                },
-                "examples": {
-                    "The current user": {
-                        "value": "current"
-                    },
-                    "A user specified by their user id": {
-                        "value": "94853"
-                    },
-                    "A user specified by their idnumber": {
-                        "value": "idnumber:some-student-idnumber               "
-                    },
-                    "A user specified by their username": {
-                        "value": "username:lyona1"
-                    }
-                },
-                "required": true
-            },
-            "core--router--parameters--path_themename": {
-                "name": "themename",
-                "in": "path",
-                "description": "The name of a Moodle theme.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9_\\-]*$"
-                },
-                "examples": {
-                    "The Boost theme": {
-                        "value": "boost"
-                    },
-                    "A custom theme name": {
-                        "value": "mytheme"
-                    }
-                },
-                "required": true
-            },
-            "core--router--parameters--path_component": {
-                "name": "component",
-                "in": "path",
-                "description": "The name of a Moodle component, in frankenstyle format.",
-                "schema": {
-                    "type": "string",
-                    "pattern": "^[a-z][a-z0-9]*(_(?:[a-z][a-z0-9_](?!__))*)?[a-z0-9]+$"
-                },
-                "examples": {
-                    "The core subsystem": {
-                        "value": "core"
-                    },
-                    "The Course subsystem": {
-                        "value": "core_course"
-                    },
-                    "An activity module": {
-                        "value": "mod_assign"
-                    },
-                    "An assignment subplugin": {
-                        "value": "assignsubmission_file"
-                    }
-                },
-                "required": true
-            },
-            "core--router--parameters--header_language": {
-                "name": "language",
-                "in": "header",
-                "description": "The language of the requested response.",
-                "schema": {
-                    "type": "string"
-                },
-                "examples": {
-                    "Site default": {},
-                    "English": {
-                        "value": "en"
-                    },
-                    "Deutsch (kids)": {
-                        "value": "de_kids"
-                    }
-                }
-            },
-            "core--router--parameters--path_user--fe5eea65": {
-                "name": "userId",
-                "in": "path",
-                "description": "The user identifier.\n\nThis can be the magic string 'current', or the user's id, idnumber, or username.\n\nIf specifying an id, the value should be in the format `[id]`.\n\nIf specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a username, the value should be in the format `username:[username]`.",
+                "description": "The user identifier.\n\nThis can be the magic string 'current', or the user's id, idnumber, or username.\n\nIf specifying an id, the value should be in the format `[id]`, for example `123`.\n\nIf specifying an idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a username, the value should be in the format `username:[username]`.",
                 "schema": {
                     "type": "string",
                     "pattern": "^(current|\\d+|idnumber:.+|username:.+)$"
@@ -2223,7 +1739,7 @@
                 "required": true
             },
             "core--router--parameters--query_pagesize": {
-                "name": "pagesize",
+                "name": "pageSize",
                 "in": "query",
                 "description": "The number of results per page. Maximum 100.",
                 "schema": {
@@ -2264,17 +1780,17 @@
                 "example": "\"0123456789abcdef0123456789abcdef01234567\""
             },
             "core--router--schema--parameters--etag": {
+                "description": "The entity-tag of this representation. Preserve the double quotes when sending it in an If-Match or If-None-Match request header.",
                 "name": "ETag",
                 "in": "header",
-                "description": "The entity-tag of this representation. Preserve the double quotes when sending it in an If-Match or If-None-Match request header.",
                 "schema": {
                     "type": "string"
                 }
             },
             "core--router--schema--parameters--if_none_match": {
+                "description": "An optional ETag, as previously returned by this resource. Include the literal double quotes, for example `\"abc123\"`. If it matches the current ETag, an empty 304 Not Modified response is returned.",
                 "name": "If-None-Match",
                 "in": "header",
-                "description": "An optional ETag, as previously returned by this resource. Include the literal double quotes, for example `\"abc123\"`. If it matches the current ETag, an empty 304 Not Modified response is returned.",
                 "schema": {
                     "type": "string"
                 }
@@ -2343,5 +1859,11 @@
     "externalDocs": {
         "description": "Moodle Developer Docs",
         "url": "https://moodledev.io"
-    }
+    },
+    "tags": [
+        {
+            "name": "core_user",
+            "description": "Operations related to core user management."
+        }
+    ]
 }
