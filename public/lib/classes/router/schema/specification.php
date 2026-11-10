@@ -636,6 +636,8 @@ class specification implements
             $data = $callable($route, $data);
         }
 
+        ksort($data->responses);
+
         $methoddata = [];
         $methods = $route->get_methods(['GET']);
 
