@@ -55,7 +55,7 @@ trait course_parameter_trait {
         $extra['examples'] = [
             new example(
                 name: 'A course id',
-                value: 54,
+                value: "54",
             ),
             new example(
                 name: 'A course specified by its idnumber',

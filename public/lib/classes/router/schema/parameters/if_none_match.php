@@ -26,7 +26,7 @@ use core\router\schema\referenced_object;
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class if_none_match extends header_object implements referenced_object {
+class if_none_match extends request_header_object implements referenced_object {
     /**
      * Constructor.
      */
