@@ -84,6 +84,10 @@ final class users_test extends route_testcase {
             array_keys(\core_user\local\visible_user_finder::SORT_COLUMNS),
             $route->collection->sortable,
         );
+
+        $schema = $route->get_query_parameters()['sort']->get_openapi_description(new \core\router\schema\specification());
+        $this->assertStringContainsString('Sortable fields: firstName, lastName.', $schema->description);
+        $this->assertSame('^-?(firstName|lastName)(,-?(firstName|lastName))*$', $schema->schema->pattern);
     }
 
     public function test_list_requires_login(): void {
@@ -148,7 +152,7 @@ final class users_test extends route_testcase {
             array_column($this->decode_response($response, true)['items'], 'id'),
         );
 
-        $response = $this->process_api_request('GET', '/users?search=Zzorder&sort=-firstname');
+        $response = $this->process_api_request('GET', '/users?search=Zzorder&sort=-firstName');
         $this->assertEquals(
             [(int) $c->id, (int) $b->id, (int) $a->id],
             array_column($this->decode_response($response, true)['items'], 'id'),
@@ -167,14 +171,14 @@ final class users_test extends route_testcase {
         }
         $this->setAdminUser();
 
-        $response = $this->process_api_request('GET', '/users?search=Zed&sort=firstname&pagesize=3');
+        $response = $this->process_api_request('GET', '/users?search=Zed&sort=firstName&pagesize=3');
         $this->assert_valid_response($response);
         $payload = $this->decode_response($response, true);
         $this->assertNull($payload['pagination']['totalItems']);
         $this->assertTrue($payload['pagination']['hasMore']);
         $this->assertEquals(['Anna', 'Bella', 'Cara'], array_column($payload['items'], 'firstName'));
 
-        $response = $this->process_api_request('GET', '/users?search=Zed&sort=-firstname&pagesize=3&page=2');
+        $response = $this->process_api_request('GET', '/users?search=Zed&sort=-firstName&pagesize=3&page=2');
         $payload = $this->decode_response($response, true);
         $this->assertEquals(['Anna'], array_column($payload['items'], 'firstName'));
         $this->assertFalse($payload['pagination']['hasMore']);
@@ -190,9 +194,29 @@ final class users_test extends route_testcase {
         $this->add_class_routes_to_route_loader(users::class);
         $this->setAdminUser();
 
-        foreach (['page=0', 'pagesize=101', 'sort=password', 'sort=email'] as $query) {
+        foreach (['page=0', 'pagesize=101', 'sort=password', 'sort=email', 'sort=firstname', 'sort=lastname'] as $query) {
             $response = $this->process_api_request('GET', "/users?{$query}");
             $this->assertEquals(400, $response->getStatusCode(), $query);
+        }
+    }
+
+    public function test_sort_by_public_name_fields(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+        $generator = $this->getDataGenerator();
+        $a = $generator->create_user(['firstname' => 'Anna', 'lastname' => 'ZzsortA']);
+        $b = $generator->create_user(['firstname' => 'Bella', 'lastname' => 'ZzsortA']);
+        $c = $generator->create_user(['firstname' => 'Cara', 'lastname' => 'ZzsortB']);
+        $this->setAdminUser();
+
+        $sorts = [
+            'lastName,-firstName' => [$b->id, $a->id, $c->id],
+            '-lastName,firstName' => [$c->id, $a->id, $b->id],
+        ];
+        foreach ($sorts as $sort => $expected) {
+            $response = $this->process_api_request('GET', "/users?search=Zzsort&sort={$sort}");
+            $this->assert_valid_response($response);
+            $this->assertEquals($expected, array_column($this->decode_response($response, true)['items'], 'id'));
         }
     }
 

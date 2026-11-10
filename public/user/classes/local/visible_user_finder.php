@@ -53,8 +53,8 @@ class visible_user_finder {
      * @var string[]
      */
     public const SORT_COLUMNS = [
-        'firstname' => 'u.firstname',
-        'lastname' => 'u.lastname',
+        'firstName' => 'u.firstname',
+        'lastName' => 'u.lastname',
     ];
 
     /**

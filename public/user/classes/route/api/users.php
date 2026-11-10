@@ -92,7 +92,7 @@ class users {
         ],
     )]
     // Attributes cannot call functions. The sortable fields must match visible_user_finder::SORT_COLUMNS.
-    #[collection(sortable: ['firstname', 'lastname'])]
+    #[collection(sortable: ['firstName', 'lastName'])]
     #[scopeset(
         new \core_user\route\scope\user\read_self(),
     )]
