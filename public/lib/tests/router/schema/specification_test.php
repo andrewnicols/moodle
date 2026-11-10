@@ -19,6 +19,7 @@ namespace core\router\schema;
 use core\param;
 use core\router\route;
 use core\router\scope\scopeset;
+use core\router\schema\operationid;
 use core\router\schema\parameters\path_parameter;
 use core\router\schema\response\content\payload_response_type;
 use core\router\schema\response\response;
@@ -232,6 +233,163 @@ final class specification_test extends route_testcase {
         $schema = $spec->get_schema();
         $this->assertObjectHasProperty('/core/example/path/with', $schema->paths);
         $this->assertObjectHasProperty('/core/example/path/with/{option}', $schema->paths);
+    }
+
+    public function test_operationid_is_added_to_openapi_operation(): void {
+        $spec = new specification();
+        $handler = new class {
+            /**
+             * Test route handler.
+             */
+            #[route(path: '/users')]
+            #[operationid('Users')]
+            public function handle(): void {
+            }
+        };
+        $classinfo = new \ReflectionClass($handler);
+        $route = route::from_reflection($classinfo, $classinfo->getMethod('handle'));
+
+        $schema = $spec->get_openapi_schema_for_route(
+            route: $route,
+            component: 'core_user',
+            path: '/users',
+            classname: '\\core_user\\route\\api\\users',
+        );
+        $this->assertSame('coreUserUsersUsers', $schema->get->operationId);
+
+        $schemawithoutid = $spec->get_openapi_schema_for_route(
+            route: new route(path: '/without-id'),
+            component: 'core',
+            path: '/without-id',
+        );
+        $this->assertSame('coreWithoutId', $schemawithoutid->get->operationId);
+
+        $automatic = $spec->get_openapi_schema_for_route(
+            route: new route(path: '/users'),
+            component: 'core_user',
+            path: '/users',
+            operationname: 'list_users',
+        );
+        $this->assertSame('coreUserListUsers', $automatic->get->operationId);
+    }
+
+    public function test_operationid_is_unique_for_optional_path_variants(): void {
+        $spec = new specification();
+        $route = new route(
+            path: '/users[/{user}]',
+            pathtypes: [
+                new path_parameter(name: 'user', type: param::INT),
+            ],
+        );
+        $route->set_operationid(new operationid('Users'));
+
+        $spec->add_path(
+            component: 'core_user',
+            route: $route,
+        );
+
+        $paths = $spec->get_schema()->paths;
+        $baseid = $paths->{'/user/users'}->get->operationId;
+        $parameterisedid = $paths->{'/user/users/{user}'}->get->operationId;
+
+        $this->assertSame('coreUserUsers', $baseid);
+        $this->assertSame('coreUserUsersWithUser', $parameterisedid);
+    }
+
+    public function test_operationid_includes_path_parameters(): void {
+        $spec = new specification();
+        $schema = $spec->get_openapi_schema_for_route(
+            route: new route(path: '/{user}/preferences/{preference}'),
+            component: 'core_user',
+            path: '/user/{user}/preferences/{preference}',
+            operationname: 'get_preferences',
+        );
+
+        $this->assertSame('coreUserGetPreferencesWithUserAndPreference', $schema->get->operationId);
+    }
+
+    public function test_duplicate_operationid_is_rejected(): void {
+        $spec = new specification();
+        $spec->add_path(
+            component: 'core_user',
+            route: (new route(path: '/users'))->set_operationid(new operationid('Users')),
+        );
+
+        $this->expectException(\coding_exception::class);
+        $spec->add_path(
+            component: 'core_user',
+            route: (new route(path: '/people'))->set_operationid(new operationid('Users')),
+        );
+    }
+
+    /**
+     * Test operation IDs derived from the route handler class.
+     *
+     * @param string $component
+     * @param string $classname
+     * @param string $path
+     * @param string $operationname
+     * @param array $methods
+     * @param array $expected
+     */
+    #[DataProvider('namespaced_operationid_provider')]
+    public function test_namespaced_operationid(
+        string $component,
+        string $classname,
+        string $path,
+        string $operationname,
+        array $methods,
+        array $expected,
+    ): void {
+        $spec = new specification();
+        $schema = $spec->get_openapi_schema_for_route(
+            route: new route(path: $path, method: $methods),
+            component: $component,
+            path: $path,
+            operationname: $operationname,
+            classname: $classname,
+        );
+
+        foreach ($expected as $method => $operationid) {
+            $this->assertSame($operationid, $schema->{$method}->operationId);
+        }
+    }
+
+    /**
+     * Operation IDs with class namespaces and optional HTTP methods.
+     *
+     * @return array
+     */
+    public static function namespaced_operationid_provider(): array {
+        return [
+            'users' => [
+                'core_user', '\\core_user\\route\\api\\users', '/users', 'list_users', ['GET'],
+                ['get' => 'coreUserUsersListUsers'],
+            ],
+            'nested namespace' => [
+                'core_admin', '\\core_admin\\route\\api\\oauth2\\server\\clients',
+                '/oauth2/server/clients/{client}/disable', 'disable_client', ['POST'],
+                ['post' => 'coreAdminOauth2ServerClientsDisableClientWithClient'],
+            ],
+            'multiple parameters' => [
+                'core_user', 'core_user\\route\\api\\preferences',
+                '/{user}/preferences/{preference}', 'get_preferences', ['GET'],
+                ['get' => 'coreUserPreferencesGetPreferencesWithUserAndPreference'],
+            ],
+            'multiple HTTP methods' => [
+                'core_user', 'core_user\\route\\api\\preferences',
+                '/{user}/preferences/{preference}', 'handle', ['GET', 'POST'],
+                [
+                    'get' => 'coreUserPreferencesGetHandleWithUserAndPreference',
+                    'post' => 'coreUserPreferencesPostHandleWithUserAndPreference',
+                ],
+            ],
+            'plugin and snake case namespace' => [
+                'mod_forum', 'mod_forum\\route\\api\\discussion_tools\\posts',
+                '/posts', 'list_posts', ['GET'],
+                ['get' => 'modForumDiscussionToolsPostsListPosts'],
+            ],
+        ];
     }
 
     /**

@@ -36,5 +36,25 @@ final class apidocs_test extends \advanced_testcase {
 
         $this->assertTrue($result->hasHeader('Content-Type'));
         $this->assertEquals(['application/json'], $result->getHeader('Content-Type'));
+
+        $schema = json_decode((string) $result->getBody());
+        $operationids = [];
+        foreach ($schema->paths as $path => $methods) {
+            foreach ($methods as $method => $operation) {
+                $this->assertNotEmpty($operation->operationId, "Missing operationId for {$method} {$path}");
+                $this->assertArrayNotHasKey($operation->operationId, $operationids);
+                $operationids[$operation->operationId] = true;
+            }
+        }
+
+        $this->assertSame('coreUserUsersListUsers', $schema->paths->{'/user/users'}->get->operationId);
+        $this->assertSame(
+            'coreUserPreferencesGetPreferencesWithUserAndPreference',
+            $schema->paths->{'/user/{user}/preferences/{preference}'}->get->operationId,
+        );
+        $this->assertSame(
+            'coreUserPreferencesGetPreferencesWithUser',
+            $schema->paths->{'/user/{user}/preferences'}->get->operationId,
+        );
     }
 }

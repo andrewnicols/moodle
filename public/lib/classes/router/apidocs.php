@@ -157,6 +157,8 @@ class apidocs {
                 component: $component,
                 route: $routeattribute,
                 scopesets: $scopesets,
+                operationname: $method->getName(),
+                classname: $classinfo->getName(),
             );
         }
 

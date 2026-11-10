@@ -19,6 +19,7 @@ namespace core\router;
 use core\exception\coding_exception;
 use core\router\schema\collection;
 use core\router\schema\etag;
+use core\router\schema\operationid;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
 use core\router\schema\request_body;
@@ -41,6 +42,9 @@ class route {
 
     /** @var etag|null Set if this route supports conditional requests using an ETag */
     public ?etag $etag = null;
+
+    /** @var operationid|null The OpenAPI operation ID for this route */
+    public ?operationid $operationid = null;
 
     /**
      * The parent route, if relevant.
@@ -221,6 +225,17 @@ class route {
     }
 
     /**
+     * Set the OpenAPI operation ID for this route.
+     *
+     * @param operationid|null $operationid
+     * @return self
+     */
+    public function set_operationid(?operationid $operationid): self {
+        $this->operationid = $operationid;
+        return $this;
+    }
+
+    /**
      * Create the route for a method from its attributes, including any sibling attributes such as #[collection].
      *
      * This is the single place in which routes are instantiated from reflection, and so the single place in which
@@ -261,6 +276,11 @@ class route {
             $etagattributes = $methodinfo->getAttributes(etag::class);
             if ($etagattributes) {
                 $methodroute->set_etag($etagattributes[0]->newInstance());
+            }
+
+            $operationidattributes = $methodinfo->getAttributes(operationid::class);
+            if ($operationidattributes) {
+                $methodroute->set_operationid($operationidattributes[0]->newInstance());
             }
         }
 
