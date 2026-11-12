@@ -567,9 +567,14 @@ function initialise_cfg() {
         return;
     }
 
+    $rc = new \ReflectionClass(\core\config::class);
     foreach ($localcfg as $name => $value) {
         // Note that get_config() keeps forced settings
         // and normalises values to string if possible.
+        if ($rc->hasProperty($name) && $rc->getProperty($name)->isReadOnly()) {
+            // Skip read-only properties.
+            continue;
+        }
         $CFG->{$name} = $value;
     }
 }

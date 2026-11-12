@@ -230,17 +230,17 @@ final class advanced_test extends \advanced_testcase {
         $this->assertEquals(1, $DB->get_field('user', 'confirmed', array('id'=>2)));
         // Config change.
         $CFG->xx = 'yy';
-        unset($CFG->admin);
+        unset($CFG->wwwroot);
         $CFG->rolesactive = 0;
 
         try {
             self::resetAllData(true);
         } catch (test_exception $e) {
             $this->assertStringContainsString('xx', $e->getMessage());
-            $this->assertStringContainsString('admin', $e->getMessage());
+            $this->assertStringContainsString('wwwroot', $e->getMessage());
             $this->assertStringContainsString('rolesactive', $e->getMessage());
             $this->assertFalse(isset($CFG->xx));
-            $this->assertTrue(isset($CFG->admin));
+            $this->assertTrue(isset($CFG->wwwroot));
             $this->assertEquals(1, $CFG->rolesactive);
         }
 

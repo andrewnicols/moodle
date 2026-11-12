@@ -31,58 +31,35 @@
  * Holds the core settings that affect how Moodle works. Some of its fields
  * are set in config.php, and the rest are loaded from the config table.
  *
- * Some typical settings in the $CFG global:
- *  - $CFG->wwwroot  - Path to moodle index directory in url format.
- *  - $CFG->dataroot - Path to moodle data files directory on server's filesystem.
- *  - $CFG->dirroot  - Path to moodle's library folder on server's filesystem.
- *  - $CFG->libdir   - Path to moodle's library folder on server's filesystem.
- *  - $CFG->backuptempdir  - Path to moodle's backup temp file directory on server's filesystem.
- *  - $CFG->tempdir  - Path to moodle's temp file directory on server's filesystem.
- *  - $CFG->cachedir - Path to moodle's cache directory on server's filesystem (shared by cluster nodes).
- *  - $CFG->localcachedir - Path to moodle's local cache directory (not shared by cluster nodes).
- *  - $CFG->localrequestdir - Path to moodle's local temp request directory (not shared by cluster nodes).
- *
- * @global object $CFG
+ * @see \core\config
+ * @global \core\config $CFG
  * @name $CFG
  */
-global $CFG; // this should be done much earlier in config.php before creating new $CFG instance
+global $CFG; // This should be done much earlier in config.php before creating new $CFG instance
 
 if (!isset($CFG)) {
     if (defined('PHPUNIT_TEST') and PHPUNIT_TEST) {
         echo('There is a missing "global $CFG;" at the beginning of the config.php file.'."\n");
         exit(1);
     } else {
-        // this should never happen, maybe somebody is accessing this file directly...
+        // This should never happen, maybe somebody is accessing this file directly.
         exit(1);
     }
 }
 
-// We can detect real dirroot path reliably since PHP 4.0.2,
-// it can not be anything else, there is no point in having this in config.php
-$CFG->dirroot = dirname(__DIR__);
-$CFG->root = dirname($CFG->dirroot);
-
-// File permissions on created directories in the $CFG->dataroot
-if (!isset($CFG->directorypermissions)) {
-    $CFG->directorypermissions = 02777;      // Must be octal (that's why it's here)
-}
-if (!isset($CFG->filepermissions)) {
-    $CFG->filepermissions = ($CFG->directorypermissions & 0666); // strip execute flags
-}
-// Better also set default umask because developers often forget to include directory
-// permissions in mkdir() and chmod() after creating new files.
-if (!isset($CFG->umaskpermissions)) {
-    $CFG->umaskpermissions = (($CFG->directorypermissions & 0777) ^ 0777);
-}
-umask($CFG->umaskpermissions);
+// The `$CFG` variable is initially defined in `config.php`.
+require_once(__DIR__. '/classes/config.php');
+$CFG = \core\config::from_object($CFG);
 
 if (defined('BEHAT_SITE_RUNNING')) {
     // We already switched to behat test site previously.
 
+    // TODO Look at creating a `behat\config` implementation of the config class.
 } else if (!empty($CFG->behat_wwwroot) or !empty($CFG->behat_dataroot) or !empty($CFG->behat_prefix)) {
     // The behat is configured on this server, we need to find out if this is the behat test
     // site based on the URL used for access.
     require_once(__DIR__ . '/../lib/behat/lib.php');
+    require_once(__DIR__ . '/../lib/behat/classes/config.php');
 
     // Update config variables for parallel behat runs.
     behat_update_vars_for_process();
@@ -135,128 +112,12 @@ if (defined('BEHAT_SITE_RUNNING')) {
         // actions like reset the site or use data generators.
         define('BEHAT_SITE_RUNNING', true);
 
-        // Clean extra config.php settings.
-        behat_clean_init_config();
-
-        // Now we can begin switching $CFG->X for $CFG->behat_X.
-        $CFG->wwwroot = $CFG->behat_wwwroot;
-        $CFG->prefix = $CFG->behat_prefix;
-        $CFG->dataroot = $CFG->behat_dataroot;
-
-        // And we do the same with the optional ones.
-        $allowedconfigoverride = ['dbname', 'dbuser', 'dbpass', 'dbhost'];
-        foreach ($allowedconfigoverride as $config) {
-            $behatconfig = 'behat_' . $config;
-            if (!isset($CFG->$behatconfig)) {
-                continue;
-            }
-            $CFG->$config = $CFG->$behatconfig;
-        }
+        $CFG = \core\behat\config::reset_config_from_config($CFG);
     }
 }
 
-// Set default warn runtime.
-if (!isset($CFG->taskruntimewarn)) {
-    $CFG->taskruntimewarn = 12 * 60 * 60;
-}
-
-// Set default error runtime.
-if (!isset($CFG->taskruntimeerror)) {
-    $CFG->taskruntimeerror = 24 * 60 * 60;
-}
-
-// Normalise dataroot - we do not want any symbolic links, trailing / or any other weirdness there
-if (!isset($CFG->dataroot)) {
-    if (isset($_SERVER['REMOTE_ADDR'])) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error ');
-    }
-    echo('Fatal error: $CFG->dataroot is not specified in config.php! Exiting.'."\n");
-    exit(1);
-}
-$CFG->dataroot = realpath($CFG->dataroot);
-if ($CFG->dataroot === false) {
-    if (isset($_SERVER['REMOTE_ADDR'])) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error ');
-    }
-    echo('Fatal error: $CFG->dataroot is not configured properly, directory does not exist or is not accessible! Exiting.'."\n");
-    exit(1);
-} else if (!is_writable($CFG->dataroot)) {
-    if (isset($_SERVER['REMOTE_ADDR'])) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error ');
-    }
-    echo('Fatal error: $CFG->dataroot is not writable, admin has to fix directory permissions! Exiting.'."\n");
-    exit(1);
-}
-
-// wwwroot is mandatory
-if (!isset($CFG->wwwroot) or $CFG->wwwroot === 'http://example.com/moodle') {
-    if (isset($_SERVER['REMOTE_ADDR'])) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error ');
-    }
-    echo('Fatal error: $CFG->wwwroot is not configured! Exiting.'."\n");
-    exit(1);
-}
-
-// The router configuration is mandatory.
-$CFG->routerconfigured = !empty($CFG->routerconfigured);
-
-// Make sure there is some database table prefix.
-if (!isset($CFG->prefix)) {
-    $CFG->prefix = '';
-}
-
-// Define admin directory
-if (!isset($CFG->admin)) {   // Just in case it isn't defined in config.php
-    $CFG->admin = 'admin';   // This is relative to the wwwroot and dirroot
-}
-
-// Set up some paths.
-$CFG->libdir = $CFG->dirroot .'/lib';
-
-// Allow overriding of tempdir but be backwards compatible
-if (!isset($CFG->tempdir)) {
-    $CFG->tempdir = $CFG->dataroot . DIRECTORY_SEPARATOR . "temp";
-}
-
-// Allow overriding of backuptempdir but be backwards compatible
-if (!isset($CFG->backuptempdir)) {
-    $CFG->backuptempdir = "$CFG->tempdir/backup";
-}
-
-// Allow overriding of cachedir but be backwards compatible
-if (!isset($CFG->cachedir)) {
-    $CFG->cachedir = "$CFG->dataroot/cache";
-}
-
-// Allow overriding of localcachedir.
-if (!isset($CFG->localcachedir)) {
-    $CFG->localcachedir = "$CFG->dataroot/localcache";
-}
-
-// Allow overriding of localrequestdir.
-if (!isset($CFG->localrequestdir)) {
-    $CFG->localrequestdir = sys_get_temp_dir() . '/requestdir';
-}
-
-// Location of all languages except core English pack.
-if (!isset($CFG->langotherroot)) {
-    $CFG->langotherroot = $CFG->dataroot.'/lang';
-}
-
-// Location of local lang pack customisations (dirs with _local suffix).
-if (!isset($CFG->langlocalroot)) {
-    $CFG->langlocalroot = $CFG->dataroot.'/lang';
-}
-
-// The current directory in PHP version 4.3.0 and above isn't necessarily the
-// directory of the script when run from the command line. The require_once()
-// would fail, so we'll have to chdir()
-if (!isset($_SERVER['REMOTE_ADDR']) && isset($_SERVER['argv'][0])) {
-    // do it only once - skip the second time when continuing after prevous abort
-    if (!defined('ABORT_AFTER_CONFIG') and !defined('ABORT_AFTER_CONFIG_CANCEL')) {
-        chdir(dirname($_SERVER['argv'][0]));
-    }
-}
+// Normalise and validate core paths in the Moodle configuration.
+$CFG->validate_paths();
 
 // sometimes default PHP settings are borked on shared hosting servers, I wonder why they have to do that??
 ini_set('precision', 14); // needed for upgrades and gradebook

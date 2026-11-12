@@ -756,4 +756,18 @@ abstract class base_testcase extends PHPUnit\Framework\TestCase {
 
         require_once($fullpath);
     }
+
+    /**
+     * Create an instance of the config object with mandatory defaults provided.
+     *
+     * These defaults can be overeridden by providing a $settings array with the desired values.
+     *
+     * @param array $settings
+     * @return core\config
+     */
+    protected function create_config(array $settings = []): \core\config {
+        $settings['dataroot'] ??= '/moodledata';
+
+        return \core\config::from_object((object) $settings);
+    }
 }

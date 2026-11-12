@@ -122,11 +122,11 @@ final class router_test extends route_testcase {
         bool $configured,
         string $expected,
     ): void {
-        global $CFG;
-
-        $this->resetAfterTest();
-        $CFG->wwwroot = $wwwroot;
-        $CFG->routerconfigured = $configured;
+        $config = $this->create_config([
+            'wwwroot' => $wwwroot,
+            'routerconfigured' => $configured,
+        ]);
+        di::set(\core\config::class, $config);
 
         $router = di::get(router::class);
 
@@ -173,12 +173,14 @@ final class router_test extends route_testcase {
         string $requestedpath,
         string $expected,
     ): void {
-        global $CFG;
+        $config = $this->create_config([
+            'wwwroot' => $wwwroot,
+            'routerconfigured' => $configured,
+        ]);
+        \core\di::set(\core\config::class, $config);
 
         $this->resetAfterTest();
-        $CFG->wwwroot = $wwwroot;
-        $CFG->routerconfigured = $configured;
-        $_SERVER['SCRIPT_FILENAME'] = "{$CFG->dirroot}/r.php";
+        $_SERVER['SCRIPT_FILENAME'] = "{$config->dirroot}/r.php";
         $_SERVER['REQUEST_URI'] = $requestedpath;
 
         $router = di::get(router::class);
@@ -192,12 +194,6 @@ final class router_test extends route_testcase {
      * @return \Generator
      */
     public static function router_configured_basepath_provider(): \Generator {
-        yield 'Root domain, Not configured, accessed via r.php' => [
-            'http://example.com',
-            null,
-            '/r.php/example',
-            '/r.php',
-        ];
         yield 'Root domain, Configured true, accessed via r.php' => [
             'http://example.com',
             true,
@@ -209,12 +205,6 @@ final class router_test extends route_testcase {
             false,
             '/r.php/example',
             '/r.php',
-        ];
-        yield 'Sub directory, Not configured, accessed via r.php' => [
-            'http://example.com/moodle',
-            null,
-            '/moodle/r.php/example',
-            '/moodle/r.php',
         ];
         yield 'Sub directory, Configured true, accessed via r.php' => [
             'http://example.com/moodle',
@@ -228,12 +218,6 @@ final class router_test extends route_testcase {
             '/moodle/r.php/example',
             '/moodle/r.php',
         ];
-        yield 'Root domain, Not configured, accessed without r.php' => [
-            'http://example.com',
-            null,
-            '/example',
-            '/r.php',
-        ];
         yield 'Root domain, Configured true, accessed without r.php' => [
             'http://example.com',
             true,
@@ -245,12 +229,6 @@ final class router_test extends route_testcase {
             false,
             '/example',
             '/r.php',
-        ];
-        yield 'Sub directory, Not configured, accessed without r.php' => [
-            'http://example.com/moodle',
-            null,
-            '/example',
-            '/moodle/r.php',
         ];
         yield 'Sub directory, Configured true, accessed without r.php' => [
             'http://example.com/moodle',

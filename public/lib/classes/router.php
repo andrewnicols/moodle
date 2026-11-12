@@ -76,6 +76,7 @@ class router {
      * @param route_loader_interface $routeloader
      * @param request_validator_interface $requestvalidator
      * @param response_validator_interface $responsevalidator
+     * @param \core\config $config
      * @param null|string $basepath
      */
     public function __construct(
@@ -91,6 +92,9 @@ class router {
         /** @var response_validator_interface */
         protected response_validator_interface $responsevalidator,
 
+        /** @var \core\config */
+        protected readonly \core\config $config,
+
         ?string $basepath = null,
     ) {
         if ($basepath === null) {
@@ -105,13 +109,11 @@ class router {
      * @return string
      */
     protected function guess_basepath(): string {
-        global $CFG;
-
         // Moodle is not guaranteed to exist at the domain root.
         // Strip out the current script.
-        $scriptroot = parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '';
+        $scriptroot = parse_url($this->config->wwwroot, PHP_URL_PATH) ?? '';
         $scriptfile = str_replace(
-            realpath($CFG->dirroot),
+            realpath($this->config->dirroot),
             '',
             realpath($_SERVER['SCRIPT_FILENAME']),
         );
@@ -126,7 +128,7 @@ class router {
             }
         }
 
-        if ($CFG->routerconfigured != true || $userphp) {
+        if ($this->config->routerconfigured != true || $userphp) {
             $scriptroot .= '/r.php';
         }
 
@@ -216,9 +218,8 @@ class router {
      * Add the Error Handling Middleware to the RouteGroup.
      */
     protected function add_error_handler_middleware(): void {
-        global $CFG;
         // Display error details only when debugging is on.
-        $displayerrordetails = !empty($CFG->debugdisplay);
+        $displayerrordetails = !empty($this->config->debugdisplay);
         // Add the Error Handling Middleware and configure it to show Moodle Errors for HTML pages.
         $errormiddleware = new ErrorMiddleware(
             $this->app->getCallableResolver(),
@@ -336,13 +337,11 @@ class router {
      * Configure caching for the routes.
      */
     protected function configure_caching(): void {
-        global $CFG;
-
         // Note: Slim uses a file cache and is not compatible with MUC.
         $this->app->getRouteCollector()->setCacheFile(
             sprintf(
                 "%s/routes.%s.cache",
-                $CFG->cachedir,
+                $this->config->cachedir,
                 sha1($this->basepath),
             ),
         );

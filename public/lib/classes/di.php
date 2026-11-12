@@ -143,6 +143,13 @@ class di {
                 return $DB;
             },
 
+            \core\config::class => function(): \core\config {
+                global $CFG;
+
+                // This shoudl already be a \core\config object.
+                return $CFG;
+            },
+
             // The string manager.
             \core_string_manager::class => fn() => get_string_manager(),
 

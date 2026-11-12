@@ -141,17 +141,21 @@ class phpunit_util extends \core\test\testing_util {
 
             $oldcfg = self::get_global_backup('CFG');
             $oldsite = self::get_global_backup('SITE');
+
+            $ignoredcfg = [];
             foreach ($CFG as $k => $v) {
                 if (!property_exists($oldcfg, $k)) {
                     $warnings[] = 'Warning: unexpected new $CFG->' . $k . ' value';
                 } else if ($oldcfg->$k !== $CFG->$k) {
                     $warnings[] = 'Warning: unexpected change of $CFG->' . $k . ' value';
                 }
-                unset($oldcfg->$k);
+                $ignoredcfg[] = $k;
             }
             if ($oldcfg) {
                 foreach ($oldcfg as $k => $v) {
-                    $warnings[] = 'Warning: unexpected removal of $CFG->' . $k;
+                    if (!in_array($k, $ignoredcfg)) {
+                        $warnings[] = 'Warning: unexpected removal of $CFG->' . $k;
+                    }
                 }
             }
 

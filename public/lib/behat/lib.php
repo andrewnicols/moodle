@@ -203,45 +203,6 @@ function behat_get_shutdown_process_errors() {
 }
 
 /**
- * Restrict the config.php settings allowed.
- *
- * When running the behat features the config.php
- * settings should not affect the results.
- *
- * @return void
- */
-function behat_clean_init_config() {
-    global $CFG;
-
-    $allowed = array_flip(array(
-        'wwwroot', 'dataroot', 'root', 'dirroot', 'admin', 'directorypermissions', 'filepermissions',
-        'umaskpermissions', 'dbtype', 'dblibrary', 'dbhost', 'dbname', 'dbuser', 'dbpass', 'prefix',
-        'dboptions', 'proxyhost', 'proxyport', 'proxytype', 'proxyuser', 'proxypassword',
-        'proxybypass', 'pathtogs', 'pathtophp', 'pathtodu', 'aspellpath', 'pathtodot', 'skiplangupgrade',
-        'altcacheconfigpath', 'pathtounoconv', 'alternative_file_system_class', 'pathtopython',
-        'routerconfigured',
-    ));
-
-    // Add extra allowed settings.
-    if (!empty($CFG->behat_extraallowedsettings)) {
-        $allowed = array_merge($allowed, array_flip($CFG->behat_extraallowedsettings));
-    }
-
-    // Also allowing behat_ prefixed attributes.
-    foreach ($CFG as $key => $value) {
-        if (!isset($allowed[$key]) && strpos($key, 'behat_') !== 0) {
-            unset($CFG->{$key});
-        }
-    }
-
-    // Allow email catcher settings.
-    if (defined('TEST_EMAILCATCHER_MAIL_SERVER')) {
-        $CFG->noemailever = false;
-        $CFG->smtphosts = TEST_EMAILCATCHER_MAIL_SERVER;
-    }
-}
-
-/**
  * Checks that the behat config vars are properly set.
  *
  * @return void Stops execution with error code if something goes wrong.

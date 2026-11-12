@@ -245,11 +245,11 @@ STRING;
     public function test_cfg_modification(): void {
         global $CFG;
         $CFG->xx = 'yy';
-        unset($CFG->admin);
+        unset($CFG->wwwroot);
         $CFG->rolesactive = 0;
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageMatches('/rolesactive.*xx value.*removal.*admin/ms'); // 3 messages matched.
+        $this->expectExceptionMessageMatches('/rolesactive.*xx value.*removal.*wwwroot/ms'); // 3 messages matched.
         phpunit_util::reset_all_data(true);
     }
 
@@ -287,7 +287,7 @@ STRING;
         global $DB, $CFG, $USER, $COURSE;
         $DB->set_field('user', 'confirmed', 1, ['id' => -1]);
         $CFG->xx = 'yy';
-        unset($CFG->admin);
+        unset($CFG->wwwroot);
         $CFG->rolesactive = 0;
         $USER->id = 10;
         $COURSE->id = 10;
