@@ -25,8 +25,8 @@ use grade_item;
  * @category   external
  * @copyright  2026 Vincent Schneider <vincent.schneider@sudile.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \gradereport_singleview\external\singleview
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(singleview::class)]
 final class singleview_test extends \core_external\tests\externallib_testcase {
     /**
      * Call the protected get_grade_items_for_search_widget method.
