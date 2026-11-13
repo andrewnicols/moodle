@@ -48,6 +48,15 @@ class user_object extends schema_object implements referenced_object {
             'middleName' => new scalar_type(param::NOTAGS),
             'alternateName' => new scalar_type(param::NOTAGS),
             'email' => new scalar_type(param::EMAIL),
+            'mailFormat' => new scalar_type(
+                param::INT,
+                description: "Email format preference: 0 for plain text, 1 for HTML. Subject to user-field visibility.",
+            ),
+            'mailDisplay' => new scalar_type(
+                param::INT,
+                description: "Email visibility preference: 0 for hidden, 1 for everyone, 2 for course members. "
+                    . "Subject to user-field visibility.",
+            ),
             'city' => new scalar_type(param::TEXT),
             'country' => new scalar_type(
                 param::ALPHA,

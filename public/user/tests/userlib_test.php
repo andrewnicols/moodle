@@ -933,6 +933,7 @@ final class userlib_test extends \advanced_testcase {
                                                           'theme'      => $CFG->theme,
                                                           'timezone'   => '5',
                                                           'mailformat' => '0',
+                                                          'maildisplay' => '0',
                                                           'trackforums' => '1',
                                                       ]);
 
@@ -945,7 +946,10 @@ final class userlib_test extends \advanced_testcase {
         self::assertSame($CFG->theme, $got['theme']);
         self::assertSame('5', $got['timezone']);
         self::assertSame('0', $got['mailformat']);
+        self::assertArrayNotHasKey('maildisplay', $got);
         self::assertSame('1', $got['trackforums']);
+        $got = \core\user::get_user_details($user, userfields: ['maildisplay']);
+        self::assertSame('0', $got['maildisplay']);
     }
 
     /**

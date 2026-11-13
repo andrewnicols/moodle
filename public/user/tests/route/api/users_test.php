@@ -341,18 +341,28 @@ final class users_test extends route_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $teacher = $generator->create_and_enrol($course, 'editingteacher');
-        $student = $generator->create_and_enrol($course, 'student', ['lang' => 'en', 'idnumber' => 'STUDENT1']);
+        $student = $generator->create_and_enrol($course, 'student', [
+            'lang' => 'en',
+            'idnumber' => 'STUDENT1',
+            'mailformat' => 0,
+            'maildisplay' => 2,
+        ]);
 
         foreach ([$student, get_admin()] as $viewer) {
             $this->setUser($viewer);
-            $response = $this->process_api_request('GET', "/users/{$student->id}");
-            $this->assert_valid_response($response);
-            $payload = $this->decode_response($response, true);
-            $this->assertSame('en', $payload['language']);
-            $this->assertSame('gregorian', $payload['calendarType']);
-            $this->assertSame('STUDENT1', $payload['idnumber']);
-            $this->assertTrue($payload['confirmed']);
-            $this->assertSame($student->auth, $payload['authenticationMethod']);
+            foreach (["/users/{$student->id}", '/users?pageSize=100'] as $path) {
+                $response = $this->process_api_request('GET', $path);
+                $this->assert_valid_response($response);
+                $payload = $this->decode_response($response, true);
+                $item = isset($payload['items']) ? array_column($payload['items'], null, 'id')[$student->id] : $payload;
+                $this->assertSame('en', $item['language']);
+                $this->assertSame('gregorian', $item['calendarType']);
+                $this->assertSame('STUDENT1', $item['idnumber']);
+                $this->assertTrue($item['confirmed']);
+                $this->assertSame($student->auth, $item['authenticationMethod']);
+                $this->assertSame(0, $item['mailFormat']);
+                $this->assertSame(2, $item['mailDisplay']);
+            }
         }
 
         $this->setUser($teacher);
@@ -364,6 +374,13 @@ final class users_test extends route_testcase {
         $this->assertNull($items[$student->id]['idnumber']);
         $this->assertNull($items[$student->id]['confirmed']);
         $this->assertNull($items[$student->id]['authenticationMethod']);
+        $this->assertNull($items[$student->id]['mailFormat']);
+        $this->assertNull($items[$student->id]['mailDisplay']);
+        $response = $this->process_api_request('GET', "/users/{$student->id}");
+        $this->assert_valid_response($response);
+        $item = $this->decode_response($response, true);
+        $this->assertNull($item['mailFormat']);
+        $this->assertNull($item['mailDisplay']);
 
         $this->setAdminUser();
         $unconfirmed = $generator->create_user(['confirmed' => 0]);

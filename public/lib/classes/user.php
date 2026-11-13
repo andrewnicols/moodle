@@ -2036,7 +2036,10 @@ class user {
         }
 
         // These fields may be requested, but are not returned unless they are asked for.
-        $optionalfields = ['firstnamephonetic', 'lastnamephonetic', 'middlename', 'alternatename', 'imagealt', 'deleted', 'calendartype'];
+        $optionalfields = [
+            'firstnamephonetic', 'lastnamephonetic', 'middlename', 'alternatename', 'imagealt', 'deleted', 'calendartype',
+            'maildisplay',
+        ];
 
         foreach ($userfields as $thefield) {
             if (!in_array($thefield, $defaultfields) && !in_array($thefield, $optionalfields)) {
@@ -2352,7 +2355,7 @@ class user {
         }
 
         if ($currentuser || has_capability('moodle/user:viewalldetails', $context)) {
-            $extrafields = ['auth', 'confirmed', 'lang', 'calendartype', 'theme', 'mailformat', 'trackforums'];
+            $extrafields = ['auth', 'confirmed', 'lang', 'calendartype', 'theme', 'mailformat', 'maildisplay', 'trackforums'];
             foreach ($extrafields as $extrafield) {
                 if (in_array($extrafield, $userfields) && isset($user->$extrafield)) {
                     $userdetails[$extrafield] = $user->$extrafield;
