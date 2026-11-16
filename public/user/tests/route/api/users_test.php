@@ -135,6 +135,27 @@ final class users_test extends route_testcase {
         $this->assertArrayNotHasKey('lastAccess', $item);
     }
 
+    public function test_get_deleted_user_returns_not_found(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+        $deleted = $this->getDataGenerator()->create_user([
+            'deleted' => 1,
+            'idnumber' => 'deleted-user-idnumber',
+            'username' => 'deleted-user',
+        ]);
+        $this->setAdminUser();
+
+        $identifiers = [
+            (string) $deleted->id,
+            "idnumber:{$deleted->idnumber}",
+            "username:{$deleted->username}",
+        ];
+        foreach ($identifiers as $identifier) {
+            $response = $this->process_api_request('GET', "/users/{$identifier}");
+            $this->assert_not_found_response($response);
+        }
+    }
+
     public function test_default_order_is_by_name_not_id(): void {
         $this->resetAfterTest();
         $this->add_class_routes_to_route_loader(users::class);

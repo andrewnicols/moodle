@@ -137,6 +137,50 @@ final class path_user_test extends route_testcase {
         $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
+    /**
+     * Deleted users cannot be resolved by any supported identifier.
+     *
+     * @param string $identifier
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('deleted_user_identifier_provider')]
+    public function test_deleted_user_not_found(string $identifier): void {
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user([
+            'deleted' => 1,
+            'idnumber' => 'deleted-user-idnumber',
+            'username' => 'deleted-user',
+        ]);
+        if ($identifier === 'current') {
+            $this->setUser($user);
+        }
+        $value = match ($identifier) {
+            'current' => 'current',
+            'id' => (string) $user->id,
+            'idnumber' => "idnumber:{$user->idnumber}",
+            'username' => "username:{$user->username}",
+        };
+
+        $this->expectException(not_found_exception::class);
+        (new path_user())->add_attributes_for_parameter_value(
+            new ServerRequest('GET', '/user'),
+            $value,
+        );
+    }
+
+    /**
+     * Data provider for deleted user identifiers.
+     *
+     * @return array
+     */
+    public static function deleted_user_identifier_provider(): array {
+        return [
+            'current' => ['current'],
+            'id' => ['id'],
+            'idnumber' => ['idnumber'],
+            'username' => ['username'],
+        ];
+    }
+
     public function test_validation(): void {
         $this->resetAfterTest();
 
