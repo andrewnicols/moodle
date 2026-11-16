@@ -18,6 +18,7 @@ namespace core_question\route\api;
 
 use core\context\course;
 use core\context\module;
+use core\formatting;
 use core\param;
 use core\router\parameters\query_course;
 use core\router\parameters\query_coursemodule;
@@ -50,6 +51,17 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class bank {
+    /**
+     * Constructor.
+     *
+     * @param formatting $formatter Formats text for the current request
+     */
+    public function __construct(
+        /** @var formatting Formats text for the current request */
+        protected formatting $formatter,
+    ) {
+    }
+
     /**
      * Return the total number of questions in each question bank for the given course.
      *
@@ -136,6 +148,7 @@ class bank {
      */
     #[route(
         path: '/banks', // Resolves to /api/rest/v2/question/banks.
+        description: 'Text preferences apply to bank names, course names and category names.',
         queryparams: [
             new query_course(required: true),
             new query_coursemodule('currentmodule'),
@@ -176,6 +189,7 @@ class bank {
             $params['includerecent'],
             $params['includeprivate'],
         );
+        $banks = array_map(fn (formatted_bank $bank) => $bank->get_formatted($this->formatter), $banks);
         return new payload_response(
             request: $request,
             response: $response,
@@ -194,6 +208,7 @@ class bank {
      */
     #[route(
         path: '/categories', // Resolves to /api/rest/v2/question/categories.
+        description: 'Text preferences apply to category names and info. infoformat describes the returned info.',
         queryparams: [
             new query_coursemodule(),
         ],
@@ -223,6 +238,15 @@ class bank {
     ): payload_response {
         require_login();
         $categories = $categoryselector->get_categories_for_contexts($coursemodulecontext->id, top: true);
+        foreach ($categories as $category) {
+            $category->name = $this->formatter->format_short_string($category->name, $coursemodulecontext);
+            [$category->info, $format] = $this->formatter->format_content(
+                $category->info,
+                $category->infoformat,
+                $coursemodulecontext,
+            );
+            $category->infoformat = (int) $format;
+        }
         return new payload_response(
             request: $request,
             response: $response,

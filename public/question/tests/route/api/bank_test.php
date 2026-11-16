@@ -18,9 +18,15 @@ namespace core_question\route\api;
 
 use core\router\route_loader_interface;
 use core\tests\router\route_testcase;
+use core\context\course;
 use core\context\module;
+use core\formatting;
+use core_question\local\bank\question_bank_helper;
 use core_question\local\bank\question_counts_test;
 use core_question\local\bank\question_version_status;
+use core_question\output\question_category_selector;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -37,6 +43,123 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 #[CoversClass(bank::class)]
 final class bank_test extends route_testcase {
+    public function test_uses_injected_formatter(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $course = $this->getDataGenerator()->create_course();
+        $bank = $this->getDataGenerator()->create_module('qbank', ['course' => $course->id]);
+        $modulecontext = module::instance($bank->cmid);
+        $formatter = $this->createMock(formatting::class);
+        $formatter->method('format_short_string')->willReturn('Injected name');
+        $formatter->method('format_content')->willReturn(['Injected info', FORMAT_HTML]);
+        $controller = new bank($formatter);
+
+        $selector = $this->createMock(question_category_selector::class);
+        $selector->method('get_categories_for_contexts')->willReturn([
+            (object) ['name' => 'Original', 'info' => 'Original', 'infoformat' => FORMAT_MARKDOWN],
+        ]);
+        $categories = $controller->categories(
+            new ServerRequest('GET', '/categories'),
+            new Response(),
+            $modulecontext,
+            $selector,
+        )->payload['categories'];
+        $this->assertSame('Injected name', $categories[0]->name);
+        $this->assertSame('Injected info', $categories[0]->info);
+        $this->assertSame((int) FORMAT_HTML, $categories[0]->infoformat);
+
+        $request = (new ServerRequest('GET', '/banks'))->withQueryParams([
+            'includeshared' => true,
+            'includerecent' => false,
+            'includeprivate' => false,
+        ]);
+        $banks = $controller->banks(
+            $request,
+            new Response(),
+            course::instance($course->id),
+            $modulecontext,
+            new question_bank_helper(),
+        )->payload['banks'];
+        $selected = array_column($banks, null, 'modid')[$bank->cmid];
+        $this->assertSame('Injected name', $selected->name);
+    }
+
+    public function test_categories_text_representations(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $this->add_class_routes_to_route_loader(bank::class);
+        $course = $this->getDataGenerator()->create_course();
+        $bank = $this->getDataGenerator()->create_module('qbank', ['course' => $course->id]);
+        $context = module::instance($bank->cmid);
+        $category = $this->getDataGenerator()->get_plugin_generator('core_question')->create_question_category([
+            'contextid' => $context->id,
+            'name' => '<span lang="en" class="multilang">English</span><span lang="fr" class="multilang">French</span>',
+            'info' => '**Category info**',
+            'infoformat' => FORMAT_MARKDOWN,
+        ]);
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        filter_set_applies_to_strings('multilang', 1);
+        \filter_manager::instance()->reset_caches();
+        force_current_language('en');
+
+        try {
+            $path = "/categories?coursemodule={$bank->cmid}";
+            $response = $this->process_api_request('GET', "{$path}&textMode=raw");
+            $this->assert_valid_response($response);
+            $raw = $this->decode_response($response, true)['categories'][$category->id];
+            $this->assertSame($category->name, $raw['name']);
+            $this->assertSame('**Category info**', $raw['info']);
+            $this->assertSame((int) FORMAT_MARKDOWN, $raw['infoformat']);
+
+            $response = $this->process_api_request('GET', "{$path}&applyContextFilters=true");
+            $this->assert_valid_response($response);
+            $formatted = $this->decode_response($response, true)['categories'][$category->id];
+            $this->assertSame('English', $formatted['name']);
+            $this->assertStringContainsString('<strong>Category info</strong>', $formatted['info']);
+            $this->assertSame((int) FORMAT_HTML, $formatted['infoformat']);
+
+            $response = $this->process_api_request('GET', "{$path}&applyContextFilters=false");
+            $this->assert_valid_response($response);
+            $unfiltered = $this->decode_response($response, true)['categories'][$category->id];
+            $this->assertSame('EnglishFrench', $unfiltered['name']);
+            $this->assertSame((int) FORMAT_HTML, $unfiltered['infoformat']);
+        } finally {
+            force_current_language(null);
+        }
+    }
+
+    public function test_bank_text_representations(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $this->add_class_routes_to_route_loader(bank::class);
+        $course = $this->getDataGenerator()->create_course();
+        $name = '<span lang="en" class="multilang">English</span><span lang="fr" class="multilang">French</span>';
+        $bank = $this->getDataGenerator()->create_module('qbank', ['course' => $course->id, 'name' => $name]);
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        filter_set_applies_to_strings('multilang', 1);
+        \filter_manager::instance()->reset_caches();
+        force_current_language('en');
+
+        try {
+            $path = "/banks?course={$course->id}&currentmodule={$bank->cmid}";
+            foreach (
+                [
+                    'textMode=raw' => $name,
+                    'applyContextFilters=true' => 'English',
+                    'applyContextFilters=false' => 'EnglishFrench',
+                ] as $query => $expected
+            ) {
+                $response = $this->process_api_request('GET', "{$path}&{$query}");
+                $this->assert_valid_response($response);
+                $banks = $this->decode_response($response, true)['banks'];
+                $selected = array_column($banks, null, 'modid')[$bank->cmid];
+                $this->assertSame($expected, $selected['name']);
+            }
+        } finally {
+            force_current_language(null);
+        }
+    }
+
     /**
      * All course modules using the question bank should have their count returned.
      */

@@ -17,6 +17,7 @@
 namespace core_question\local\bank;
 
 use core\context;
+use core\formatting;
 use core_course\cm_info;
 use JsonSerializable;
 
@@ -58,14 +59,32 @@ class formatted_bank implements JsonSerializable {
     /**
      * Return the question bank formatted for output.
      *
+     * @param formatting|null $formatter Formatter for an API representation, or null for the existing display representation
      * @return \stdClass
      */
-    public function get_formatted(): \stdClass {
+    public function get_formatted(?formatting $formatter = null): \stdClass {
         $filteroptions = [
             'escape' => false,
             'context' => $this->filtercontext,
         ];
-        $formattedname = $this->cminfo->get_formatted_name($filteroptions);
+        $formattedname = $formatter
+            ? $formatter->format_short_string($this->cminfo->get_name(), $this->filtercontext, escape: false)
+            : $this->cminfo->get_formatted_name($filteroptions);
+        $coursename = $formatter
+            ? $formatter->format_short_string(
+                $this->cminfo->get_course()->shortname,
+                $this->filtercontext,
+                escape: false,
+            )
+            : format_string($this->cminfo->get_course()->shortname, true, $filteroptions);
+        $categories = $this->questioncategories;
+        if ($formatter) {
+            $categories = array_map(function ($category) use ($formatter) {
+                $category = clone $category;
+                $category->name = $formatter->format_short_string($category->name, $this->filtercontext);
+                return $category;
+            }, $categories);
+        }
         return (object) [
             'name' => $formattedname,
             'modid' => $this->cminfo->id,
@@ -74,12 +93,12 @@ class formatted_bank implements JsonSerializable {
                 'coursenamebankname',
                 'question',
                 (object) [
-                    'coursename' => format_string($this->cminfo->get_course()->shortname, true, $filteroptions),
+                    'coursename' => $coursename,
                     'bankname' => $formattedname,
                 ],
             ),
             'cminfo' => $this->cminfo,
-            'questioncategories' => $this->questioncategories,
+            'questioncategories' => $categories,
             'shared' => $this->shared,
             'recent' => $this->recent,
             'current' => $this->current,
