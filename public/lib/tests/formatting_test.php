@@ -24,7 +24,6 @@ namespace core;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\formatting::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\core\formatting::class)]
 final class formatting_test extends \advanced_testcase {
     public function test_external_text_preferences(): void {
         $this->resetAfterTest();
@@ -44,6 +43,73 @@ final class formatting_test extends \advanced_testcase {
         $this->assertSame(['', FORMAT_HTML], $formatter->format_content('', FORMAT_MARKDOWN, $context));
         $this->assertNotSame($text, $formatter->format_short_string($text, $context));
         $this->assertSame($text, $formatter->format_short_string($text, $context, raw: true));
+    }
+
+    public function test_external_string_filter_preferences_do_not_share_cached_results(): void {
+        $this->resetAfterTest();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        filter_set_applies_to_strings('multilang', 1);
+        \filter_manager::instance()->reset_caches();
+        force_current_language('en');
+        $formatter = new formatting();
+        $context = \core\context\system::instance();
+        $text = '<span lang="en" class="multilang">English</span><span lang="fr" class="multilang">French</span>';
+
+        try {
+            $formatter->set_external_options(new text_formatting_options(raw: false, filter: true));
+            $this->assertSame('English', $formatter->format_short_string($text, $context));
+            $formatter->set_external_options(new text_formatting_options(raw: false, filter: false));
+            $this->assertSame('EnglishFrench', $formatter->format_short_string($text, $context));
+            $formatter->set_external_options(new text_formatting_options(raw: true));
+            $this->assertSame($text, $formatter->format_short_string($text, $context));
+            $formatter->set_external_options(new text_formatting_options(raw: false, filter: true));
+            $this->assertSame('English', $formatter->format_short_string($text, $context));
+        } finally {
+            force_current_language(null);
+        }
+    }
+
+    public function test_request_filter_policy_applies_to_display_formatting(): void {
+        $this->resetAfterTest();
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        filter_set_applies_to_strings('multilang', 1);
+        \filter_manager::instance()->reset_caches();
+        force_current_language('en');
+        $formatter = new formatting();
+        $context = \core\context\system::instance();
+        $text = '<span lang="en" class="multilang">English</span><span lang="fr" class="multilang">French</span>';
+
+        try {
+            foreach ([null, true, false, null] as $filter) {
+                $formatter->set_external_options(new text_formatting_options(raw: false, filter: $filter));
+                $string = $formatter->format_string($text, context: $context);
+                $richtext = $formatter->format_text($text, FORMAT_HTML, context: $context);
+                $this->assertSame($filter === true ? 'English' : 'EnglishFrench', $string);
+                $this->assertStringContainsString('English', $richtext);
+                if ($filter === true) {
+                    $this->assertStringNotContainsString('French', $richtext);
+                } else {
+                    $this->assertStringContainsString('French', $richtext);
+                }
+            }
+
+            $formatter->set_external_options(new text_formatting_options(raw: false, filter: true));
+            $this->assertSame('EnglishFrench', $formatter->format_string($text, context: $context, filter: false));
+            $this->assertStringContainsString(
+                'French',
+                $formatter->format_text($text, FORMAT_HTML, context: $context, filter: false),
+            );
+            $formatter->set_external_options(new text_formatting_options(raw: true));
+            $this->assertStringNotContainsString(
+                '<script>',
+                $formatter->format_text('<script>alert(1)</script>', FORMAT_HTML, context: $context),
+            );
+            $formatter->set_external_options(null);
+            $this->assertSame('English', $formatter->format_string($text, context: $context));
+            $this->assertStringNotContainsString('French', $formatter->format_text($text, FORMAT_HTML, context: $context));
+        } finally {
+            force_current_language(null);
+        }
     }
 
     public function test_format_string_striptags_cfg(): void {

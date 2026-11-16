@@ -52,6 +52,12 @@ final class util_test extends \advanced_testcase {
             $this->assertSame(FORMAT_HTML, $format);
             $this->assertStringNotContainsString('@@PLUGINFILE@@', $formatted);
             $this->assertNotSame($text, util::format_string($text, $context));
+
+            $formatter->set_external_options(null);
+            $settings->set_raw(true);
+            [$legacyraw] = util::format_text($text, FORMAT_HTML, $context, 'user', 'profile');
+            $this->assertStringNotContainsString('@@PLUGINFILE@@', $legacyraw);
+            $this->assertSame(['', FORMAT_MARKDOWN], util::format_text('', FORMAT_MARKDOWN, $context));
         } finally {
             $formatter->set_external_options(null);
         }

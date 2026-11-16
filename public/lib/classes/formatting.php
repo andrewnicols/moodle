@@ -60,7 +60,8 @@ class formatting {
     /**
      * Format rich text for a consumer, returning the effective Moodle format with the text.
      *
-     * Raw text is not safe to render without further processing.
+     * Raw text is not safe to render without further processing. Without request preferences or overrides,
+     * text is formatted and context filters are enabled.
      *
      * @param string|null $text
      * @param string|int|null $format
@@ -141,7 +142,8 @@ class formatting {
     /**
      * Format a short string for a consumer.
      *
-     * Raw strings are not safe to render without further processing.
+     * Raw strings are not safe to render without further processing. Without request preferences or overrides,
+     * strings are formatted and context filters are enabled.
      *
      * @param string|null $string
      * @param context|int $context
