@@ -45,9 +45,9 @@ class collection {
      */
     public function __construct(
         /** @var int The default page size */
-        public readonly int $pagesize = 25,
+        public readonly int $pagesize = \core\router\pagination_request::DEFAULT_PAGESIZE,
         /** @var int The maximum page size */
-        public readonly int $maxpagesize = 100,
+        public readonly int $maxpagesize = \core\router\pagination_request::DEFAULT_MAX_PAGESIZE,
         /** @var string[] The fields which clients may sort by. If empty, no sort parameter is added. */
         public readonly array $sortable = [],
     ) {
