@@ -30,6 +30,33 @@ final class util_test extends \advanced_testcase {
     /** @var \moodle_database The database connection */
     protected $db;
 
+    public function test_request_preferences_override_external_settings(): void {
+        $this->resetAfterTest();
+        $context = \core\context\system::instance();
+        $formatter = \core\di::get(\core\formatting::class);
+        $settings = external_settings::get_instance();
+        $settings->set_raw(false);
+        $settings->set_fileurl(true);
+        $text = '<p>@@PLUGINFILE@@/example.png</p>';
+
+        try {
+            $formatter->set_external_options(new \core\text_formatting_options(raw: true));
+            $this->assertSame(
+                [$text, FORMAT_HTML],
+                util::format_text($text, FORMAT_HTML, $context, 'user', 'profile'),
+            );
+            $this->assertSame($text, util::format_string($text, $context));
+
+            $formatter->set_external_options(new \core\text_formatting_options(raw: false, filter: false));
+            [$formatted, $format] = util::format_text($text, FORMAT_HTML, $context, 'user', 'profile');
+            $this->assertSame(FORMAT_HTML, $format);
+            $this->assertStringNotContainsString('@@PLUGINFILE@@', $formatted);
+            $this->assertNotSame($text, util::format_string($text, $context));
+        } finally {
+            $formatter->set_external_options(null);
+        }
+    }
+
     /**
      * Store the global DB for restore between tests.
      */

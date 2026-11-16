@@ -466,7 +466,9 @@ class util {
      * @param boolean $striplinks To strip any link in the result text. Moodle 1.8 default changed from false to true! MDL-8713
      * @param array $options options array/object or courseid
      * @return string text
+     * @deprecated since Moodle 6.0 Use \core\formatting::format_short_string().
      */
+    #[\core\attribute\deprecated('\core\formatting::format_short_string', since: '6.0', mdl: 'MDL-90234')]
     public static function format_string(
         $content,
         $context,
@@ -483,13 +485,17 @@ class util {
         // Get settings (singleton).
         $settings = external_settings::get_instance();
 
-        if (!$settings->get_raw()) {
-            $options['context'] = $context;
-            $options['filter'] = isset($options['filter']) && !$options['filter'] ? false : $settings->get_filter();
-            return format_string($content, $striplinks, $options);
-        }
-
-        return $content;
+        $formatter = \core\di::get(\core\formatting::class);
+        $preferences = $formatter->get_external_options();
+        $options = (array) $options;
+        return $formatter->format_short_string(
+            string: $content,
+            context: $context,
+            striplinks: $striplinks,
+            escape: $options['escape'] ?? true,
+            raw: $preferences?->raw ?? $settings->get_raw(),
+            filter: ($options['filter'] ?? true) && ($preferences?->filter ?? $settings->get_filter()),
+        );
     }
 
     /**
@@ -524,7 +530,9 @@ class util {
      * @param int|string|null $itemid helps identify the file area.
      * @param array|stdClass|null $options text formatting options
      * @return array text + textformat
+     * @deprecated since Moodle 6.0 Use \core\formatting::format_content().
      */
+    #[\core\attribute\deprecated('\core\formatting::format_content', since: '6.0', mdl: 'MDL-90234')]
     public static function format_text(
         $text,
         $textformat,
@@ -534,31 +542,23 @@ class util {
         $itemid = null,
         $options = null
     ) {
-        global $CFG;
-
-        if ($text === null || $text === '') {
+        $formatter = \core\di::get(\core\formatting::class);
+        $preferences = $formatter->get_external_options();
+        if (($text === null || $text === '') && $preferences === null) {
             // Nothing to return.
             // Note: It's common for the DB to return null, so we allow format_string to take nulls,
             // even though it is counter-intuitive.
             return ['', $textformat ?? FORMAT_MOODLE];
         }
 
-        if ($itemid !== null) {
-            $itemid = (int) $itemid;
-        }
-
         // Get settings (singleton).
         $settings = external_settings::get_instance();
 
-        if ($component && $filearea && $settings->get_fileurl()) {
-            require_once($CFG->libdir . "/filelib.php");
-            $text = file_rewrite_pluginfile_urls($text, $settings->get_file(), $context->id, $component, $filearea, $itemid);
-        }
-
+        $raw = $preferences?->raw ?? $settings->get_raw();
         // Note that $CFG->forceclean does not apply here if the client requests for the raw database content.
         // This is consistent with web clients that are still able to load non-cleaned text into editors, too.
 
-        if (!$settings->get_raw()) {
+        if (!$raw) {
             $options = (array) $options;
 
             // If context is passed in options, check that is the same to show a debug message.
@@ -582,18 +582,31 @@ class util {
                 }
             }
 
-            $options['filter'] = isset($options['filter']) && !$options['filter'] ? false : $settings->get_filter();
             $options['para'] = isset($options['para']) ? $options['para'] : false;
-            $options['context'] = $context;
             $options['allowid'] = isset($options['allowid']) ? $options['allowid'] : true;
-
-            $text = format_text($text, $textformat, $options);
-            // Once converted to html (from markdown, plain... lets inform consumer this is already HTML).
-            $textformat = FORMAT_HTML;
         }
 
-        // Note: The formats defined in weblib are strings.
-        return [$text, $textformat];
+        $options = (array) $options;
+        $clean = array_key_exists('noclean', $options) ? !$options['noclean'] : ($options['clean'] ?? null);
+        return $formatter->format_content(
+            text: $text,
+            format: $textformat,
+            context: $context,
+            raw: $raw,
+            filter: ($options['filter'] ?? true) && ($preferences?->filter ?? $settings->get_filter()),
+            trusted: $options['trusted'] ?? false,
+            clean: $clean,
+            para: $options['para'] ?? true,
+            newlines: $options['newlines'] ?? true,
+            overflowdiv: $options['overflowdiv'] ?? false,
+            blanktarget: $options['blanktarget'] ?? false,
+            allowid: $options['allowid'] ?? false,
+            component: $component,
+            filearea: $filearea,
+            itemid: $itemid,
+            rewriteurls: $settings->get_fileurl() && !($preferences?->raw ?? false),
+            file: $settings->get_file(),
+        );
     }
 
     /**

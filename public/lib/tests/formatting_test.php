@@ -26,6 +26,26 @@ namespace core;
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\formatting::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\core\formatting::class)]
 final class formatting_test extends \advanced_testcase {
+    public function test_external_text_preferences(): void {
+        $this->resetAfterTest();
+        $formatter = new formatting();
+        $context = \core\context\system::instance();
+        $text = '<script>alert(1)</script> **Hello**';
+
+        $formatter->set_external_options(new text_formatting_options(raw: true, filter: false));
+        $this->assertSame([$text, FORMAT_MARKDOWN], $formatter->format_content($text, FORMAT_MARKDOWN, $context));
+        $this->assertSame($text, $formatter->format_short_string($text, $context));
+        $this->assertNotSame($text, $formatter->format_string($text, context: $context));
+
+        $formatter->set_external_options(new text_formatting_options(raw: false, filter: false));
+        [$formatted, $format] = $formatter->format_content($text, FORMAT_MARKDOWN, $context);
+        $this->assertSame(FORMAT_HTML, $format);
+        $this->assertStringNotContainsString('<script>', $formatted);
+        $this->assertSame(['', FORMAT_HTML], $formatter->format_content('', FORMAT_MARKDOWN, $context));
+        $this->assertNotSame($text, $formatter->format_short_string($text, $context));
+        $this->assertSame($text, $formatter->format_short_string($text, $context, raw: true));
+    }
+
     public function test_format_string_striptags_cfg(): void {
         global $CFG;
 

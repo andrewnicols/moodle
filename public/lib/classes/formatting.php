@@ -36,6 +36,147 @@ class formatting {
     /** @var array A string cache for format_string */
     protected $formatstringcache = [];
 
+    /** @var text_formatting_options|null Preferences for external representations */
+    protected ?text_formatting_options $externaloptions = null;
+
+    /**
+     * Set the preferences for externally returned text.
+     *
+     * @param text_formatting_options|null $options
+     */
+    public function set_external_options(?text_formatting_options $options): void {
+        $this->externaloptions = $options;
+    }
+
+    /**
+     * Get the preferences for externally returned text.
+     *
+     * @return text_formatting_options|null
+     */
+    public function get_external_options(): ?text_formatting_options {
+        return $this->externaloptions;
+    }
+
+    /**
+     * Format rich text for a consumer, returning the effective Moodle format with the text.
+     *
+     * Raw text is not safe to render without further processing.
+     *
+     * @param string|null $text
+     * @param string|int|null $format
+     * @param context $context
+     * @param bool|null $raw Override the request preference
+     * @param bool|null $filter Whether to apply filters, subject to the request policy
+     * @param bool $trusted Whether the text is trusted
+     * @param bool|null $clean Whether to clean the text
+     * @param bool $para Whether to wrap text in a paragraph container
+     * @param bool $newlines Whether to convert newlines
+     * @param bool $overflowdiv Whether to wrap the output in an overflow container
+     * @param bool $blanktarget Whether links open in a new window
+     * @param bool $allowid Whether HTML IDs are allowed
+     * @param string|null $component The component owning the file area
+     * @param string|null $filearea The file area
+     * @param int|string|null $itemid The file area item ID
+     * @param bool $rewriteurls Whether to rewrite plugin file URLs, including in raw text
+     * @param string $file The file serving script
+     * @return array An array containing the text and its effective format
+     */
+    public function format_content(
+        ?string $text,
+        string|int|null $format,
+        context $context,
+        ?bool $raw = null,
+        ?bool $filter = null,
+        bool $trusted = false,
+        ?bool $clean = null,
+        bool $para = true,
+        bool $newlines = true,
+        bool $overflowdiv = false,
+        bool $blanktarget = false,
+        bool $allowid = false,
+        ?string $component = null,
+        ?string $filearea = null,
+        int|string|null $itemid = null,
+        bool $rewriteurls = false,
+        string $file = 'pluginfile.php',
+    ): array {
+        global $CFG;
+
+        $raw ??= $this->externaloptions?->raw ?? false;
+        $filter ??= $this->externaloptions?->filter ?? true;
+        if ($text !== null && $text !== '' && $component && $filearea && $rewriteurls) {
+            require_once($CFG->libdir . '/filelib.php');
+            $text = file_rewrite_pluginfile_urls(
+                $text,
+                $file,
+                $context->id,
+                $component,
+                $filearea,
+                $itemid === null ? null : (int) $itemid,
+            );
+        }
+        if ($raw) {
+            return [$text ?? '', $format];
+        }
+
+        $format ??= FORMAT_MOODLE;
+        return [
+            $this->format_text(
+                text: $text,
+                format: (string) $format,
+                context: $context,
+                trusted: $trusted,
+                clean: $clean,
+                filter: $filter,
+                para: $para,
+                newlines: $newlines,
+                overflowdiv: $overflowdiv,
+                blanktarget: $blanktarget,
+                allowid: $allowid,
+            ),
+            FORMAT_HTML,
+        ];
+    }
+
+    /**
+     * Format a short string for a consumer.
+     *
+     * Raw strings are not safe to render without further processing.
+     *
+     * @param string|null $string
+     * @param context|int $context
+     * @param bool $striplinks
+     * @param bool $escape Whether to escape ampersands
+     * @param bool|null $raw Override the request preference
+     * @param bool|null $filter Whether to apply filters, subject to the request policy
+     * @return string
+     */
+    public function format_short_string(
+        ?string $string,
+        context|int $context,
+        bool $striplinks = true,
+        bool $escape = true,
+        ?bool $raw = null,
+        ?bool $filter = null,
+    ): string {
+        $raw ??= $this->externaloptions?->raw ?? false;
+        $filter ??= $this->externaloptions?->filter ?? true;
+        if ($raw || $string === null || $string === '') {
+            return $string ?? '';
+        }
+
+        if (is_int($context)) {
+            $context = context::instance_by_id($context);
+        }
+        return $this->format_string(
+            string: $string,
+            striplinks: $striplinks,
+            context: $context,
+            filter: $filter,
+            escape: $escape,
+        );
+    }
+
     /**
      * Given a simple string, this function returns the string
      * processed by enabled string filters if $CFG->filterall is enabled
@@ -60,6 +201,10 @@ class formatting {
         bool $escape = true,
     ): string {
         global $PAGE;
+
+        if ($this->externaloptions !== null) {
+            $filter = $filter && ($this->externaloptions->filter ?? false);
+        }
 
         if ($string === '' || is_null($string)) {
             // No need to do any filters and cleaning.
@@ -173,6 +318,10 @@ class formatting {
         bool $allowid = false,
     ): string {
         global $CFG, $PAGE;
+
+        if ($this->externaloptions !== null) {
+            $filter = $filter && ($this->externaloptions->filter ?? false);
+        }
 
         if ($text === '' || is_null($text)) {
             // No need to do any filters and cleaning.
