@@ -26,6 +26,12 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class pagination_request {
+    /** @var int The default page size */
+    public const int DEFAULT_PAGESIZE = 25;
+
+    /** @var int The default value for the maximum page size */
+    public const int DEFAULT_MAX_PAGESIZE = 100;
+
     /**
      * Constructor.
      *
@@ -37,7 +43,7 @@ final class pagination_request {
         /** @var int The page number, starting at 1 */
         public readonly int $page = 1,
         /** @var int The number of items per page */
-        public readonly int $pagesize = 25,
+        public readonly int $pagesize = self::DEFAULT_PAGESIZE,
         /** @var array<string, bool> Map of field name to whether it is descending, in order of precedence */
         public readonly array $sort = [],
     ) {
@@ -60,7 +66,7 @@ final class pagination_request {
 
         return new self(
             page: (int) ($params['page'] ?? 1),
-            pagesize: (int) ($params['pageSize'] ?? 25),
+            pagesize: (int) ($params['pageSize'] ?? self::DEFAULT_PAGESIZE),
             sort: $sort,
         );
     }
