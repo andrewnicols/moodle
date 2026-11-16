@@ -35,13 +35,22 @@ class cache_control_middleware implements MiddlewareInterface {
         // Handle the response.
         $response = $handler->handle($request);
 
-        if ($request->getMethod() !== 'GET') {
-            // Do not add any caching headers to non-GET requests.
+        if ($response->hasHeader('Cache-Control') || $response->hasHeader('Expires') || $response->hasHeader('Pragma')) {
             return $response;
         }
 
-        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
-            // Do not add any caching headers to non-OK responses.
+        $response = $response
+            ->withHeader('Cache-Control', 'private, no-store, no-cache')
+            ->withHeader('Pragma', 'no-cache')
+            ->withHeader('Expires', '0');
+
+        if ($request->getMethod() !== 'GET') {
+            // Only GET responses can be publicly cached.
+            return $response;
+        }
+
+        if (($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) && $response->getStatusCode() !== 304) {
+            // Do not publicly cache error or redirect responses.
             return $response;
         }
 

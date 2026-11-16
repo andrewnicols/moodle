@@ -295,7 +295,9 @@ class router {
     protected function configure_oauth2_route(RouteGroupInterface $group): void {
         $group
             ->add(di::get(cors_middleware::class))
-            ->add(di::get(moodle_authentication_middleware::class));
+            ->add(di::get(moodle_authentication_middleware::class))
+            ->add(di::get(cache_control_middleware::class));
+
     }
 
     /**
