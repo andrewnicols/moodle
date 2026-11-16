@@ -435,6 +435,89 @@ final class users_test extends route_testcase {
         }
     }
 
+    public function test_text_representation_and_etag(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+        $user = $this->getDataGenerator()->create_user([
+            'firstname' => 'Textmodeuser',
+            'description' => '**Hello** @@PLUGINFILE@@/example.png',
+            'descriptionformat' => FORMAT_MARKDOWN,
+        ]);
+        $this->setAdminUser();
+
+        foreach (["/users/{$user->id}", '/users?search=Textmodeuser'] as $path) {
+            $separator = str_contains($path, '?') ? '&' : '?';
+            $formatted = $this->process_api_request('GET', $path);
+            $this->assert_valid_response($formatted);
+            $payload = $this->decode_response($formatted, true);
+            $item = $payload['items'][0] ?? $payload;
+            $this->assertSame((int) FORMAT_HTML, $item['descriptionFormat']);
+            $this->assertStringContainsString('<strong>Hello</strong>', $item['description']);
+            $this->assertStringNotContainsString('@@PLUGINFILE@@', $item['description']);
+
+            $raw = $this->process_api_request('GET', "{$path}{$separator}textMode=raw");
+            $this->assert_valid_response($raw);
+            $payload = $this->decode_response($raw, true);
+            $item = $payload['items'][0] ?? $payload;
+            $this->assertSame((int) FORMAT_MARKDOWN, $item['descriptionFormat']);
+            $this->assertSame('**Hello** @@PLUGINFILE@@/example.png', $item['description']);
+
+            if (!str_contains($path, '?')) {
+                $formattedetag = $formatted->getHeaderLine('ETag');
+                $rawetag = $raw->getHeaderLine('ETag');
+                $this->assertNotSame($formattedetag, $rawetag);
+                $response = $this->process_api_request(
+                    'GET',
+                    "{$path}?textMode=raw",
+                    headers: ['If-None-Match' => $formattedetag],
+                );
+                $this->assertSame(200, $response->getStatusCode());
+                $response = $this->process_api_request(
+                    'GET',
+                    "{$path}?textMode=raw",
+                    headers: ['If-None-Match' => $rawetag],
+                );
+                $this->assertSame(304, $response->getStatusCode());
+            }
+        }
+
+        foreach (['textMode=unknown', 'textMode=raw&applyContextFilters=false', 'applyContextFilters=invalid'] as $query) {
+            $response = $this->process_api_request('GET', "/users/{$user->id}?{$query}");
+            $this->assertSame(400, $response->getStatusCode(), $query);
+        }
+    }
+
+    public function test_text_representation_context_filters(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+        filter_set_global_state('multilang', TEXTFILTER_ON);
+        \filter_manager::instance()->reset_caches();
+        $user = $this->getDataGenerator()->create_user([
+            'firstname' => 'Textfilteruser',
+            'description' => '<span lang="en" class="multilang">English</span><span lang="fr" class="multilang">French</span>',
+            'descriptionformat' => FORMAT_HTML,
+        ]);
+        $this->setAdminUser();
+        force_current_language('en');
+
+        try {
+            foreach (["/users/{$user->id}?", '/users?search=Textfilteruser&'] as $path) {
+                foreach (['true' => 'English', 'false' => 'French'] as $setting => $expected) {
+                    $response = $this->process_api_request('GET', "{$path}textMode=formatted&applyContextFilters={$setting}");
+                    $this->assert_valid_response($response);
+                    $payload = $this->decode_response($response, true);
+                    $description = ($payload['items'][0] ?? $payload)['description'];
+                    $this->assertStringContainsString($expected, $description);
+                    if ($setting === 'true') {
+                        $this->assertStringNotContainsString('French', $description);
+                    }
+                }
+            }
+        } finally {
+            force_current_language(null);
+        }
+    }
+
     public function test_standard_profile_fields_course_visibility(): void {
         $this->resetAfterTest();
         $this->add_class_routes_to_route_loader(users::class);
@@ -461,7 +544,7 @@ final class users_test extends route_testcase {
         role_assign($roleid, $teacher->id, $context);
         $this->setUser($teacher);
 
-        foreach (["/users/{$student->id}", '/users'] as $path) {
+        foreach (["/users/{$student->id}", '/users', "/users/{$student->id}?textMode=raw", '/users?textMode=raw'] as $path) {
             $response = $this->process_api_request('GET', $path);
             $this->assert_valid_response($response);
             $payload = $this->decode_response($response, true);

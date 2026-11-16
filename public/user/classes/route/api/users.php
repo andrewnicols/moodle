@@ -77,7 +77,8 @@ class users {
      */
     #[route(
         title: 'List users',
-        description: 'List the users visible to the current user. A token with only the read:self scope lists just the current user.',
+        description: 'List the users visible to the current user. A token with only the read:self scope lists just the current user. '
+            . 'Text representation preferences apply to the profile description.',
         method: ['GET'],
         queryparams: [
             new query_parameter(
@@ -135,7 +136,7 @@ class users {
     #[route(
         path: '/{userId}',
         title: 'Fetch a user',
-        description: 'Fetch the key information about one user.',
+        description: 'Fetch the key information about one user. Text representation preferences apply to the profile description.',
         method: ['GET'],
         pathtypes: [
             new path_user(name: 'userId'),

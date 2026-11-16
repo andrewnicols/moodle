@@ -583,7 +583,7 @@ class specification implements
                 ),
                 array_merge(
                     $route->get_path_parameters(),
-                    $route->get_query_parameters(),
+                    text_formatting::get_api_query_parameters($route),
                     $route->get_header_parameters(),
                 ),
             ),

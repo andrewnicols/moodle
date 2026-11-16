@@ -35,6 +35,7 @@ use core\router\middleware\{
     moodle_bootstrap_middleware,
     moodle_scope_attribute_middleware,
     moodle_route_attribute_middleware,
+    text_formatting_middleware,
     uri_normalisation_middleware,
     validation_middleware,
 };
@@ -276,6 +277,7 @@ class router {
         $group
             // Add a Middleware to set the CORS headers for all REST Responses.
             ->add(di::get(cors_middleware::class))
+            ->add(di::get(text_formatting_middleware::class))
             ->add(di::get(api_validation_middleware::class))
             ->add(di::get(moodle_api_authentication_middleware::class))
             ->add(di::get(error_handling_middleware::class))

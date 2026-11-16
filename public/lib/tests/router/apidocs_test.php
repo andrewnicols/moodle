@@ -36,5 +36,21 @@ final class apidocs_test extends \advanced_testcase {
 
         $this->assertTrue($result->hasHeader('Content-Type'));
         $this->assertEquals(['application/json'], $result->getHeader('Content-Type'));
+
+        $schema = json_decode((string) $result->getBody());
+        foreach ($schema->paths as $path => $methods) {
+            foreach ($methods as $method => $operation) {
+                $names = [];
+                foreach ($operation->parameters as $parameter) {
+                    if (isset($parameter->{'$ref'})) {
+                        $name = substr($parameter->{'$ref'}, strlen('#/components/parameters/'));
+                        $parameter = $schema->components->parameters->{$name};
+                    }
+                    $names[] = $parameter->name;
+                }
+                $this->assertSame(1, count(array_keys($names, 'textMode')), "{$method} {$path}");
+                $this->assertSame(1, count(array_keys($names, 'applyContextFilters')), "{$method} {$path}");
+            }
+        }
     }
 }

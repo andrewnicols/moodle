@@ -16,6 +16,8 @@
 
 namespace core\router\middleware;
 
+use core\router\route;
+use core\router\schema\text_formatting;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,7 +33,21 @@ class api_validation_middleware extends validation_middleware {
     #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
         try {
+            $route = $request->getAttribute(route::class);
+            $originalparams = $request->getQueryParams();
+            if ($route) {
+                text_formatting::get_api_query_parameters($route);
+            }
             $request = $this->requestvalidator->validate_request($request);
+            if ($route) {
+                foreach (text_formatting::get_query_parameters() as $name => $parameter) {
+                    if (array_key_exists($name, $originalparams)) {
+                        $params = $request->getQueryParams();
+                        $params[$name] = $originalparams[$name];
+                        $request = $parameter->validate($request, $params);
+                    }
+                }
+            }
         } catch (\Exception $e) {
             return $this->responsehandler->get_response_from_exception($request, $e);
         }

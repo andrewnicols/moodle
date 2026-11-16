@@ -65,6 +65,23 @@ final class preferences_test extends route_testcase {
         $this->assertEquals(1, $payload->filemanager_recentviewmode);
     }
 
+    public function test_common_text_parameters_on_preferences(): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(preferences::class);
+        $this->setAdminUser();
+        set_user_preference('filemanager_recentviewmode', 1);
+
+        foreach (['textMode=raw', 'applyContextFilters=true', 'applyContextFilters=false'] as $query) {
+            $response = $this->process_api_request('GET', "/current/preferences?{$query}");
+            $this->assert_valid_response($response);
+            $this->assertEquals(1, $this->decode_response($response)->filemanager_recentviewmode);
+        }
+        foreach (['textMode=invalid', 'applyContextFilters=invalid', 'textMode=raw&applyContextFilters=false'] as $query) {
+            $response = $this->process_api_request('GET', "/current/preferences?{$query}");
+            $this->assert_invalid_parameter_response($response);
+        }
+    }
+
     public function test_preference_returned(): void {
         $this->resetAfterTest();
 

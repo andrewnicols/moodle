@@ -75,7 +75,7 @@ class user_object extends schema_object implements referenced_object {
             'address' => new scalar_type(param::TEXT),
             'description' => new scalar_type(
                 param::RAW,
-                description: "Profile description formatted by the user-details API, with its format given by descriptionFormat.",
+                description: "Profile description, in the format given by descriptionFormat. Raw text must not be trusted as HTML.",
             ),
             'descriptionFormat' => new scalar_type(
                 param::INT,
