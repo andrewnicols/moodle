@@ -97,6 +97,33 @@ final class users_test extends route_testcase {
         $this->assertTrue($route->requirelogin->should_require_login());
     }
 
+    /**
+     * The class-level login requirement applies to every endpoint in the class.
+     *
+     * @param string $path
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('login_required_path_provider')]
+    public function test_endpoints_require_login(string $path, int $unauthenticatedstatus): void {
+        $this->resetAfterTest();
+        $this->add_class_routes_to_route_loader(users::class);
+        $this->setUser();
+
+        $response = $this->process_api_request('GET', $path);
+        $this->assertNotSame($unauthenticatedstatus, $response->getStatusCode());
+    }
+
+    /**
+     * Data provider for endpoints which require a login.
+     *
+     * @return array
+     */
+    public static function login_required_path_provider(): array {
+        return [
+            'list users' => ['/users', 200],
+            'get user' => ['/users/current', 404],
+        ];
+    }
+
     public function test_list_as_admin(): void {
         $this->resetAfterTest();
         $this->add_class_routes_to_route_loader(users::class);

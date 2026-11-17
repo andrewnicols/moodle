@@ -46,7 +46,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 #[route(
     path: '/users',
-    requirelogin: new require_login(),
+    requirelogin: new require_login(autologinguest: false),
 )]
 class users {
     use user_scope_check_trait;
