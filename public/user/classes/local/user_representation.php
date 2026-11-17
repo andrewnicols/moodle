@@ -143,6 +143,51 @@ class user_representation {
     }
 
     /**
+     * Get the core representations of visible users, batching course enrolment checks.
+     *
+     * @param stdClass[] $users Users to represent
+     * @return array[] Representations for users visible to the current user, in input order
+     */
+    public function get_core_visible_for_users(array $users): array {
+        $itemsbyuserid = [];
+        $fallbackusers = [];
+
+        foreach ($users as $user) {
+            $item = $this->get_core($user);
+            if ($item === null) {
+                $fallbackusers[] = $user;
+            } else {
+                $itemsbyuserid[(int) $user->id] = $item;
+            }
+        }
+
+        if ($fallbackusers) {
+            $courses = $this->finder->get_courses_with_viewdetails();
+            $coursemap = $this->finder->get_first_matching_course_for_users($fallbackusers, $courses);
+            foreach ($fallbackusers as $user) {
+                $course = $coursemap[(int) $user->id] ?? null;
+                if ($course === null) {
+                    continue;
+                }
+
+                $item = $this->get_core($user, $course);
+                if ($item !== null) {
+                    $itemsbyuserid[(int) $user->id] = $item;
+                }
+            }
+        }
+
+        $items = [];
+        foreach ($users as $user) {
+            if (isset($itemsbyuserid[(int) $user->id])) {
+                $items[] = $itemsbyuserid[(int) $user->id];
+            }
+        }
+
+        return $items;
+    }
+
+    /**
      * Find a course (if needed) in which the user is visible, and build a representation in it.
      *
      * @param stdClass $user

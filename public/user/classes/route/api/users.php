@@ -112,14 +112,7 @@ class users {
             onlyself: $this->is_read_limited_to_current_user($request),
         );
 
-        $items = [];
-        $courses = null;
-        foreach ($result['users'] as $user) {
-            $item = $this->representation->get_core_visible($user, $courses);
-            if ($item !== null) {
-                $items[] = $item;
-            }
-        }
+        $items = $this->representation->get_core_visible_for_users($result['users']);
 
         return new collection_response($items, $result['total'], $result['hasmore'], $request, $response);
     }

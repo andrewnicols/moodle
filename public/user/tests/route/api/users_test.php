@@ -295,6 +295,9 @@ final class users_test extends route_testcase {
         $course = $generator->create_course();
         $teacher = $generator->create_and_enrol($course, 'editingteacher');
         $student = $generator->create_and_enrol($course, 'student');
+        $secondcourse = $generator->create_course();
+        $generator->enrol_user($teacher->id, $secondcourse->id, 'editingteacher');
+        $secondstudent = $generator->create_and_enrol($secondcourse, 'student');
         $outsider = $generator->create_user();
 
         $this->setUser($teacher);
@@ -308,7 +311,39 @@ final class users_test extends route_testcase {
 
         $this->assertContains((int) $teacher->id, $ids);
         $this->assertContains((int) $student->id, $ids);
+        $this->assertContains((int) $secondstudent->id, $ids);
         $this->assertNotContains((int) $outsider->id, $ids);
+    }
+
+    public function test_visible_course_lookup_is_batched(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+        $generator = $this->getDataGenerator();
+        $firstcourse = $generator->create_course();
+        $secondcourse = $generator->create_course();
+        $teacher = $generator->create_user();
+        $firststudent = $generator->create_user();
+        $secondstudent = $generator->create_user();
+        $outsider = $generator->create_user();
+        $generator->enrol_user($teacher->id, $firstcourse->id, 'editingteacher');
+        $generator->enrol_user($teacher->id, $secondcourse->id, 'editingteacher');
+        $generator->enrol_user($firststudent->id, $firstcourse->id, 'student');
+        $generator->enrol_user($secondstudent->id, $secondcourse->id, 'student');
+        $this->setUser($teacher);
+
+        $finder = \core\di::get(\core_user\local\visible_user_finder::class);
+        $courses = $finder->get_courses_with_viewdetails();
+        $before = $DB->perf_get_queries();
+        $coursemap = $finder->get_first_matching_course_for_users(
+            [$firststudent, $secondstudent, $outsider],
+            $courses,
+        );
+
+        $this->assertSame(1, $DB->perf_get_queries() - $before);
+        $this->assertSame((int) $firstcourse->id, (int) $coursemap[$firststudent->id]->id);
+        $this->assertSame((int) $secondcourse->id, (int) $coursemap[$secondstudent->id]->id);
+        $this->assertArrayNotHasKey($outsider->id, $coursemap);
     }
 
     public function test_get_user_required_scopes(): void {

@@ -18,6 +18,7 @@ namespace core_user\local;
 
 use core\current_user;
 use core\dml\database_proxy;
+use core\enrolment;
 use core\router\pagination_request;
 use core\user;
 use stdClass;
@@ -35,12 +36,15 @@ class visible_user_finder {
      *
      * @param database_proxy $db The database
      * @param current_user $currentuser The user who is looking for other users
+     * @param enrolment $enrolment Enrolment query helper
      */
     public function __construct(
         /** @var database_proxy The database */
         protected database_proxy $db,
         /** @var current_user The user who is looking for other users */
         protected current_user $currentuser,
+        /** @var enrolment Enrolment query helper */
+        protected enrolment $enrolment,
     ) {
     }
 
@@ -136,8 +140,63 @@ class visible_user_finder {
      * @return stdClass[]
      */
     public function get_courses_with_viewdetails(): array {
-        $courses = get_user_capability_course('moodle/user:viewdetails', $this->currentuser->get_id(), true, '', 'id');
+        $fields = implode(',', [
+            ...array_values(\context_helper::get_preload_record_columns('ctx')),
+            'groupmode',
+        ]);
 
-        return $courses ? array_values($courses) : [];
+        $courses = get_user_capability_course(
+            'moodle/user:viewdetails',
+            $this->currentuser->get_id(),
+            true,
+            $fields,
+            'id',
+        );
+        if (!$courses) {
+            return [];
+        }
+
+        foreach ($courses as $course) {
+            \context_helper::preload_from_record($course);
+        }
+
+        return array_values($courses);
+    }
+
+    /**
+     * Find the first matching course for each user from a supplied list of courses.
+     *
+     * The input order is preserved when a user is enrolled in multiple courses.
+     *
+     * @param stdClass[] $users Users to find courses for
+     * @param stdClass[] $courses Courses where the current user can view user details
+     * @return array<int, stdClass> Map of user IDs to the first course in which they are enrolled
+     */
+    public function get_first_matching_course_for_users(array $users, array $courses): array {
+        if (!$users || !$courses) {
+            return [];
+        }
+
+        $userids = array_map(
+            static fn(stdClass $user): int => (int) $user->id,
+            $users,
+        );
+
+        $courseidbyuserid = $this->enrolment->get_first_matching_course_for_users(
+            array_map(static fn(stdClass $course): int => (int) $course->id, $courses),
+            $userids,
+        );
+
+        $coursesbyid = [];
+        foreach ($courses as $course) {
+            $coursesbyid[(int) $course->id] = $course;
+        }
+
+        $coursemap = [];
+        foreach ($courseidbyuserid as $userid => $courseid) {
+            $coursemap[$userid] = $coursesbyid[$courseid];
+        }
+
+        return $coursemap;
     }
 }
