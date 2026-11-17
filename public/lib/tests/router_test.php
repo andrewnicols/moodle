@@ -313,4 +313,156 @@ final class router_test extends route_testcase {
             500,
         ];
     }
+
+    /**
+     * Only missing non-API routes may request a web-server error document.
+     *
+     * @param string|false|null $type The configured web-server type, or a disabled or unset setting
+     * @param string $path The request path
+     * @param string $method The request method
+     * @param int $expectedstatus The response status
+     * @param array $expectedheaders The expected handoff headers
+     * @param string $basepath The router base path
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('missing_route_response_provider')]
+    public function test_missing_route_response(
+        string|false|null $type,
+        string $path,
+        string $method,
+        int $expectedstatus,
+        array $expectedheaders,
+        string $basepath,
+    ): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        unset($CFG->use_http_not_found_response);
+        if ($type !== null) {
+            $CFG->use_http_not_found_response = $type;
+        }
+
+        $app = $this->get_app($basepath);
+        $notfound = fn ($request) => throw new \Slim\Exception\HttpNotFoundException($request);
+        $app->get('/found/{userId}', $notfound);
+        $app->get(router\route_loader_interface::ROUTE_GROUP_API . '/found/{userId}', $notfound);
+        $app->get('/returned', fn ($response) => $response->withStatus(404));
+        $app->get('/method', fn ($response) => $response);
+        $request = new ServerRequest($method, $basepath . $path, ['Accept' => 'application/json']);
+
+        $previousstatus = http_response_code();
+        $response = $app->handle($request);
+
+        $this->assertSame($expectedstatus, $response->getStatusCode());
+        $this->assertSame($previousstatus, http_response_code());
+        foreach (['X-Accel-Redirect', 'X-Moodle-Route-Not-Found'] as $header) {
+            $this->assertSame($expectedheaders[$header] ?? '', $response->getHeaderLine($header));
+        }
+    }
+
+    /**
+     * Data provider for web-server error-document handling.
+     *
+     * @return \Generator
+     */
+    public static function missing_route_response_provider(): \Generator {
+        $apibase = router\route_loader_interface::ROUTE_GROUP_API;
+        $batchbase = router\route_loader_interface::ROUTE_BATCH_API;
+        $cases = [
+            'Missing route' => ['/missing', 'GET', 404, true],
+            'Missing resource' => ['/found/400000', 'GET', 404, false],
+            'Returned not found' => ['/returned', 'GET', 404, false],
+            'Method not allowed' => ['/method', 'POST', 405, false],
+            'Missing API route' => ["{$apibase}/missing", 'GET', 404, false],
+            'Missing API root' => [$apibase, 'GET', 404, false],
+            'Missing API resource' => ["{$apibase}/found/400000", 'GET', 404, false],
+            'Normalised missing API route' => ["{$apibase}//missing/", 'GET', 404, false],
+            'Similar non-API prefix' => ["{$apibase}other/missing", 'GET', 404, true],
+            'Missing batch API route' => ["{$batchbase}/missing", 'GET', 404, false],
+        ];
+        $serverheaders = [
+            'nginx' => ['X-Accel-Redirect' => '/_moodle/route-not-found'],
+            'httpd' => ['X-Moodle-Route-Not-Found' => '1'],
+        ];
+
+        foreach (['', '/moodle/r.php'] as $basepath) {
+            foreach ($serverheaders as $type => $headers) {
+                foreach ($cases as $name => [$path, $method, $status, $handoff]) {
+                    yield "{$basepath}: {$type}: {$name}" => [
+                        $type, $path, $method, $status, $handoff ? $headers : [], $basepath,
+                    ];
+                }
+            }
+            foreach (['disabled' => false, 'unset' => null, 'empty' => ''] as $name => $type) {
+                yield "{$basepath}: {$name}" => [$type, '/missing', 'GET', 404, [], $basepath];
+            }
+        }
+    }
+
+    /**
+     * Web-server error-document responses bypass the page-not-found controller.
+     *
+     * @param string|false $type The configured web-server type, or false to disable the setting
+     * @param string $path The request path
+     * @param bool $render Whether the page-not-found controller should be called
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('missing_route_renderer_provider')]
+    public function test_missing_route_renderer(string|false $type, string $path, bool $render): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $CFG->use_http_not_found_response = $type;
+
+        $controller = $this->createMock(\core\route\controller\page_not_found_controller::class);
+        $controller->expects($render ? $this->once() : $this->never())
+            ->method('page_not_found_handler')
+            ->willReturn(new \GuzzleHttp\Psr7\Response(404, [], 'Rendered not found'));
+        di::set(\core\route\controller\page_not_found_controller::class, $controller);
+
+        $app = $this->get_app('');
+        $app->get('/found/{userId}', fn ($request) => throw new \Slim\Exception\HttpNotFoundException($request));
+        $request = new ServerRequest('GET', $path, ['Accept' => 'text/html']);
+
+        $response = $app->handle($request);
+
+        $this->assertSame(404, $response->getStatusCode());
+        $this->assertSame($render ? 'Rendered not found' : '', (string) $response->getBody());
+    }
+
+    /**
+     * Data provider for page-not-found rendering.
+     *
+     * @return \Generator
+     */
+    public static function missing_route_renderer_provider(): \Generator {
+        yield 'Missing route, nginx' => ['nginx', '/missing', false];
+        yield 'Missing route, httpd' => ['httpd', '/missing', false];
+        yield 'Missing route, disabled' => [false, '/missing', true];
+        yield 'Missing resource, nginx' => ['nginx', '/found/400000', true];
+        yield 'Missing resource, httpd' => ['httpd', '/found/400000', true];
+    }
+
+    /**
+     * Unsupported web-server types report a configuration error.
+     */
+    public function test_missing_route_unsupported_response_type(): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $CFG->use_http_not_found_response = 'unsupported';
+        $CFG->debugdisplay = true;
+
+        $app = $this->get_app('');
+        $request = new ServerRequest('GET', '/missing', ['Accept' => 'application/json']);
+        $response = $app->handle($request);
+
+        $this->assertSame(500, $response->getStatusCode());
+        $payload = json_decode((string) $response->getBody(), true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame(\RuntimeException::class, $payload['exception'][0]['type']);
+        $this->assertSame(
+            'Unsupported HTTP not found response type: unsupported',
+            $payload['exception'][0]['message'],
+        );
+        $this->assertFalse($response->hasHeader('X-Accel-Redirect'));
+        $this->assertFalse($response->hasHeader('X-Moodle-Route-Not-Found'));
+    }
 }

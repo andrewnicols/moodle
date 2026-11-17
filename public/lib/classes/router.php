@@ -43,6 +43,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Slim\Exception\{
     HttpForbiddenException,
@@ -50,6 +51,8 @@ use Slim\Exception\{
 };
 use Slim\Interfaces\RouteGroupInterface;
 use Slim\Middleware\ErrorMiddleware;
+use Slim\Routing\RouteContext;
+use Slim\Routing\RoutingResults;
 
 /**
  * Moodle Router.
@@ -203,6 +206,51 @@ class router {
         // This allows the Route to be accessed before it is handled.
         // See https://www.slimframework.com/docs/v4/cookbook/retrieving-current-route.html for further information.
         $this->app->addRoutingMiddleware();
+
+        // Return a native error response without rendering a page, but only when routing itself failed.
+        $basepath = $this->basepath;
+        $responsefactory = $this->app->getResponseFactory();
+        $this->app->add(function (
+            ServerRequestInterface $request,
+            RequestHandlerInterface $handler,
+        ) use (
+            $basepath,
+            $responsefactory,
+        ): ResponseInterface {
+            global $CFG;
+
+            try {
+                return $handler->handle($request);
+            } catch (HttpNotFoundException $exception) {
+                $path = $request->getUri()->getPath();
+                foreach ([route_loader_interface::ROUTE_GROUP_API, route_loader_interface::ROUTE_BATCH_API] as $prefix) {
+                    $apibase = $basepath . $prefix;
+                    if ($path === $apibase || str_starts_with($path, "{$apibase}/")) {
+                        throw $exception;
+                    }
+                }
+
+                $routingresults = $exception->getRequest()->getAttribute(RouteContext::ROUTING_RESULTS);
+                $code = $exception->getCode();
+                if (
+                    !empty($CFG->use_http_not_found_response)
+                    && $routingresults?->getRouteStatus() === RoutingResults::NOT_FOUND
+                    && in_array($code, [404], true)
+                ) {
+                    return match ($CFG->use_http_not_found_response) {
+                        'nginx' => $responsefactory->createResponse($code)
+                            ->withHeader('X-Accel-Redirect', '/_moodle/route-not-found'),
+                        'httpd' => $responsefactory->createResponse($code)
+                            ->withHeader('X-Moodle-Route-Not-Found', '1'),
+                        default => throw new \RuntimeException(
+                            "Unsupported HTTP not found response type: {$CFG->use_http_not_found_response}",
+                        ),
+                    };
+                }
+
+                throw $exception;
+            }
+        });
 
         // Add request normalisation middleware to standardise the URI.
         // This must be done before the Routing Middleware to ensure that the route is matched correctly.
