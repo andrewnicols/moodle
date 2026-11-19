@@ -29,4 +29,4 @@ export interface PaginationProps extends ComponentPropsWithoutRef<'nav'> {
     /** Disables all interactive elements, preventing focus, hover, and page-change events. */
     disabled?: boolean;
 }
-export declare const Pagination: ({ totalPages, currentPage, onPageChange, ariaLabel, previousPageLabel, nextPageLabel, pageLabelFormatter, variant, disabled, className, ...props }: PaginationProps) => import("react").JSX.Element | null;
+export declare const Pagination: ({ totalPages, currentPage, onPageChange, ariaLabel, previousPageLabel, nextPageLabel, pageLabelFormatter, variant, disabled, className, ...props }: PaginationProps) => import('react').JSX.Element | null;

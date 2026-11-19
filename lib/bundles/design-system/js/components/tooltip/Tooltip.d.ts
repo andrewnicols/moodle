@@ -11,5 +11,5 @@ export interface TooltipProps extends HTMLAttributes<HTMLDivElement> {
     /** The trigger element. Must be a single React element that forwards refs. */
     children: ReactElement;
 }
-export declare const Tooltip: ({ label, placement, variant, children, className, ...props }: TooltipProps) => import("react").JSX.Element;
+export declare const Tooltip: ({ label, placement, variant, children, className, ...props }: TooltipProps) => import('react').JSX.Element;
 export {};

@@ -24,4 +24,4 @@ export interface BreadcrumbProps extends ComponentPropsWithoutRef<'nav'> {
      */
     overflowAriaLabel?: string;
 }
-export declare const Breadcrumb: ({ items, ariaLabel, overflowAriaLabel, className, ...props }: BreadcrumbProps) => import("react").JSX.Element | null;
+export declare const Breadcrumb: ({ items, ariaLabel, overflowAriaLabel, className, ...props }: BreadcrumbProps) => import('react').JSX.Element | null;

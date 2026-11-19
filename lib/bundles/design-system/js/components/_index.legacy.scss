@@ -1,3 +1,89 @@
+/* _internal/index.css */
+.mds-btn.btn.mds-btn--icon-only.mds-btn--size-sm.mds-field-info-button {
+  padding: 0;
+}
+
+.mds-btn.btn.mds-btn--icon-only.mds-btn--size-sm.mds-field-info-button i,
+.mds-btn.btn.mds-btn--icon-only.mds-btn--size-sm.mds-field-info-button svg {
+  inline-size: var(--mds-icons-xs);
+  block-size: var(--mds-icons-xs);
+  font-size: var(--mds-icons-xs);
+}
+
+/* _internal/index.css */
+/* Layout for Tag's identity content (avatar + up to three text lines),
+   shared with the future Combobox's menu rows via TagContent.tsx — see the
+   comment there for why this is a shared helper rather than a Tag prop.
+
+   Deliberately host-agnostic: no cursor, no container chrome and no
+   disabled colours live here. Typography (font, size, line height) and the
+   name's colour are inherited from the host element, and each host applies
+   its own disabled treatment through these hooks (Tag's is in tag.css). */
+
+/* Figma's `content` frame: avatar beside the text lines. It keeps its own
+   8px gap, separate from the host's gap to whatever follows it (Tag's close
+   button), which grows to 12px at the md and lg density tiers. */
+.mds-tag__body {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--mds-spacing-xs);
+  min-inline-size: 0;
+}
+
+.mds-tag__avatar[class] {
+  flex-shrink: 0;
+}
+
+/* Three stacked lines: name, then the Position 2 bucket, then institution.
+   Each line is its own row so it can truncate independently. */
+.mds-tag__content {
+  display: inline-flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+.mds-tag__name,
+.mds-tag__institution {
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Line 2 — a single row holding the Position 2 items, divider-separated
+   from each other when there is more than one. */
+.mds-tag__supporting-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mds-spacing-xxs);
+  max-inline-size: 100%;
+  overflow: hidden;
+}
+
+.mds-tag__supporting-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-inline-size: 0;
+}
+
+.mds-tag__supporting-text,
+.mds-tag__institution {
+  color: var(--mds-text-subtle);
+  font-weight: var(--mds-font-weight-regular);
+}
+
+.mds-tag__divider {
+  flex-shrink: 0;
+  inline-size: var(--mds-stroke-weight-sm);
+  block-size: var(--mds-font-size-paragraph-small);
+  background-color: var(--mds-border-subtle);
+}
+
 /* activity-icon/index.css */
 .mds-activity-icon {
   align-items: center;
@@ -38,34 +124,114 @@
 }
 
 /* Category background colors apply only when a background container is active. */
-.mds-activity-icon--default.mds-activity-icon--category-assessment,
-.mds-activity-icon--large.mds-activity-icon--category-assessment {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-assessment {
   background-color: var(--mds-activity-icon-assessment-bg);
 }
 
-.mds-activity-icon--default.mds-activity-icon--category-collaboration,
-.mds-activity-icon--large.mds-activity-icon--category-collaboration {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-collaboration {
   background-color: var(--mds-activity-icon-collaboration-bg);
 }
 
-.mds-activity-icon--default.mds-activity-icon--category-communication,
-.mds-activity-icon--large.mds-activity-icon--category-communication {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-communication {
   background-color: var(--mds-activity-icon-communication-bg);
 }
 
-.mds-activity-icon--default.mds-activity-icon--category-interactive,
-.mds-activity-icon--large.mds-activity-icon--category-interactive {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-interactive {
   background-color: var(--mds-activity-icon-interactive-bg);
 }
 
-.mds-activity-icon--default.mds-activity-icon--category-other,
-.mds-activity-icon--large.mds-activity-icon--category-other {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-other {
   background-color: var(--mds-activity-icon-other-bg);
 }
 
-.mds-activity-icon--default.mds-activity-icon--category-resource,
-.mds-activity-icon--large.mds-activity-icon--category-resource {
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ).mds-activity-icon--category-resource {
   background-color: var(--mds-activity-icon-resource-bg);
+}
+
+/*
+ * muted: tile and icon use the muted tokens. Declared after the category rules with matching specificity so
+ * it wins; none has no tile, so only the icon is muted.
+ */
+.mds-activity-icon:is(
+    .mds-activity-icon--default,
+    .mds-activity-icon--large
+  ):is(.mds-activity-icon--muted, .mds-activity-icon--muted-filter) {
+  background-color: var(--mds-activity-icon-muted-bg);
+}
+
+.mds-activity-icon--muted {
+  position: relative;
+}
+
+/* Hide the full-colour asset (it stays in the a11y tree) and paint its shape in the muted token colour. */
+.mds-activity-icon--muted .mds-activity-icon__asset {
+  opacity: 0;
+}
+
+.mds-activity-icon__mask {
+  background-color: var(--mds-activity-icon-muted-icon);
+  /* Match the asset's radius so muted icons keep the same rounded corners. */
+  border-radius: var(--mds-border-radius-xs);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  pointer-events: none;
+  position: absolute;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.mds-activity-icon--none .mds-activity-icon__mask {
+  inset: 0;
+}
+
+.mds-activity-icon--default .mds-activity-icon__mask {
+  inset: var(--mds-spacing-xs);
+}
+
+.mds-activity-icon--large .mds-activity-icon__mask {
+  inset: var(--mds-spacing-sm);
+}
+
+/* Forced colours override the mask's background, which would hide the icon, so show the real asset instead. */
+@media (forced-colors: active) {
+  .mds-activity-icon--muted .mds-activity-icon__asset {
+    opacity: 1;
+  }
+
+  .mds-activity-icon__mask {
+    display: none;
+  }
+}
+
+/*
+ * muted-filter: fallback for third-party brand icons only (see mutedFilterFallbackIcons).
+ * We can't control the colour of third-party artwork and masking would erase
+ * its detail, so the <img> has its saturation reduced instead. No opacity is applied, so the artwork keeps its contrast. This is NOT token-driven and contrast varies by artwork, which
+ * the repo guardrails discourage and which differs from the token-driven muted
+ * state. Keep it limited to flagged assets.
+ */
+.mds-activity-icon--muted-filter .mds-activity-icon__asset {
+  filter: saturate(0.2);
 }
 
 /* Size variants */
@@ -99,200 +265,145 @@
   inline-size: 100%;
 }
 
-/* breadcrumb/index.css */
-/* ─── List ─────────────────────────────────────────────────────────────────── */
-
-.mds-breadcrumb__list.breadcrumb {
-  /* Never wrap to a second line — labels truncate via flex shrink so the
-     trail always fits inline. */
-  flex-wrap: nowrap;
-  align-items: center;
-  margin-bottom: 0;
-  padding: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* Hide the broken-image placeholder while the icon has no source. */
+.mds-activity-icon__asset:not([src]) {
+  visibility: hidden;
 }
 
-/* ─── Items ─────────────────────────────────────────────────────────────────── */
-
-.breadcrumb-item.items-2 {
-  max-width: 50%;
-}
-.breadcrumb-item.items-3 {
-  max-width: 33.3333%;
-}
-.breadcrumb-item.items-4 {
-  max-width: 25%;
-}
-.breadcrumb-item.mds-breadcrumb__item--current {
-  max-width: 50%;
-}
-
-.breadcrumb-item {
-  /* Each item is its own flex row: the Bootstrap ::before divider and the
-     link/span become flex siblings rather than inline boxes. This eliminates
-     the inline-box strut that previously added 2 px to every link item
-     (making them 26 px while the current-page item was 24 px), and prevents
-     the ::before + span from wrapping to a second line when the <li> is
-     narrower than the span's natural width. Bootstrap's float:left on
-     ::before is ignored inside a flex container - the divider becomes a
-     zero-shrink flex item at its natural content size, which is correct. */
+/* alert/index.css */
+.mds-alert {
   display: flex;
-  align-items: center;
-  flex: 0 1 auto;
-  min-width: 0;
+  gap: var(--mds-spacing-md);
+  align-items: flex-start;
+  inline-size: 100%;
+  padding: var(--mds-spacing-md);
+  border: var(--mds-stroke-weight-sm) solid var(--mds-border-feedback-primary);
+  border-radius: var(--mds-border-radius-md);
+  background-color: var(--mds-bg-feedback-primary-light);
+  color: var(--mds-text-feedback-primary);
 }
 
-/* --- Link items --------------------------------------------------------------------------- */
-
-/* When a Tooltip wraps a Link it becomes a flex item inside the <li> flex
-   container. Its default min-width:auto prevents the flex algorithm from
-   shrinking the wrapper, causing text overlap on narrow viewports. Overriding
-   to min-width:0 lets the wrapper shrink freely alongside the other items. */
-.breadcrumb-item .mds-tooltip {
-  min-width: 0;
+.mds-alert--success {
+  background-color: var(--mds-bg-feedback-success-light);
+  border-color: var(--mds-border-feedback-success);
+  color: var(--mds-text-feedback-success);
 }
 
-/* The overflow trigger is wrapped by Dropdown's root element (.mds-dropdown,
-   display:inline-flex) so it can reuse Dropdown's floating-ui orchestration.
-   display:contents makes that wrapper transparent to the <li> flex layout,
-   matching the un-wrapped button that used to be the direct flex item. */
-.mds-breadcrumb__item--overflow .mds-dropdown {
-  display: contents;
+.mds-alert--warning {
+  background-color: var(--mds-bg-feedback-warning-light);
+  border-color: var(--mds-border-feedback-warning);
+  color: var(--mds-text-feedback-warning);
 }
 
-/* ─── Shared text styles ─────────────────────────────────────────────────────── */
+.mds-alert--danger {
+  background-color: var(--mds-bg-feedback-danger-light);
+  border-color: var(--mds-border-feedback-danger);
+  color: var(--mds-text-feedback-danger);
+}
 
-/* The overflow trigger button and current-page label are not rendered by the
-   Link component, so they need explicit typography to match it. Token values
-   mirror those set in link.css so the row stays visually uniform. */
-.mds-breadcrumb__overflow-trigger,
-.mds-breadcrumb__item--current .mds-breadcrumb__label {
+.mds-alert-icon-wrap {
+  display: flex;
+  flex-shrink: 0;
+  inline-size: 20px; /* Figma defines icon frame as fixed 20x20. */
+  block-size: 20px; /* Figma defines icon frame as fixed 20x20. */
+}
+
+.mds-alert--no-title .mds-alert-icon-wrap {
+  block-size: 24px; /* Figma no-title variant uses a 20x24 icon frame. */
+}
+
+.mds-alert-icon {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  background-color: var(--mds-bg-feedback-primary-default);
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10.0195%2020C6.42578%2020%203.14453%2018.125%201.34766%2015C-0.449219%2011.9141%20-0.449219%208.125%201.34766%205C3.14453%201.91406%206.42578%200%2010.0195%200C13.5742%200%2016.8555%201.91406%2018.6523%205C20.4492%208.125%2020.4492%2011.9141%2018.6523%2015C16.8555%2018.125%2013.5742%2020%2010.0195%2020ZM8.45703%2013.125C7.91016%2013.125%207.51953%2013.5547%207.51953%2014.0625C7.51953%2014.6094%207.91016%2015%208.45703%2015H11.582C12.0898%2015%2012.5195%2014.6094%2012.5195%2014.0625C12.5195%2013.5547%2012.0898%2013.125%2011.582%2013.125H11.2695V9.6875C11.2695%209.17969%2010.8398%208.75%2010.332%208.75H8.45703C7.91016%208.75%207.51953%209.17969%207.51953%209.6875C7.51953%2010.2344%207.91016%2010.625%208.45703%2010.625H9.39453V13.125H8.45703ZM10.0195%205C9.31641%205%208.76953%205.58594%208.76953%206.25C8.76953%206.95312%209.31641%207.5%2010.0195%207.5C10.6836%207.5%2011.2695%206.95312%2011.2695%206.25C11.2695%205.58594%2010.6836%205%2010.0195%205Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10.0195%2020C6.42578%2020%203.14453%2018.125%201.34766%2015C-0.449219%2011.9141%20-0.449219%208.125%201.34766%205C3.14453%201.91406%206.42578%200%2010.0195%200C13.5742%200%2016.8555%201.91406%2018.6523%205C20.4492%208.125%2020.4492%2011.9141%2018.6523%2015C16.8555%2018.125%2013.5742%2020%2010.0195%2020ZM8.45703%2013.125C7.91016%2013.125%207.51953%2013.5547%207.51953%2014.0625C7.51953%2014.6094%207.91016%2015%208.45703%2015H11.582C12.0898%2015%2012.5195%2014.6094%2012.5195%2014.0625C12.5195%2013.5547%2012.0898%2013.125%2011.582%2013.125H11.2695V9.6875C11.2695%209.17969%2010.8398%208.75%2010.332%208.75H8.45703C7.91016%208.75%207.51953%209.17969%207.51953%209.6875C7.51953%2010.2344%207.91016%2010.625%208.45703%2010.625H9.39453V13.125H8.45703ZM10.0195%205C9.31641%205%208.76953%205.58594%208.76953%206.25C8.76953%206.95312%209.31641%207.5%2010.0195%207.5C10.6836%207.5%2011.2695%206.95312%2011.2695%206.25C11.2695%205.58594%2010.6836%205%2010.0195%205Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.mds-alert--success .mds-alert-icon {
+  background-color: var(--mds-bg-feedback-success-default);
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10%2020C4.45312%2020%200%2015.5469%200%2010C0%204.49219%204.45312%200%2010%200C15.5078%200%2020%204.49219%2020%2010C20%2015.5469%2015.5078%2020%2010%2020ZM14.4141%208.16406H14.375C14.7656%207.8125%2014.7656%207.22656%2014.375%206.83594C14.0234%206.48438%2013.4375%206.48438%2013.0859%206.83594L8.75%2011.2109L6.91406%209.375C6.52344%208.98438%205.9375%208.98438%205.58594%209.375C5.19531%209.72656%205.19531%2010.3125%205.58594%2010.6641L8.08594%2013.1641C8.4375%2013.5547%209.02344%2013.5547%209.41406%2013.1641L14.4141%208.16406Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10%2020C4.45312%2020%200%2015.5469%200%2010C0%204.49219%204.45312%200%2010%200C15.5078%200%2020%204.49219%2020%2010C20%2015.5469%2015.5078%2020%2010%2020ZM14.4141%208.16406H14.375C14.7656%207.8125%2014.7656%207.22656%2014.375%206.83594C14.0234%206.48438%2013.4375%206.48438%2013.0859%206.83594L8.75%2011.2109L6.91406%209.375C6.52344%208.98438%205.9375%208.98438%205.58594%209.375C5.19531%209.72656%205.19531%2010.3125%205.58594%2010.6641L8.08594%2013.1641C8.4375%2013.5547%209.02344%2013.5547%209.41406%2013.1641L14.4141%208.16406Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+}
+
+.mds-alert--warning .mds-alert-icon {
+  background-color: var(--mds-bg-feedback-warning-default);
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2218%22%20viewBox%3D%220%200%2020%2018%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10.0193%200C10.5667%200%2011.075%200.312798%2011.3487%200.781996L19.7943%2015.1707C20.068%2015.679%2020.068%2016.2655%2019.7943%2016.7347C19.5206%2017.243%2019.0123%2017.5167%2018.4649%2017.5167H1.57377C0.987269%2017.5167%200.478972%2017.243%200.205274%2016.7347C-0.0684246%2016.2655%20-0.0684246%2015.679%200.205274%2015.1707L8.65083%200.781996C8.92452%200.312798%209.43282%200%2010.0193%200ZM10.0193%205.00477C9.47192%205.00477%209.08092%205.43487%209.08092%205.94317V10.3223C9.08092%2010.8697%209.47192%2011.2607%2010.0193%2011.2607C10.5276%2011.2607%2010.9577%2010.8697%2010.9577%2010.3223V5.94317C10.9577%205.43487%2010.5276%205.00477%2010.0193%205.00477ZM11.2705%2013.7631C11.2705%2013.0984%2010.684%2012.5119%2010.0193%2012.5119C9.31552%2012.5119%208.76812%2013.0984%208.76812%2013.7631C8.76812%2014.4669%209.31552%2015.0143%2010.0193%2015.0143C10.684%2015.0143%2011.2705%2014.4669%2011.2705%2013.7631Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2218%22%20viewBox%3D%220%200%2020%2018%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10.0193%200C10.5667%200%2011.075%200.312798%2011.3487%200.781996L19.7943%2015.1707C20.068%2015.679%2020.068%2016.2655%2019.7943%2016.7347C19.5206%2017.243%2019.0123%2017.5167%2018.4649%2017.5167H1.57377C0.987269%2017.5167%200.478972%2017.243%200.205274%2016.7347C-0.0684246%2016.2655%20-0.0684246%2015.679%200.205274%2015.1707L8.65083%200.781996C8.92452%200.312798%209.43282%200%2010.0193%200ZM10.0193%205.00477C9.47192%205.00477%209.08092%205.43487%209.08092%205.94317V10.3223C9.08092%2010.8697%209.47192%2011.2607%2010.0193%2011.2607C10.5276%2011.2607%2010.9577%2010.8697%2010.9577%2010.3223V5.94317C10.9577%205.43487%2010.5276%205.00477%2010.0193%205.00477ZM11.2705%2013.7631C11.2705%2013.0984%2010.684%2012.5119%2010.0193%2012.5119C9.31552%2012.5119%208.76812%2013.0984%208.76812%2013.7631C8.76812%2014.4669%209.31552%2015.0143%2010.0193%2015.0143C10.684%2015.0143%2011.2705%2014.4669%2011.2705%2013.7631Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+}
+
+.mds-alert--danger .mds-alert-icon {
+  background-color: var(--mds-bg-feedback-danger-default);
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10%2020C4.45312%2020%200%2015.5469%200%2010C0%204.49219%204.45312%200%2010%200C15.5078%200%2020%204.49219%2020%2010C20%2015.5469%2015.5078%2020%2010%2020ZM6.83594%206.83594C6.44531%207.22656%206.44531%207.8125%206.83594%208.16406L8.67188%2010L6.83594%2011.8359C6.44531%2012.2266%206.44531%2012.8125%206.83594%2013.1641C7.1875%2013.5547%207.77344%2013.5547%208.125%2013.1641L9.96094%2011.3281L11.7969%2013.1641C12.1875%2013.5547%2012.7734%2013.5547%2013.125%2013.1641C13.5156%2012.8125%2013.5156%2012.2266%2013.125%2011.8359L11.2891%2010L13.125%208.16406C13.5156%207.8125%2013.5156%207.22656%2013.125%206.83594C12.7734%206.48438%2012.1875%206.48438%2011.7969%206.83594L9.96094%208.67188L8.125%206.83594C7.77344%206.48438%207.1875%206.48438%206.83594%206.83594Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M10%2020C4.45312%2020%200%2015.5469%200%2010C0%204.49219%204.45312%200%2010%200C15.5078%200%2020%204.49219%2020%2010C20%2015.5469%2015.5078%2020%2010%2020ZM6.83594%206.83594C6.44531%207.22656%206.44531%207.8125%206.83594%208.16406L8.67188%2010L6.83594%2011.8359C6.44531%2012.2266%206.44531%2012.8125%206.83594%2013.1641C7.1875%2013.5547%207.77344%2013.5547%208.125%2013.1641L9.96094%2011.3281L11.7969%2013.1641C12.1875%2013.5547%2012.7734%2013.5547%2013.125%2013.1641C13.5156%2012.8125%2013.5156%2012.2266%2013.125%2011.8359L11.2891%2010L13.125%208.16406C13.5156%207.8125%2013.5156%207.22656%2013.125%206.83594C12.7734%206.48438%2012.1875%206.48438%2011.7969%206.83594L9.96094%208.67188L8.125%206.83594C7.77344%206.48438%207.1875%206.48438%206.83594%206.83594Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+}
+
+.mds-alert-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--mds-spacing-md);
+  min-inline-size: 0;
+}
+
+.mds-alert-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mds-spacing-xs);
+}
+
+.mds-alert-title {
+  margin: 0;
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-headings-6);
+  font-weight: var(--mds-font-weight-medium);
+  line-height: var(--mds-line-height-headings-6);
+  color: inherit;
+}
+
+.mds-alert-message {
+  margin: 0;
   font-family: var(--mds-font-family-base);
   font-size: var(--mds-font-size-paragraph-default);
-  /* paragraph-xs matches the Link component's own line-height token */
-  line-height: var(--mds-line-height-paragraph-xs);
-  letter-spacing: var(--mds-letter-spacing-default);
-}
-
-/* ─── Link truncation overrides (on top of the Link component styles) ────────── */
-
-/* Link is inline-flex so min-width:0 is required to allow it to shrink below
-   its natural content width when the breadcrumb row is too narrow. */
-.mds-breadcrumb__link.mds-link {
-  min-width: 0;
-}
-
-/* Truncate the text inside Link's inner label span. min-width:0 lets the flex
-   item shrink below its natural text width (flex default is min-width:auto). */
-.mds-breadcrumb__link.mds-link .mds-link__label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-  line-height: var(--mds-line-height-paragraph-default);
-}
-
-/* ─── Current page label ─────────────────────────────────────────────────────── */
-
-.mds-breadcrumb__item--current .mds-breadcrumb__label {
-  color: var(--mds-text-subtle);
-  font-weight: var(--mds-typography-font-weight-regular);
-  line-height: var(--mds-line-height-paragraph-default);
-
-  /* The span is a flex item inside the current-page <li> flex container.
-     Flex items are blockified, so overflow:hidden + text-overflow:ellipsis
-     work without an explicit display override. flex:1 1 auto fills the
-     remaining space after the ::before divider; min-width:0 allows the span
-     to shrink below its natural text width when the container is narrow. */
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* The label is focusable (tabIndex=0) so its truncation tooltip is reachable
-   by keyboard, matching the Link items' focus-visible treatment. */
-.mds-breadcrumb__item--current .mds-breadcrumb__label:focus {
-  outline: none;
-}
-
-.mds-breadcrumb__item--current .mds-breadcrumb__label:focus-visible {
-  outline: none;
-  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
-    var(--mds-focus-default);
-}
-
-/* ─── Overflow trigger ───────────────────────────────────────────────────────── */
-
-/* The overflow button is visually styled to match the Link component. */
-.mds-breadcrumb__overflow-trigger {
-  display: inline-flex;
-  align-items: center;
-  line-height: var(--mds-line-height-paragraph-default);
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  /* Colour and weight to match Link's primary resting state */
-  color: var(--mds-text-link-primary-default);
   font-weight: var(--mds-font-weight-regular);
-  text-decoration: none;
+  line-height: var(--mds-line-height-paragraph-default);
+  color: inherit;
 }
 
-.mds-breadcrumb__overflow-trigger:hover:not(:focus-visible) {
-  color: var(--mds-text-link-primary-hover);
+.mds-alert-message a,
+.mds-alert-custom a {
+  color: var(--mds-text-link-primary-default);
   text-decoration: underline;
-  text-decoration-thickness: from-font;
-  text-underline-position: from-font;
 }
 
-.mds-breadcrumb__overflow-trigger:active {
-  color: var(--mds-text-link-primary-hover);
+.mds-alert-custom {
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-default);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-default);
+  color: inherit;
 }
 
-.mds-breadcrumb__overflow-trigger:focus {
-  outline: none;
+.mds-alert-actions {
+  display: flex;
 }
 
-.mds-breadcrumb__overflow-trigger:focus-visible {
-  /* Use an inset underline so focus does not change layout height. */
-  outline: none;
-  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
-    var(--mds-focus-default);
+.mds-alert-dismiss {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Link's base focus style adds border/padding and can shift breadcrumb rows.
-   Override to a non-layout-affecting inset underline within breadcrumb only. */
-.mds-breadcrumb__link.mds-link:focus-visible {
-  padding-bottom: 0;
-  border-bottom: 0;
-  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
-    var(--mds-focus-default);
-}
-
-/* ─── Overflow link items (per-element overrides) ────────────────────────────── */
-
-/* Bootstrap's breadcrumb divider is CSS-generated via content: and is therefore
-   read aloud by screen readers (VoiceOver, NVDA, JAWS). Override it here with
-   the CSS content alt-text syntax (content: <value> / "") to keep the visual
-   separator while silencing it for assistive technologies (MDN: Breadcrumb
-   navigation — Accessibility concerns; WCAG 1.3.3). */
-.mds-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-  content: '/' / '';
-  color: var(--mds-text-muted);
-  /* Own spacing on both sides of the divider to keep gaps visually even. */
-  margin-inline: var(--mds-spacing-xs);
-  padding: 0;
-  float: none;
-}
-
-.mds-breadcrumb .breadcrumb-item + .breadcrumb-item {
-  /* Neutralize Bootstrap's physical padding so RTL/LTR both rely on the
-     symmetric divider margins above. */
-  padding-inline: 0;
+.mds-alert-dismiss-button {
+  color: inherit;
 }
 
 /* avatar/index.css */
@@ -415,9 +526,13 @@
 }
 
 /* badge/index.css */
-.mds-badge {
+.mds-badge[class] {
   display: inline-flex;
   align-items: center;
+  /* Holds its own intrinsic height regardless of taller flex siblings —
+     without this, a parent flex container's default align-items: stretch
+     would stretch the badge to match the tallest sibling in the row. */
+  align-self: flex-start;
   gap: 0;
   padding: var(--mds-spacing-xxs) var(--mds-spacing-xs);
   border-radius: var(--mds-border-radius-sm);
@@ -431,13 +546,13 @@
   vertical-align: baseline;
 }
 
-.mds-badge--has-icon {
+.mds-badge[class].mds-badge--has-icon {
   gap: var(--mds-spacing-xxs);
 }
 
 /* Normalize icon dimensions to match the badge icon token across <i> and <svg> usage. */
-.mds-badge > i,
-.mds-badge > svg {
+.mds-badge[class] > i,
+.mds-badge[class] > svg {
   width: var(--mds-icons-xxs);
   height: var(--mds-icons-xxs);
   font-size: var(--mds-icons-xxs);
@@ -445,7 +560,7 @@
 }
 
 /* Pill shape overrides the default rounded corners */
-.mds-badge--pill {
+.mds-badge[class].mds-badge--pill {
   border-radius: var(--mds-border-radius-pill);
 }
 
@@ -455,80 +570,279 @@
  * Subtle contrast (.mds-badge--subtle): light tinted background, dark feedback text, visible border.
  */
 
-.mds-badge--subtle {
+.mds-badge[class].mds-badge--subtle {
   border: var(--mds-stroke-weight-sm) solid transparent;
 }
 
 /* --- Primary --- */
-.mds-badge--primary {
+.mds-badge[class].mds-badge--primary {
   background-color: var(--mds-bg-feedback-primary-default);
   color: var(--mds-text-inverse);
 }
 
-.mds-badge--primary.mds-badge--subtle {
+.mds-badge[class].mds-badge--primary.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-primary-subtle);
   color: var(--mds-text-feedback-primary);
   border-color: var(--mds-border-feedback-primary);
 }
 
 /* --- Secondary --- */
-.mds-badge--secondary {
+.mds-badge[class].mds-badge--secondary {
   background-color: var(--mds-bg-feedback-secondary-default);
   color: var(--mds-text-feedback-secondary);
 }
 
-.mds-badge--secondary.mds-badge--subtle {
+.mds-badge[class].mds-badge--secondary.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-secondary-subtle);
   color: var(--mds-text-feedback-secondary);
   border-color: var(--mds-border-feedback-secondary);
 }
 
 /* --- Success --- */
-.mds-badge--success {
+.mds-badge[class].mds-badge--success {
   background-color: var(--mds-bg-feedback-success-default);
   color: var(--mds-text-inverse);
 }
 
-.mds-badge--success.mds-badge--subtle {
+.mds-badge[class].mds-badge--success.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-success-subtle);
   color: var(--mds-text-feedback-success);
   border-color: var(--mds-border-feedback-success);
 }
 
 /* --- Danger --- */
-.mds-badge--danger {
+.mds-badge[class].mds-badge--danger {
   background-color: var(--mds-bg-feedback-danger-default);
   color: var(--mds-text-inverse);
 }
 
-.mds-badge--danger.mds-badge--subtle {
+.mds-badge[class].mds-badge--danger.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-danger-subtle);
   color: var(--mds-text-feedback-danger);
   border-color: var(--mds-border-feedback-danger);
 }
 
 /* --- Warning --- */
-.mds-badge--warning {
+.mds-badge[class].mds-badge--warning {
   background-color: var(--mds-bg-feedback-warning-default);
   color: var(--mds-text-feedback-warning);
 }
 
-.mds-badge--warning.mds-badge--subtle {
+.mds-badge[class].mds-badge--warning.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-warning-subtle);
   color: var(--mds-text-feedback-warning);
   border-color: var(--mds-border-feedback-warning);
 }
 
 /* --- Info --- */
-.mds-badge--info {
+.mds-badge[class].mds-badge--info {
   background-color: var(--mds-bg-feedback-info-default);
   color: var(--mds-text-inverse);
 }
 
-.mds-badge--info.mds-badge--subtle {
+.mds-badge[class].mds-badge--info.mds-badge--subtle {
   background-color: var(--mds-bg-feedback-info-subtle);
   color: var(--mds-text-feedback-info);
   border-color: var(--mds-border-feedback-info);
+}
+
+/* breadcrumb/index.css */
+/* ─── List ─────────────────────────────────────────────────────────────────── */
+
+.mds-breadcrumb__list.breadcrumb {
+  /* Never wrap to a second line — labels truncate via flex shrink so the
+     trail always fits inline. */
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Items ─────────────────────────────────────────────────────────────────── */
+
+/* Every rule here is scoped to .mds-breadcrumb so it can't restyle other
+   Bootstrap breadcrumbs on the page (e.g. Moodle LMS) that share the
+   .breadcrumb-item class. */
+.mds-breadcrumb .mds-breadcrumb__item--count-2 {
+  max-width: 50%;
+}
+.mds-breadcrumb .mds-breadcrumb__item--count-3 {
+  max-width: 33.3333%;
+}
+.mds-breadcrumb .mds-breadcrumb__item--count-4 {
+  max-width: 25%;
+}
+.mds-breadcrumb .mds-breadcrumb__item--current {
+  max-width: 50%;
+}
+
+.mds-breadcrumb .mds-breadcrumb__item {
+  /* Each item is its own flex row: the Bootstrap ::before divider and the
+     link/span become flex siblings rather than inline boxes. This eliminates
+     the inline-box strut that previously added 2 px to every link item
+     (making them 26 px while the current-page item was 24 px), and prevents
+     the ::before + span from wrapping to a second line when the <li> is
+     narrower than the span's natural width. Bootstrap's float:left on
+     ::before is ignored inside a flex container - the divider becomes a
+     zero-shrink flex item at its natural content size, which is correct. */
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* --- Link items --------------------------------------------------------------------------- */
+
+/* When a Tooltip wraps a Link it becomes a flex item inside the <li> flex
+   container. Its default min-width:auto prevents the flex algorithm from
+   shrinking the wrapper, causing text overlap on narrow viewports. Overriding
+   to min-width:0 lets the wrapper shrink freely alongside the other items. */
+.mds-breadcrumb .mds-breadcrumb__item .mds-tooltip {
+  min-width: 0;
+}
+
+/* The overflow trigger is wrapped by Dropdown's root element (.mds-dropdown,
+   display:inline-flex) so it can reuse Dropdown's floating-ui orchestration.
+   display:contents makes that wrapper transparent to the <li> flex layout,
+   matching the un-wrapped button that used to be the direct flex item. */
+.mds-breadcrumb__item--overflow .mds-dropdown {
+  display: contents;
+}
+
+/* ─── Shared text styles ─────────────────────────────────────────────────────── */
+
+/* The overflow trigger button and current-page label are not rendered by the
+   Link component, so they need explicit typography to match it. Token values
+   mirror those set in link.css so the row stays visually uniform. */
+.mds-breadcrumb__overflow-trigger,
+.mds-breadcrumb__item--current .mds-breadcrumb__label {
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-default);
+  /* paragraph-xs matches the Link component's own line-height token */
+  line-height: var(--mds-line-height-paragraph-xs);
+  letter-spacing: var(--mds-letter-spacing-default);
+}
+
+/* ─── Link truncation overrides (on top of the Link component styles) ────────── */
+
+/* Link is inline-flex so min-width:0 is required to allow it to shrink below
+   its natural content width when the breadcrumb row is too narrow. */
+.mds-breadcrumb__link.mds-link {
+  min-width: 0;
+}
+
+/* Truncate the text inside Link's inner label span. min-width:0 lets the flex
+   item shrink below its natural text width (flex default is min-width:auto). */
+.mds-breadcrumb__link.mds-link .mds-link__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  line-height: var(--mds-line-height-paragraph-default);
+}
+
+/* ─── Current page label ─────────────────────────────────────────────────────── */
+
+.mds-breadcrumb__item--current .mds-breadcrumb__label {
+  color: var(--mds-text-subtle);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-default);
+
+  /* The span is a flex item inside the current-page <li> flex container.
+     Flex items are blockified, so overflow:hidden + text-overflow:ellipsis
+     work without an explicit display override. flex:1 1 auto fills the
+     remaining space after the ::before divider; min-width:0 allows the span
+     to shrink below its natural text width when the container is narrow. */
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The label is focusable (tabIndex=0) so its truncation tooltip is reachable
+   by keyboard, matching the Link items' focus-visible treatment. */
+.mds-breadcrumb__item--current .mds-breadcrumb__label:focus {
+  outline: none;
+}
+
+.mds-breadcrumb__item--current .mds-breadcrumb__label:focus-visible {
+  outline: none;
+  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
+    var(--mds-focus-default);
+}
+
+/* ─── Overflow trigger ───────────────────────────────────────────────────────── */
+
+/* The overflow button is visually styled to match the Link component. */
+.mds-breadcrumb__overflow-trigger {
+  display: inline-flex;
+  align-items: center;
+  line-height: var(--mds-line-height-paragraph-default);
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* Colour and weight to match Link's primary resting state */
+  color: var(--mds-text-link-primary-default);
+  font-weight: var(--mds-font-weight-regular);
+  text-decoration: none;
+}
+
+.mds-breadcrumb__overflow-trigger:hover:not(:focus-visible) {
+  color: var(--mds-text-link-primary-hover);
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+}
+
+.mds-breadcrumb__overflow-trigger:active {
+  color: var(--mds-text-link-primary-hover);
+}
+
+.mds-breadcrumb__overflow-trigger:focus {
+  outline: none;
+}
+
+.mds-breadcrumb__overflow-trigger:focus-visible {
+  /* Use an inset underline so focus does not change layout height. */
+  outline: none;
+  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
+    var(--mds-focus-default);
+}
+
+/* Link's base focus style adds border/padding and can shift breadcrumb rows.
+   Override to a non-layout-affecting inset underline within breadcrumb only. */
+.mds-breadcrumb__link.mds-link:focus-visible {
+  padding-bottom: 0;
+  border-bottom: 0;
+  box-shadow: inset 0 calc(-1 * var(--mds-stroke-weight-md)) 0
+    var(--mds-focus-default);
+}
+
+/* ─── Overflow link items (per-element overrides) ────────────────────────────── */
+
+/* Bootstrap's breadcrumb divider is CSS-generated via content: and is therefore
+   read aloud by screen readers (VoiceOver, NVDA, JAWS). Override it here with
+   the CSS content alt-text syntax (content: <value> / "") to keep the visual
+   separator while silencing it for assistive technologies (MDN: Breadcrumb
+   navigation — Accessibility concerns; WCAG 1.3.3). */
+.mds-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+  content: '/' / '';
+  color: var(--mds-text-muted);
+  /* Own spacing on both sides of the divider to keep gaps visually even. */
+  margin-inline: var(--mds-spacing-xs);
+  padding: 0;
+  float: none;
+}
+
+.mds-breadcrumb .breadcrumb-item + .breadcrumb-item {
+  /* Neutralize Bootstrap's physical padding so RTL/LTR both rely on the
+     symmetric divider margins above. */
+  padding-inline: 0;
 }
 
 /* button/index.css */
@@ -1403,61 +1717,77 @@
 .mds-close-button.btn-close {
   inline-size: var(--mds-icons-md);
   block-size: var(--mds-icons-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border-radius: var(--mds-border-radius-xs);
-  color: var(--mds-text-default);
-  background-color: currentColor;
+  color: var(--mds-text-subtle);
+  background-color: transparent;
   background-image: none;
-  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M4.12109%205.87891L8.22266%209.98047L4.12109%2014.1211C3.61328%2014.5898%203.61328%2015.4102%204.12109%2015.8789C4.58984%2016.3867%205.41016%2016.3867%205.87891%2015.8789L9.98047%2011.7773L14.1211%2015.8789C14.5898%2016.3867%2015.4102%2016.3867%2015.8789%2015.8789C16.3867%2015.4102%2016.3867%2014.5898%2015.8789%2014.1211L11.7773%209.98047L15.8789%205.87891C16.3867%205.41016%2016.3867%204.58984%2015.8789%204.12109C15.4102%203.61328%2014.5898%203.61328%2014.1211%204.12109L9.98047%208.22266L5.87891%204.12109C5.41016%203.61328%204.58984%203.61328%204.12109%204.12109C3.61328%204.58984%203.61328%205.41016%204.12109%205.87891Z%22%20fill%3D%22%231D2125%22%2F%3E%20%3C%2Fsvg%3E');
+  opacity: 1;
+}
+
+.mds-close-button.btn-close::before {
+  content: '';
+  display: block;
+  inline-size: var(--mds-icons-xs);
+  block-size: var(--mds-icons-xs);
+  background-color: currentColor;
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M0.365054%202.04992L4.29641%205.98128L0.365054%209.95008C-0.121685%2010.3994%20-0.121685%2011.1856%200.365054%2011.6349C0.814352%2012.1217%201.60062%2012.1217%202.04992%2011.6349L5.98128%207.70359L9.95008%2011.6349C10.3994%2012.1217%2011.1856%2012.1217%2011.6349%2011.6349C12.1217%2011.1856%2012.1217%2010.3994%2011.6349%209.95008L7.70359%205.98128L11.6349%202.04992C12.1217%201.60062%2012.1217%200.814353%2011.6349%200.365055C11.1856%20-0.121685%2010.3994%20-0.121685%209.95008%200.365055L5.98128%204.29641L2.04992%200.365055C1.60062%20-0.121685%200.814352%20-0.121685%200.365054%200.365055C-0.121685%200.814353%20-0.121685%201.60062%200.365054%202.04992Z%22%20fill%3D%22%23495057%22%2F%3E%20%3C%2Fsvg%3E');
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: var(--mds-icons-md) var(--mds-icons-md);
-  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M4.12109%205.87891L8.22266%209.98047L4.12109%2014.1211C3.61328%2014.5898%203.61328%2015.4102%204.12109%2015.8789C4.58984%2016.3867%205.41016%2016.3867%205.87891%2015.8789L9.98047%2011.7773L14.1211%2015.8789C14.5898%2016.3867%2015.4102%2016.3867%2015.8789%2015.8789C16.3867%2015.4102%2016.3867%2014.5898%2015.8789%2014.1211L11.7773%209.98047L15.8789%205.87891C16.3867%205.41016%2016.3867%204.58984%2015.8789%204.12109C15.4102%203.61328%2014.5898%203.61328%2014.1211%204.12109L9.98047%208.22266L5.87891%204.12109C5.41016%203.61328%204.58984%203.61328%204.12109%204.12109C3.61328%204.58984%203.61328%205.41016%204.12109%205.87891Z%22%20fill%3D%22%231D2125%22%2F%3E%20%3C%2Fsvg%3E');
+  mask-size: 100%;
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M0.365054%202.04992L4.29641%205.98128L0.365054%209.95008C-0.121685%2010.3994%20-0.121685%2011.1856%200.365054%2011.6349C0.814352%2012.1217%201.60062%2012.1217%202.04992%2011.6349L5.98128%207.70359L9.95008%2011.6349C10.3994%2012.1217%2011.1856%2012.1217%2011.6349%2011.6349C12.1217%2011.1856%2012.1217%2010.3994%2011.6349%209.95008L7.70359%205.98128L11.6349%202.04992C12.1217%201.60062%2012.1217%200.814353%2011.6349%200.365055C11.1856%20-0.121685%2010.3994%20-0.121685%209.95008%200.365055L5.98128%204.29641L2.04992%200.365055C1.60062%20-0.121685%200.814352%20-0.121685%200.365054%200.365055C-0.121685%200.814353%20-0.121685%201.60062%200.365054%202.04992Z%22%20fill%3D%22%23495057%22%2F%3E%20%3C%2Fsvg%3E');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  -webkit-mask-size: var(--mds-icons-md) var(--mds-icons-md);
-  opacity: 0.6;
+  -webkit-mask-size: 100%;
 }
 
 .mds-close-button.btn-close:hover {
-  opacity: 0.75;
+  color: var(--mds-text-emphasis);
 }
 
 .mds-close-button.btn-close:focus {
   box-shadow: none;
+  outline: none;
 }
 
 .mds-close-button.btn-close:focus-visible {
+  color: var(--mds-text-emphasis);
   outline: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
   outline-offset: 0;
   box-shadow: none;
-  opacity: 1;
 }
 
 .mds-close-button.btn-close:disabled,
 .mds-close-button.btn-close.disabled {
-  opacity: 0.25;
+  color: var(--mds-text-muted);
 }
 
 .mds-close-button.btn-close.mds-close-button--sm {
   inline-size: var(--mds-icons-sm);
   block-size: var(--mds-icons-sm);
-  mask-size: var(--mds-icons-sm) var(--mds-icons-sm);
-  -webkit-mask-size: var(--mds-icons-sm) var(--mds-icons-sm);
+}
+
+.mds-close-button.btn-close.mds-close-button--sm::before {
+  inline-size: var(--mds-icons-xxs);
+  block-size: var(--mds-icons-xxs);
 }
 
 .mds-close-button.btn-close.mds-close-button--md {
   inline-size: var(--mds-icons-md);
   block-size: var(--mds-icons-md);
-  mask-size: var(--mds-icons-md) var(--mds-icons-md);
-  -webkit-mask-size: var(--mds-icons-md) var(--mds-icons-md);
 }
 
 .mds-close-button.btn-close.mds-close-button--lg {
   inline-size: var(--mds-icons-lg);
   block-size: var(--mds-icons-lg);
-  mask-size: var(--mds-icons-lg) var(--mds-icons-lg);
-  -webkit-mask-size: var(--mds-icons-lg) var(--mds-icons-lg);
+}
+
+.mds-close-button.btn-close.mds-close-button--lg::before {
+  inline-size: var(--mds-icons-sm);
+  block-size: var(--mds-icons-sm);
 }
 
 /* dropdown/index.css */
@@ -2053,8 +2383,351 @@
   outline-offset: 0;
 }
 
+/* input/index.css */
+/* Input component
+  Single-line text-like field with label and feedback/support text.
+  Shared field layout classes are also reused by PasswordInput. */
+
+.mds-input[class] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mds-spacing-xxs);
+
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-regular);
+}
+
+.mds-input[class] .mds-input-label-row {
+  display: flex;
+  align-items: center;
+  min-height: 16px;
+  gap: var(--mds-spacing-xxs);
+}
+
+.mds-input[class] .mds-input-label {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-xxs);
+
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-medium);
+  line-height: var(--mds-line-height-paragraph-xs);
+  color: var(--mds-text-subtle);
+}
+
+.mds-input[class] .mds-input-required {
+  color: var(--mds-text-danger);
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-medium);
+}
+
+/* This wrapper (not the <input>) carries the field's visual chrome —
+   border, radius, background — because the start icon, input, and trailing
+   action are laid out as real flex siblings inside it. That keeps each
+   element's hit box matching what it looks like, rather than the previous
+   approach of absolutely-positioning icons on top of the input's full-width
+   box, which let clicks/hover meant for the input land "through" the
+   overlaid trailing action and vice versa. Interactive state (hover, focus,
+   invalid, disabled, ...) is still driven by the <input>'s own
+   pseudo-classes, projected onto the wrapper via :has(). */
+.mds-input[class] .mds-input-field-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-xs);
+  width: 100%;
+  height: 42px;
+  padding-inline: var(--mds-spacing-sm);
+
+  background-color: transparent;
+  border: var(--mds-stroke-weight-sm) solid var(--mds-border-default);
+  border-radius: var(--mds-border-radius-sm);
+  transition: background-color 150ms ease;
+}
+
+.mds-input[class] .mds-input-field[class] {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+  width: 100%;
+  /* Resets Bootstrap's .form-control padding-inline (0.75rem) — horizontal
+     spacing is now owned entirely by the wrapper's padding-inline + gap. */
+  padding: var(--mds-spacing-xs) 0;
+
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-default);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-default);
+  letter-spacing: var(--mds-letter-spacing-default);
+  color: var(--mds-text-default);
+
+  background-color: transparent;
+  border: none;
+}
+
+/* Reset Bootstrap's .form-control:focus box-shadow (border-color is moot
+   since the field's own border is always none) — focus visuals now live on
+   the wrapper via :has(), not on the field itself. */
+.mds-input[class] .mds-input-field[class]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.mds-input[class] .mds-input-field[class]::placeholder {
+  color: var(--mds-text-muted);
+  opacity: 1;
+}
+
+/* Hide the native number spin buttons; consumers add their own stepper
+   actions via mds-input-actions when needed. */
+.mds-input[class] .mds-input-field[class]::-webkit-outer-spin-button,
+.mds-input[class] .mds-input-field[class]::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.mds-input[class] .mds-input-field[type='number'][class] {
+  -moz-appearance: textfield;
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field[class]:hover:not(:disabled):not(:focus)
+  ) {
+  background-color: var(--mds-bg-surface-default);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field[class]:active:not(
+        :disabled,
+        .mds-input-field--readonly,
+        .is-invalid
+      )
+  ) {
+  background-color: var(--mds-bg-surface-default);
+  border-color: var(--mds-border-interactive-primary-default);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field.is-invalid[class]:active:not(
+        :disabled,
+        .mds-input-field--readonly
+      )
+  ) {
+  background-color: var(--mds-bg-surface-default);
+}
+
+.mds-input[class] .mds-input-field-wrapper:has(.mds-input-field[class]:focus) {
+  background-color: var(--mds-bg-surface-default);
+  border-color: var(--mds-border-default);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(.mds-input-field[class]:focus-visible) {
+  outline: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
+  outline-offset: 0;
+  border-color: var(--mds-focus-default);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field--pointer-focus[class]:focus-visible
+  ) {
+  outline: none;
+  border-color: var(--mds-border-interactive-primary-default);
+}
+
+/* Overrides Bootstrap's own .form-control.is-invalid validation icon —
+   this component renders its own invalid icon as a flex sibling instead,
+   spaced by the wrapper's gap. */
+.mds-input[class] .mds-input-field.is-invalid[class] {
+  background-image: none;
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(.mds-input-field.is-invalid[class]) {
+  border-color: var(--mds-border-interactive-danger-default);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field.is-invalid[class]:focus-visible
+  ) {
+  outline-color: var(--mds-focus-danger);
+  border-color: var(--mds-focus-danger);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(
+    .mds-input-field--pointer-focus.is-invalid[class]:focus-visible
+  ) {
+  outline: none;
+  border-color: var(--mds-border-interactive-danger-default);
+}
+
+.mds-input[class] .mds-input-field--readonly[class] {
+  color: var(--mds-text-muted);
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(.mds-input-field--readonly[class]) {
+  border-color: var(--mds-border-default);
+}
+
+.mds-input[class] .mds-input-field[class]:disabled {
+  color: var(--mds-text-muted);
+  cursor: not-allowed;
+}
+
+.mds-input[class]
+  .mds-input-field-wrapper:has(.mds-input-field[class]:disabled) {
+  background-color: var(--mds-bg-surface-strong);
+  border-color: var(--mds-border-interactive-secondary-default);
+}
+
+.mds-input[class] .mds-input-start-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  color: var(--mds-text-default);
+  font-size: var(--mds-icons-xs);
+  line-height: 1;
+}
+
+.mds-input[class] .mds-input-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--mds-spacing-xxs);
+}
+
+.mds-input[class] .mds-input-invalid-icon {
+  color: var(--mds-text-danger);
+  font-size: var(--mds-icons-xs);
+  line-height: 1;
+}
+
+.mds-input[class] .mds-input-supporting-text,
+.mds-input[class] .mds-input-invalid-feedback {
+  margin: 0;
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-small);
+  letter-spacing: var(--mds-letter-spacing-default);
+}
+
+.mds-input[class] .mds-input-supporting-text {
+  color: var(--mds-text-muted);
+}
+
+/* Supporting text remains visible without invalid feedback, so it adopts the
+   invalid field colour to clearly communicate the validation state. */
+.mds-input[class]:has(.mds-input-field.is-invalid:not(:disabled))
+  .mds-input-supporting-text {
+  color: var(--mds-text-danger);
+}
+
+.mds-input[class] .mds-input-invalid-feedback {
+  color: var(--mds-text-danger);
+}
+
+/* input/index.css */
+/* PasswordInput component
+   Wrapper hook class for password-specific composition over Input. */
+
+/* Disabled buttons don't receive pointer events, so cursor must be set on
+   the (non-disabled) actions wrapper instead of the toggle itself. */
+.mds-password-input[class]
+  .mds-input-actions:has(.mds-input-password-toggle:disabled) {
+  cursor: not-allowed;
+}
+
+/* Suppresses Edge/IE's built-in password-reveal and clear icons so they don't
+   render alongside the custom visibility toggle button. */
+.mds-password-input[class] .mds-input-field[class]::-ms-reveal,
+.mds-password-input[class] .mds-input-field[class]::-ms-clear {
+  display: none;
+}
+
+/* Masked dots read as too light at regular weight, so the field is bolded
+   only once it holds a masked value; the empty/placeholder state and
+   revealed (type="text") text stay at the shared Input weight. */
+.mds-password-input[class]
+  .mds-input-field[type='password']:not(:placeholder-shown) {
+  font-weight: var(--mds-font-weight-bold);
+}
+
+/* Button's own icon rules (.mds-btn.btn.mds-btn--icon-only i, etc.) size this
+   <i> to its standard icon-slot box, which keeps the toggle button's overall
+   size exactly as button.css defines it (28px, per Figma). The artwork
+   itself is Figma-accurate and slightly larger than that slot, so it is
+   centered with flexbox (same technique Figma's own layout uses) rather
+   than inset+margin, which centers unevenly once the content overflows
+   its box. */
+.mds-input-password-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mds-input-password-toggle-icon::before {
+  content: '';
+  display: block;
+  /* Prevents the flex container from shrinking this pseudo-element down to
+     its 12x12 box; the Figma artwork is intentionally larger and must
+     overflow the icon slot rather than being scaled to fit it. */
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+/* input-eye.svg's viewBox is padded (matted, not scaled) to match
+   input-eye-slash.svg's 15x12 canvas - the slash needs the extra room for
+   its diagonal line, and the open eye has no equivalent use for it. Giving
+   both icons the same canvas size, with the eye shape centered the same way
+   in each, means centering this box also keeps the eyelid glyph itself
+   visually anchored (and the same overall size) across the toggle, without
+   touching either path's geometry. */
+.mds-input-password-toggle-icon--hidden::before,
+.mds-input-password-toggle-icon--visible::before {
+  inline-size: 15px; /* Figma fixed SVG bounds; input-eye.svg is 13.5x10.5, matted to 15x12. */
+  block-size: 12px; /* Figma fixed SVG bounds; input-eye.svg is 13.5x10.5, matted to 15x12. */
+}
+
+.mds-input-password-toggle-icon--hidden::before {
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2215%22%20height%3D%2212%22%20viewBox%3D%22-0.75%20-0.75%2015%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M6.75586%200C8.63086%200%2010.1543%200.867188%2011.2559%201.89844C12.3574%202.90625%2013.084%204.125%2013.4355%204.96875C13.5059%205.15625%2013.5059%205.36719%2013.4355%205.55469C13.084%206.375%2012.3574%207.59375%2011.2559%208.625C10.1543%209.65625%208.63086%2010.5%206.75586%2010.5C4.85742%2010.5%203.33398%209.65625%202.23242%208.625C1.13086%207.59375%200.404297%206.375%200.0527344%205.55469C-0.0175781%205.36719%20-0.0175781%205.15625%200.0527344%204.96875C0.404297%204.125%201.13086%202.90625%202.23242%201.89844C3.33398%200.867188%204.85742%200%206.75586%200ZM3.38086%205.25C3.38086%206.46875%204.01367%207.57031%205.06836%208.17969C6.09961%208.78906%207.38867%208.78906%208.44336%208.17969C9.47461%207.57031%2010.1309%206.46875%2010.1309%205.25C10.1309%204.05469%209.47461%202.95312%208.44336%202.34375C7.38867%201.73438%206.09961%201.73438%205.06836%202.34375C4.01367%202.95312%203.38086%204.05469%203.38086%205.25ZM6.75586%203.75C6.75586%203.58594%206.70898%203.44531%206.66211%203.28125C6.61523%203.16406%206.70898%203%206.84961%203C7.78711%203.04688%208.6543%203.70312%208.91211%204.6875C9.24023%205.88281%208.53711%207.10156%207.31836%207.42969C6.12305%207.75781%204.88086%207.03125%204.57617%205.83594C4.5293%205.67188%204.50586%205.50781%204.50586%205.36719C4.48242%205.22656%204.64648%205.13281%204.76367%205.17969C4.92773%205.22656%205.06836%205.25%205.25586%205.25C6.07617%205.25%206.75586%204.59375%206.75586%203.75Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2215%22%20height%3D%2212%22%20viewBox%3D%22-0.75%20-0.75%2015%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M6.75586%200C8.63086%200%2010.1543%200.867188%2011.2559%201.89844C12.3574%202.90625%2013.084%204.125%2013.4355%204.96875C13.5059%205.15625%2013.5059%205.36719%2013.4355%205.55469C13.084%206.375%2012.3574%207.59375%2011.2559%208.625C10.1543%209.65625%208.63086%2010.5%206.75586%2010.5C4.85742%2010.5%203.33398%209.65625%202.23242%208.625C1.13086%207.59375%200.404297%206.375%200.0527344%205.55469C-0.0175781%205.36719%20-0.0175781%205.15625%200.0527344%204.96875C0.404297%204.125%201.13086%202.90625%202.23242%201.89844C3.33398%200.867188%204.85742%200%206.75586%200ZM3.38086%205.25C3.38086%206.46875%204.01367%207.57031%205.06836%208.17969C6.09961%208.78906%207.38867%208.78906%208.44336%208.17969C9.47461%207.57031%2010.1309%206.46875%2010.1309%205.25C10.1309%204.05469%209.47461%202.95312%208.44336%202.34375C7.38867%201.73438%206.09961%201.73438%205.06836%202.34375C4.01367%202.95312%203.38086%204.05469%203.38086%205.25ZM6.75586%203.75C6.75586%203.58594%206.70898%203.44531%206.66211%203.28125C6.61523%203.16406%206.70898%203%206.84961%203C7.78711%203.04688%208.6543%203.70312%208.91211%204.6875C9.24023%205.88281%208.53711%207.10156%207.31836%207.42969C6.12305%207.75781%204.88086%207.03125%204.57617%205.83594C4.5293%205.67188%204.50586%205.50781%204.50586%205.36719C4.48242%205.22656%204.64648%205.13281%204.76367%205.17969C4.92773%205.22656%205.06836%205.25%205.25586%205.25C6.07617%205.25%206.75586%204.59375%206.75586%203.75Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+}
+
+.mds-input-password-toggle-icon--visible::before {
+  mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2215%22%20height%3D%2212%22%20viewBox%3D%220%200%2015%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M0.906279%200.132842L3.53128%202.1719C4.58597%201.37503%205.89847%200.742217%207.51565%200.742217C9.39065%200.742217%2010.9141%201.6094%2012.0157%202.64065C13.1172%203.64847%2013.8438%204.86722%2014.1953%205.71097C14.2657%205.89847%2014.2657%206.1094%2014.1953%206.2969C13.8907%207.0469%2013.2578%208.12503%2012.3203%209.06253L14.7813%2011.0078C15.0391%2011.1953%2015.086%2011.5469%2014.875%2011.7813C14.6875%2012.0391%2014.336%2012.086%2014.1016%2011.875L0.226592%201.00003C-0.0312207%200.812529%20-0.0780957%200.460967%200.132842%200.226592C0.320342%20-0.0312207%200.671904%20-0.0780957%200.906279%200.132842ZM5.24222%203.50784L7.35159%205.1719C7.44534%204.96097%207.51565%204.75003%207.51565%204.51565C7.51565%204.32815%207.46878%204.18753%207.4219%204.02347C7.39847%203.90628%207.46878%203.74222%207.6094%203.76565C8.57034%203.78909%209.41409%204.44534%209.6719%205.42972C9.81253%205.94534%209.76565%206.46097%209.57815%206.90628L10.4688%207.6094C10.7266%207.14065%2010.8907%206.57815%2010.8907%205.99222C10.8907%204.14065%209.36722%202.61722%207.51565%202.61722C6.62503%202.61722%205.82815%202.96878%205.24222%203.50784ZM8.75784%209.13284L10.4688%2010.4922C9.60159%2010.961%208.61722%2011.2422%207.51565%2011.2422C5.61722%2011.2422%204.09378%2010.3985%202.99222%209.36722C1.89065%208.33597%201.16409%207.11722%200.812529%206.2969C0.742217%206.1094%200.742217%205.89847%200.812529%205.71097C1.0469%205.1719%201.4219%204.49222%201.96097%203.78909L4.16409%205.52347C4.14065%205.68753%204.14065%205.85159%204.14065%205.99222C4.14065%207.86722%205.64065%209.36722%207.51565%209.36722C7.93753%209.36722%208.3594%209.2969%208.75784%209.13284Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20width%3D%2215%22%20height%3D%2212%22%20viewBox%3D%220%200%2015%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M0.906279%200.132842L3.53128%202.1719C4.58597%201.37503%205.89847%200.742217%207.51565%200.742217C9.39065%200.742217%2010.9141%201.6094%2012.0157%202.64065C13.1172%203.64847%2013.8438%204.86722%2014.1953%205.71097C14.2657%205.89847%2014.2657%206.1094%2014.1953%206.2969C13.8907%207.0469%2013.2578%208.12503%2012.3203%209.06253L14.7813%2011.0078C15.0391%2011.1953%2015.086%2011.5469%2014.875%2011.7813C14.6875%2012.0391%2014.336%2012.086%2014.1016%2011.875L0.226592%201.00003C-0.0312207%200.812529%20-0.0780957%200.460967%200.132842%200.226592C0.320342%20-0.0312207%200.671904%20-0.0780957%200.906279%200.132842ZM5.24222%203.50784L7.35159%205.1719C7.44534%204.96097%207.51565%204.75003%207.51565%204.51565C7.51565%204.32815%207.46878%204.18753%207.4219%204.02347C7.39847%203.90628%207.46878%203.74222%207.6094%203.76565C8.57034%203.78909%209.41409%204.44534%209.6719%205.42972C9.81253%205.94534%209.76565%206.46097%209.57815%206.90628L10.4688%207.6094C10.7266%207.14065%2010.8907%206.57815%2010.8907%205.99222C10.8907%204.14065%209.36722%202.61722%207.51565%202.61722C6.62503%202.61722%205.82815%202.96878%205.24222%203.50784ZM8.75784%209.13284L10.4688%2010.4922C9.60159%2010.961%208.61722%2011.2422%207.51565%2011.2422C5.61722%2011.2422%204.09378%2010.3985%202.99222%209.36722C1.89065%208.33597%201.16409%207.11722%200.812529%206.2969C0.742217%206.1094%200.742217%205.89847%200.812529%205.71097C1.0469%205.1719%201.4219%204.49222%201.96097%203.78909L4.16409%205.52347C4.14065%205.68753%204.14065%205.85159%204.14065%205.99222C4.14065%207.86722%205.64065%209.36722%207.51565%209.36722C7.93753%209.36722%208.3594%209.2969%208.75784%209.13284Z%22%20fill%3D%22currentColor%22%2F%3E%20%3C%2Fsvg%3E');
+}
+
+/* input/index.css */
+/* SearchInput component
+   Wrapper hook class for search-specific composition over Input. */
+
+/* Suppresses the native browser affordances for type="search" (Chrome/Safari's
+   built-in clear "x" and any decorative padding) so only the custom clear
+   button renders. */
+.mds-search-input[class] .mds-input-field[class]::-webkit-search-cancel-button,
+.mds-search-input[class] .mds-input-field[class]::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 /* link/index.css */
-.mds-link {
+.mds-link[class] {
   display: inline-flex;
   align-items: center;
   gap: var(--mds-spacing-xs);
@@ -2070,18 +2743,18 @@
   cursor: pointer;
 }
 
-.mds-link:hover:not(:focus-visible) {
+.mds-link[class]:hover:not(:focus-visible) {
   color: var(--mds-text-link-primary-hover);
 }
 
-.mds-link:active {
+.mds-link[class]:active {
   color: var(--mds-text-link-primary-hover);
 }
 
 /* Underline on hover applies only to the label text, not the icon.
    Pressed state has no underline (Figma). Thickness and position use
    from-font so the underline follows the font's own metrics. */
-.mds-link:hover:not(:focus-visible) .mds-link__label {
+.mds-link[class]:hover:not(:focus-visible) .mds-link__label {
   text-decoration: underline;
   text-decoration-thickness: from-font;
   text-underline-position: from-font;
@@ -2089,32 +2762,36 @@
 
 /* Slide icon toward the label on hover using transform so the link node width
    stays constant (gap remains --mds-spacing-xs; only the icon moves visually). */
-.mds-link:hover:not(:focus-visible) .mds-link__icon:first-child {
+.mds-link[class]:hover:not(:focus-visible) .mds-link__icon:first-child {
   transform: translateX(var(--mds-spacing-xxs));
 }
 
-.mds-link:hover:not(:focus-visible) .mds-link__icon:last-child {
+.mds-link[class]:hover:not(:focus-visible) .mds-link__icon:last-child {
   transform: translateX(calc(-1 * var(--mds-spacing-xxs)));
 }
 
-[dir='rtl'] .mds-link:hover:not(:focus-visible) .mds-link__icon:first-child {
+[dir='rtl']
+  .mds-link[class]:hover:not(:focus-visible)
+  .mds-link__icon:first-child {
   transform: translateX(calc(-1 * var(--mds-spacing-xxs)));
 }
 
-[dir='rtl'] .mds-link:hover:not(:focus-visible) .mds-link__icon:last-child {
+[dir='rtl']
+  .mds-link[class]:hover:not(:focus-visible)
+  .mds-link__icon:last-child {
   transform: translateX(var(--mds-spacing-xxs));
 }
 
 /* Reset icon position on press */
-.mds-link:active .mds-link__icon {
+.mds-link[class]:active .mds-link__icon {
   transform: none;
 }
 
-.mds-link:focus {
+.mds-link[class]:focus {
   outline: none;
 }
 
-.mds-link:focus-visible {
+.mds-link[class]:focus-visible {
   /* Bottom-only focus underline matching Figma: 2px border-bottom, 1px gap below content */
   outline: none;
   border-radius: 0;
@@ -2122,43 +2799,62 @@
   border-bottom: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
 }
 
-.mds-link.mds-link--secondary {
+.mds-link[class].mds-link--secondary {
   color: var(--mds-text-subtle);
 }
 
-.mds-link.mds-link--secondary:hover:not(:focus-visible),
-.mds-link.mds-link--secondary:active {
+.mds-link[class].mds-link--secondary:hover:not(:focus-visible),
+.mds-link[class].mds-link--secondary:active {
   color: var(--mds-text-default);
 }
 
-.mds-link.mds-link--disabled,
-.mds-link.mds-link--disabled:hover,
-.mds-link.mds-link--disabled:active {
+/* Inline links stay underlined at rest and inherit surrounding paragraph type. */
+.mds-link[class].mds-link--inline {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.mds-link[class].mds-link--inline .mds-link__label {
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+}
+
+/* Inline focus uses only the focus stroke (no stacked underline). */
+.mds-link[class].mds-link--inline:focus-visible .mds-link__label {
+  text-decoration: none;
+}
+
+.mds-link[class].mds-link--disabled,
+.mds-link[class].mds-link--disabled:hover,
+.mds-link[class].mds-link--disabled:active {
   color: var(--mds-text-link-primary-disabled);
   pointer-events: none;
 }
 
-.mds-link.mds-link--disabled .mds-link__icon,
-.mds-link.mds-link--disabled:hover .mds-link__icon,
-.mds-link.mds-link--disabled:active .mds-link__icon {
+.mds-link[class].mds-link--disabled .mds-link__icon,
+.mds-link[class].mds-link--disabled:hover .mds-link__icon,
+.mds-link[class].mds-link--disabled:active .mds-link__icon {
   transform: none;
 }
 
-.mds-link.mds-link--disabled .mds-link__label,
-.mds-link.mds-link--disabled:hover .mds-link__label,
-.mds-link.mds-link--disabled:active .mds-link__label {
+.mds-link[class].mds-link--disabled .mds-link__label,
+.mds-link[class].mds-link--disabled:hover .mds-link__label,
+.mds-link[class].mds-link--disabled:active .mds-link__label {
   text-decoration: none;
 }
 
-.mds-link.mds-link--secondary.mds-link--disabled,
-.mds-link.mds-link--secondary.mds-link--disabled:hover,
-.mds-link.mds-link--secondary.mds-link--disabled:active {
+.mds-link[class].mds-link--secondary.mds-link--disabled,
+.mds-link[class].mds-link--secondary.mds-link--disabled:hover,
+.mds-link[class].mds-link--secondary.mds-link--disabled:active {
   color: var(--mds-text-muted);
 }
 
-.mds-link__icon,
-.mds-link__icon i,
-.mds-link__icon svg {
+.mds-link[class] .mds-link__icon,
+.mds-link[class] .mds-link__icon i,
+.mds-link[class] .mds-link__icon svg {
   inline-size: var(--mds-icons-xs);
   block-size: var(--mds-icons-xs);
   font-size: var(--mds-icons-xs);
@@ -2166,14 +2862,14 @@
   flex-shrink: 0;
 }
 
-.mds-link__icon {
+.mds-link[class] .mds-link__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: transform 150ms ease;
 }
 
-.mds-link__label {
+.mds-link[class] .mds-link__label {
   text-align: start;
 }
 
@@ -2740,7 +3436,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--mds-spacing-xs);
-  padding-block: var(--mds-spacing-xxs);
+  padding-block: var(--mds-spacing-none);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -2750,12 +3446,15 @@
 }
 
 .mds-switch-label {
-  color: var(--mds-text-default);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 18px; /* Intentional Figma fixed min-height size. */
+  color: var(--mds-text-subtle);
   user-select: none;
   white-space: nowrap;
   font-family: var(--mds-font-family-base);
-  font-size: var(--mds-font-size-paragraph-default);
-  font-weight: var(--mds-font-weight-regular);
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-medium);
   line-height: var(--mds-line-height-paragraph-xs);
   letter-spacing: var(--mds-letter-spacing-default);
 }
@@ -2982,6 +3681,383 @@
   .mds-switch-icon-item {
     transition: none;
   }
+}
+
+/* tag/index.css */
+.mds-tag[class] {
+  display: inline-flex;
+  align-items: center;
+  /* Holds its own intrinsic height regardless of taller flex siblings —
+     without this, a parent flex container's default align-items: stretch
+     would stretch the tag to match the tallest sibling in the row. */
+  align-self: flex-start;
+  gap: var(--mds-spacing-xs);
+  max-inline-size: 18.75rem;
+  padding: var(--mds-spacing-xxs) var(--mds-spacing-xs);
+  border-radius: var(--mds-border-radius-sm);
+  border: var(--mds-stroke-weight-sm) solid var(--mds-border-feedback-secondary);
+  background-color: var(--mds-bg-surface-default);
+
+  font-family: var(--mds-font-family-base);
+  font-weight: var(--mds-font-weight-medium);
+  font-size: var(--mds-font-size-paragraph-small);
+  /* -small, not -xs — -xs (0.75rem) is shorter than the 0.875rem font
+     size itself, which clips descenders (y/g/q tails) on the text lines
+     below, since each line also sets overflow: hidden for truncation. */
+  line-height: var(--mds-line-height-paragraph-small);
+  letter-spacing: var(--mds-letter-spacing-default);
+  color: var(--mds-text-emphasis);
+  text-decoration: none;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+/* Link mode is pill-shaped and tinted primary by default, matching the
+   Figma default instance — there is no untinted "neutral link" state. */
+.mds-tag[class].mds-tag--link {
+  border-radius: var(--mds-border-radius-pill);
+  background-color: var(--mds-bg-feedback-primary-light);
+  border-color: var(--mds-border-feedback-primary);
+  color: var(--mds-text-feedback-secondary);
+  cursor: pointer;
+}
+
+.mds-tag[class].mds-tag--link:hover {
+  background-color: var(--mds-bg-feedback-primary-subtle);
+}
+
+.mds-tag[class].mds-tag--link:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.mds-tag[class].mds-tag--link:focus-visible {
+  outline: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
+  outline-offset: var(--mds-spacing-offset);
+  box-shadow: none;
+}
+
+.mds-tag[class].mds-tag--link:active {
+  background-color: var(--mds-bg-feedback-primary-subtle);
+}
+
+/* Colour variant modifier — link mode only. Removable mode has no colour
+   axis and always renders its neutral surface (see `.mds-tag--removable`
+   base rule above); `variant` isn't even an accepted prop there.
+   `Default` needs no modifier class — the base `.mds-tag--link` rule above
+   already renders it. `Danger` is the only other variant Figma/ZeroHeight
+   have actually designed for Tag; see the components.instructions.md MSE
+   note for why the rest of Badge's variant axis isn't offered here. */
+.mds-tag[class].mds-tag--link.mds-tag--danger {
+  background-color: var(--mds-bg-feedback-danger-light);
+  border-color: var(--mds-border-feedback-danger);
+  color: var(--mds-text-feedback-danger);
+}
+
+/* Danger's interactive states repeat the Default rules above with danger
+   tokens. The extra :pseudo lifts specificity above the resting danger rule. */
+.mds-tag[class].mds-tag--link.mds-tag--danger:hover,
+.mds-tag[class].mds-tag--link.mds-tag--danger:active {
+  background-color: var(--mds-bg-feedback-danger-subtle);
+}
+
+.mds-tag[class].mds-tag--link.mds-tag--danger:focus-visible {
+  outline-color: var(--mds-focus-danger);
+}
+
+.mds-tag[class].mds-tag--removable {
+  cursor: default;
+}
+
+/* Content-density scaling for removable mode — radius, gap and padding grow
+   as more identity lines are populated, matching the Figma/ZeroHeight spec.
+   The base rule above already matches the label-only (sm) tier; these two
+   modifiers cover the md (one supporting line) and lg (institution present)
+   tiers. Link mode is unaffected — it's always pill-shaped. */
+.mds-tag[class].mds-tag--removable.mds-tag--density-md {
+  gap: var(--mds-spacing-sm);
+  border-radius: var(--mds-border-radius-md);
+}
+
+.mds-tag[class].mds-tag--removable.mds-tag--density-lg {
+  gap: var(--mds-spacing-sm);
+  padding: var(--mds-spacing-xs);
+  border-radius: var(--mds-border-radius-lg);
+}
+
+.mds-tag[class].mds-tag--disabled {
+  color: var(--mds-text-subtle);
+  background-color: var(--mds-bg-surface-subtle);
+  border-color: var(--mds-border-subtle);
+}
+
+.mds-tag[class].mds-tag--link.mds-tag--disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* .mds-tag--link.mds-tag--danger (below) outranks the plain .mds-tag--disabled
+   rule above on specificity alone, so disabling a danger link needs its own
+   override here or it would keep its red tint instead of dimming. */
+.mds-tag[class].mds-tag--link.mds-tag--danger.mds-tag--disabled {
+  color: var(--mds-text-subtle);
+  background-color: var(--mds-bg-surface-subtle);
+  border-color: var(--mds-border-subtle);
+}
+
+/* Disabled steps each line down one level: the name inherits text-subtle
+   from the root rule, so the supporting rows drop to text-muted. */
+.mds-tag[class].mds-tag--disabled .mds-tag__supporting-text,
+.mds-tag[class].mds-tag--disabled .mds-tag__institution {
+  color: var(--mds-text-muted);
+}
+
+.mds-tag__remove[class] {
+  flex-shrink: 0;
+}
+
+/* textarea/index.css */
+/* ==========================================================================
+   Textarea component
+   Builds on Bootstrap .form-control base; all visual overrides use --mds-*
+   tokens so they remain consistent with the Moodle Design System token set.
+   ========================================================================== */
+
+/* --- Wrapper ---------------------------------------------------------------- */
+
+.mds-textarea[class] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mds-spacing-xxs);
+
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-regular);
+}
+
+/* --- Label ------------------------------------------------------------------ */
+
+/* Flex row that holds the <label> and the optional info icon-button side by side. */
+.mds-textarea[class] .mds-textarea-label-row {
+  display: flex;
+  align-items: center;
+  min-height: 16px; /* hardcoded as per Figma Fixed spec */
+  gap: var(--mds-spacing-xxs);
+}
+
+.mds-textarea[class] .mds-textarea-label {
+  /* Reset Bootstrap's form-label bottom-margin — gap on the wrapper handles spacing. */
+  margin-bottom: 0;
+
+  display: flex;
+  align-items: center;
+  gap: var(--mds-spacing-xxs);
+
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-medium);
+  line-height: var(--mds-line-height-paragraph-xs);
+  color: var(--mds-text-subtle);
+}
+
+.mds-textarea[class] .mds-textarea-required {
+  color: var(--mds-text-danger);
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-medium);
+}
+
+/* --- Textarea field --------------------------------------------------------- */
+
+/* Wrapper provides position context for the absolutely-placed invalid icon. */
+.mds-textarea[class] .mds-textarea-field-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Use [class] to outrank Bootstrap's .form-control specificity */
+.mds-textarea[class] .mds-textarea-field[class] {
+  display: block;
+  width: 100%;
+  padding: var(--mds-spacing-xs) var(--mds-spacing-sm);
+  resize: vertical;
+
+  font-family: var(--mds-font-family-base);
+  font-size: var(--mds-font-size-paragraph-default);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-default);
+  letter-spacing: var(--mds-letter-spacing-default);
+  color: var(--mds-text-default);
+
+  /* Default container fill is transparent (design spec: hover transitions to
+     bg.surface.default to signal interactivity without changing the border). */
+  background-color: transparent;
+  border: var(--mds-stroke-weight-sm) solid
+    var(--mds-border-interactive-secondary-default);
+  border-radius: var(--mds-border-radius-sm);
+
+  /* Animate default -> hover fill; border state changes remain immediate. */
+  transition: background-color 150ms ease;
+}
+
+.mds-textarea[class] .mds-textarea-field--no-resize[class] {
+  resize: none;
+}
+
+/* Placeholder text */
+.mds-textarea[class] .mds-textarea-field[class]::placeholder {
+  color: var(--mds-text-muted);
+  opacity: 1; /* Firefox reduces opacity by default */
+}
+
+/* Hover — fill transitions from transparent to surface; border stays unchanged
+   (design spec: hover is a subtle interactive cue, not a state indicator). */
+.mds-textarea[class]
+  .mds-textarea-field[class]:hover:not(:disabled):not(:focus) {
+  background-color: var(--mds-bg-surface-default);
+}
+
+/* Active / pressed — primary accent border marks the field being edited.
+   Invalid and read-only fields are excluded so pressing them keeps their own
+   border instead of switching to the primary accent. */
+.mds-textarea[class]
+  .mds-textarea-field[class]:active:not(
+    :disabled,
+    .mds-textarea-field--readonly,
+    .is-invalid
+  ) {
+  background-color: var(--mds-bg-surface-default);
+  border-color: var(--mds-border-interactive-primary-default);
+}
+
+.mds-textarea[class]
+  .mds-textarea-field.is-invalid[class]:active:not(
+    :disabled,
+    .mds-textarea-field--readonly
+  ) {
+  background-color: var(--mds-bg-surface-default);
+}
+
+/* Focus — reset Bootstrap's box-shadow; apply MDS focus ring on focus-visible only */
+.mds-textarea[class] .mds-textarea-field[class]:focus {
+  background-color: var(--mds-bg-surface-default);
+  border-color: var(--mds-border-interactive-secondary-default);
+  box-shadow: none;
+  outline: none;
+}
+
+.mds-textarea[class] .mds-textarea-field[class]:focus-visible {
+  outline: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
+  outline-offset: 0;
+  border-color: var(--mds-focus-default);
+}
+
+/* Pointer-initiated focus (mouse/touch): suppress the ring — the primary border
+   signals the selected/typing state. The ring is reserved for keyboard navigation. */
+.mds-textarea[class] .mds-textarea-field--pointer-focus[class]:focus-visible {
+  outline: none;
+  border-color: var(--mds-border-interactive-primary-default);
+}
+
+/* Invalid */
+.mds-textarea[class] .mds-textarea-field.is-invalid[class] {
+  border-color: var(--mds-border-interactive-danger-default);
+  /* Extra right padding prevents entered text from sliding under the
+     circle-exclamation icon that is absolutely positioned inside the wrapper. */
+  padding-inline-end: calc(
+    var(--mds-icons-xs) + var(--mds-spacing-sm) + var(--mds-spacing-xxs)
+  );
+  /* Suppress Bootstrap's background validation icon on textareas — MDS renders
+     the circle-exclamation icon as a positioned element instead. */
+  background-image: none;
+}
+
+/* Absolutely-positioned circle-exclamation icon within .mds-textarea-field-wrapper. */
+.mds-textarea[class] .mds-textarea-invalid-icon {
+  position: absolute;
+  top: var(--mds-spacing-xs);
+  inset-inline-end: var(--mds-spacing-sm);
+  color: var(--mds-text-danger);
+  font-size: var(--mds-icons-xs);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.mds-textarea[class] .mds-textarea-field.is-invalid[class]:focus-visible {
+  outline-color: var(--mds-focus-danger);
+  border-color: var(--mds-focus-danger);
+}
+
+/* Pointer-initiated focus on an invalid field: keep the strong danger border
+   (no ring) rather than the pale focus-danger tone reserved for keyboard focus. */
+.mds-textarea[class]
+  .mds-textarea-field--pointer-focus.is-invalid[class]:focus-visible {
+  outline: none;
+  border-color: var(--mds-border-interactive-danger-default);
+}
+
+/* Disabled */
+.mds-textarea[class] .mds-textarea-field[class]:disabled {
+  background-color: var(--mds-bg-surface-strong);
+  border-color: var(--mds-border-interactive-secondary-default);
+  color: var(--mds-text-muted);
+  resize: none;
+  cursor: not-allowed;
+}
+
+/* Read-only */
+.mds-textarea[class] .mds-textarea-field--readonly[class] {
+  background-color: var(--mds-bg-surface-default);
+  border-color: var(--mds-border-interactive-secondary-default);
+  color: var(--mds-text-muted);
+}
+
+/* --- Footer row (supporting text + counter) --------------------------------- */
+
+.mds-textarea[class] .mds-textarea-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--mds-spacing-xs);
+
+  font-size: var(--mds-font-size-paragraph-small);
+  font-weight: var(--mds-font-weight-regular);
+  line-height: var(--mds-line-height-paragraph-small);
+  letter-spacing: var(--mds-letter-spacing-default);
+}
+
+.mds-textarea[class] .mds-textarea-footer-spacer {
+  flex: 1 0 0;
+}
+
+.mds-textarea[class] .mds-textarea-supporting-text {
+  flex: 1 0 0;
+  color: var(--mds-text-muted);
+}
+
+/* Supporting text is danger-coloured when invalid (not disabled), matching the border and label. */
+.mds-textarea[class]:has(.mds-textarea-field.is-invalid:not(:disabled))
+  .mds-textarea-supporting-text {
+  color: var(--mds-text-danger);
+}
+
+/* Not using Bootstrap's invalid-feedback class: its display: none + block
+   toggle relies on a sibling selector off .is-invalid, but .is-invalid sits
+   on the textarea inside .mds-textarea-field-wrapper while this element is a
+   sibling of that wrapper, so the selector never matches. We control
+   visibility ourselves by conditionally rendering the element instead. */
+.mds-textarea[class] .mds-textarea-invalid-feedback {
+  display: block;
+  flex: 1 0 0;
+  margin-top: 0;
+  font-size: var(--mds-font-size-paragraph-small);
+  color: var(--mds-text-danger);
+}
+
+.mds-textarea[class] .mds-textarea-counter {
+  flex-shrink: 0;
+  color: var(--mds-text-subtle);
+  text-align: end;
+  unicode-bidi: isolate;
+  min-width: 65px; /* Intentional Figma fixed size. */
 }
 
 /* tooltip/index.css */

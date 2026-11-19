@@ -31,5 +31,5 @@ export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
     /** Controls striped animation when status is loading. */
     animated?: boolean;
 }
-export declare const ProgressBar: ({ value, min, max, status, labelVariant, title, count, animated, className, ...props }: ProgressBarProps) => import("react").JSX.Element;
+export declare const ProgressBar: ({ value, min, max, status, labelVariant, title, count, animated, className, ...props }: ProgressBarProps) => import('react').JSX.Element;
 export {};
