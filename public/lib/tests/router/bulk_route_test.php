@@ -23,6 +23,7 @@ use core\tests\route_testcase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -73,7 +74,7 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
-     * Ensure that requests with a non-multipart/mixed content type are rejected.
+     * Ensure that requests with an unsupported content type are rejected.
      *
      * @param string $contenttype
      */
@@ -773,6 +774,505 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * JSON child requests retain their body, query parameters, identifiers, and outer credentials.
+     */
+    public function test_json_request_and_response(): void {
+        $captured = null;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['POST']),
+            callable: function ($request, $response) use (&$captured) {
+                $captured = $request;
+                $response->getBody()->write('{"result":{"ok":true}}');
+                return $response->withHeader('Content-Type', 'application/json; charset=utf-8')
+                    ->withHeader('X-Example', 'value');
+            },
+        );
+        $response = $this->send_json_batch([
+            [
+                'id' => 'first',
+                'method' => 'POST',
+                'url' => 'rest/v2/capture?name=hello%20world&items%5B%5D=one',
+                'headers' => ['Content-Type' => 'application/json; charset=utf-8', 'If-Match' => '"etag"'],
+                'body' => ['nested' => (object) [], 'enabled' => true],
+            ],
+        ], ['Authorization' => 'Bearer outer']);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+        $result = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('first', $result['responses'][0]['id']);
+        $this->assertSame(200, $result['responses'][0]['status']);
+        $this->assertSame(['result' => ['ok' => true]], $result['responses'][0]['body']);
+        $this->assertSame('application/json; charset=utf-8', $result['responses'][0]['headers']['content-type']);
+        $this->assertSame('value', $result['responses'][0]['headers']['x-example']);
+        $this->assertSame(['name' => 'hello world', 'items' => ['one']], $captured->getQueryParams());
+        $this->assertSame('{"nested":{},"enabled":true}', (string) $captured->getBody());
+        $this->assertSame('Bearer outer', $captured->getHeaderLine('Authorization'));
+        $this->assertSame('"etag"', $captured->getHeaderLine('If-Match'));
+        $this->assertSame('first', $captured->getAttribute('batch_content_id'));
+    }
+
+    /**
+     * Failed dependencies and unsupported atomic groups are never dispatched.
+     */
+    public function test_json_dependencies_and_atomic_groups(): void {
+        $calls = [];
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/{name}', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls[] = basename($request->getUri()->getPath());
+                return $response->withStatus(end($calls) === 'fail' ? 400 : 200);
+            },
+        );
+        $response = $this->send_json_batch([
+            ['id' => 'failed', 'method' => 'GET', 'url' => 'rest/v2/fail'],
+            ['id' => 'dependent', 'method' => 'GET', 'url' => 'rest/v2/not-called', 'dependsOn' => ['failed']],
+            ['id' => 'a', 'method' => 'GET', 'url' => 'rest/v2/not-called', 'atomicityGroup' => 'group'],
+            ['id' => 'b', 'method' => 'GET', 'url' => 'rest/v2/not-called', 'atomicityGroup' => 'group'],
+            ['id' => 'after-group', 'method' => 'GET', 'url' => 'rest/v2/not-called', 'dependsOn' => ['group']],
+            ['id' => 'success', 'method' => 'GET', 'url' => 'rest/v2/success'],
+            ['id' => 'after-success', 'method' => 'GET', 'url' => 'rest/v2/next', 'dependsOn' => ['success']],
+        ]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame([400, 424, 501, 501, 424, 200, 200], array_column($results, 'status'));
+        $this->assertSame('group', $results[2]['atomicityGroup']);
+        $this->assertSame('group', $results[3]['atomicityGroup']);
+        $this->assertSame('AtomicChangeSetNotSupported', $results[2]['body']['error']['code']);
+        $this->assertSame(['fail', 'success', 'next'], $calls);
+    }
+
+    /**
+     * JSON batches continue by default, but clients may request that processing stop on error.
+     *
+     * @param string $prefer
+     * @param array $statuses
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('json_continue_provider')]
+    public function test_json_continue_on_error(string $prefer, array $statuses): void {
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/{name}', method: ['GET']),
+            callable: fn ($request, $response) => $response->withStatus(
+                str_ends_with($request->getUri()->getPath(), '/fail') ? 400 : 200,
+            ),
+        );
+        $response = $this->send_json_batch([
+            ['id' => '1', 'method' => 'GET', 'url' => 'rest/v2/fail'],
+            ['id' => '2', 'method' => 'GET', 'url' => 'rest/v2/ok'],
+        ], ['Prefer' => $prefer]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame($statuses, array_column($results, 'status'));
+    }
+
+    /**
+     * Continue-on-error preference cases for JSON batches.
+     *
+     * @return \Generator
+     */
+    public static function json_continue_provider(): \Generator {
+        yield 'default' => ['', [400, 200]];
+        yield 'true' => ['continue-on-error=true', [400, 200]];
+        yield 'false' => ['continue-on-error=false', [400]];
+        yield 'odata false' => ['odata.continue-on-error=false', [400]];
+    }
+
+    /**
+     * JSON batches preserve text and binary request and response bodies.
+     *
+     * @param string $contenttype
+     * @param string $encoded
+     * @param string $plain
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('json_body_provider')]
+    public function test_json_body_encodings(string $contenttype, string $encoded, string $plain): void {
+        $captured = null;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['POST']),
+            callable: function ($request, $response) use (&$captured, $contenttype) {
+                $captured = (string) $request->getBody();
+                $response->getBody()->write($captured);
+                return $response->withHeader('Content-Type', $contenttype);
+            },
+        );
+        $response = $this->send_json_batch([[
+            'id' => 'body',
+            'method' => 'POST',
+            'url' => 'rest/v2/capture',
+            'headers' => ['content-type' => $contenttype],
+            'body' => $encoded,
+        ]]);
+        $result = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'][0];
+        $this->assertSame(200, $result['status']);
+        $this->assertSame($plain, $captured);
+        $this->assertSame($encoded, $result['body']);
+        $this->assertSame($contenttype, $result['headers']['content-type']);
+    }
+
+    /**
+     * Text and binary body encodings for JSON batches.
+     *
+     * @return \Generator
+     */
+    public static function json_body_provider(): \Generator {
+        yield 'text' => ['text/plain; charset=utf-8', "hello\nworld", "hello\nworld"];
+        yield 'binary' => ['application/octet-stream', 'AP_-YQ', "\x00\xff\xfea"];
+    }
+
+    /**
+     * JSON subtypes retain their JSON value and null is equivalent to an absent body.
+     */
+    public function test_json_subtype_and_null_body(): void {
+        $bodies = [];
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['POST']),
+            callable: function ($request, $response) use (&$bodies) {
+                $bodies[] = (string) $request->getBody();
+                if ($bodies[count($bodies) - 1] !== '') {
+                    $response->getBody()->write((string) $request->getBody());
+                }
+                return $response->withHeader('Content-Type', 'application/problem+json; charset=utf-8');
+            },
+        );
+        $response = $this->send_json_batch([
+            [
+                'id' => 'json',
+                'method' => 'POST',
+                'url' => 'rest/v2/capture',
+                'headers' => ['content-type' => 'application/problem+json; charset=utf-8'],
+                'body' => [(object) [], ['count' => 3]],
+            ],
+            ['id' => 'null', 'method' => 'POST', 'url' => 'rest/v2/capture', 'body' => null],
+        ]);
+        $results = json_decode((string) $response->getBody(), false, 512, JSON_THROW_ON_ERROR)->responses;
+        $this->assertSame(['[{},{"count":3}]', ''], $bodies);
+        $this->assertSame(200, $results[0]->status);
+        $this->assertEquals([(object) [], (object) ['count' => 3]], $results[0]->body);
+        $this->assertSame('application/problem+json; charset=utf-8', $results[0]->headers->{'content-type'});
+        $this->assertObjectNotHasProperty('body', $results[1]);
+    }
+
+    /**
+     * An unlabelled binary response is representable without corrupting its bytes.
+     */
+    public function test_json_response_without_content_type(): void {
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) {
+                $response->getBody()->write("\x00\xff");
+                return $response->withoutHeader('Content-Type');
+            },
+        );
+        $response = $this->send_json_batch([['id' => '1', 'method' => 'GET', 'url' => 'rest/v2/capture']]);
+        $result = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'][0];
+        $this->assertSame('AP8', $result['body']);
+        $this->assertSame('application/octet-stream', $result['headers']['content-type']);
+    }
+
+    /**
+     * An invalid JSON response becomes an individual error and does not prevent later requests.
+     */
+    public function test_json_invalid_child_response(): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                $response->getBody()->write($calls === 1 ? '{invalid' : '{}');
+                return $response->withHeader('Content-Type', 'application/json');
+            },
+        );
+        $response = $this->send_json_batch([
+            ['id' => '1', 'method' => 'GET', 'url' => 'rest/v2/capture'],
+            ['id' => '2', 'method' => 'GET', 'url' => 'rest/v2/capture'],
+        ]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame([500, 200], array_column($results, 'status'));
+        $this->assertSame('InvalidBatchResponse', $results[0]['body']['error']['code']);
+    }
+
+    /**
+     * Invalid child requests are rejected independently of other JSON requests.
+     *
+     * @param array $child
+     * @param int $status
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_json_child_provider')]
+    public function test_invalid_json_child(array $child, int $status): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET', 'POST']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $child += ['id' => 'bad', 'method' => 'GET', 'url' => 'rest/v2/capture'];
+        $response = $this->send_json_batch([$child, ['id' => 'good', 'method' => 'GET', 'url' => 'rest/v2/capture']]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame([$status, 200], array_column($results, 'status'));
+        $this->assertSame(1, $calls);
+    }
+
+    /**
+     * Invalid and unsupported JSON child requests.
+     *
+     * @return \Generator
+     */
+    public static function invalid_json_child_provider(): \Generator {
+        yield 'child authorization' => [['headers' => ['Authorization' => 'Bearer other']], 400];
+        yield 'child cookie' => [['headers' => ['Cookie' => 'session=other']], 400];
+        yield 'child proxy authorization' => [['headers' => ['Proxy-Authorization' => 'other']], 400];
+        yield 'host override' => [['headers' => ['Host' => 'other.example']], 400];
+        yield 'duplicate headers' => [['headers' => ['Accept' => 'a', 'accept' => 'b']], 400];
+        yield 'invalid header value' => [['headers' => ['x-test' => ['a', 'b']]], 400];
+        yield 'invalid method' => [['method' => 'OPTIONS'], 400];
+        yield 'body on GET' => [['headers' => ['content-type' => 'application/json'], 'body' => []], 400];
+        yield 'missing content type' => [['method' => 'POST', 'body' => []], 400];
+        yield 'invalid text body' => [['method' => 'POST', 'headers' => ['content-type' => 'text/plain'], 'body' => []], 400];
+        yield 'invalid base64url' => [
+            ['method' => 'POST', 'headers' => ['content-type' => 'application/octet-stream'], 'body' => 'not+base64'],
+            400,
+        ];
+        yield 'unknown property' => [['depends_on' => ['other']], 400];
+        yield 'unsupported condition' => [['if' => '$previous/$succeeded'], 501];
+        yield 'null condition' => [['if' => null], 501];
+        yield 'unsupported url reference' => [['url' => '$previous'], 501];
+        yield 'url reference with query' => [['url' => '$previous?field=value'], 501];
+        yield 'unsupported etag reference' => [['headers' => ['if-match' => '$previous']], 501];
+        yield 'etag reference with whitespace' => [['headers' => ['if-match' => ' $previous ']], 501];
+    }
+
+    /**
+     * Unsafe URLs and nested batches are rejected before routing.
+     *
+     * @param string $target
+     * @param int $status
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('json_child_url_provider')]
+    public function test_json_child_url(string $target, int $status): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $CFG->wwwroot = 'https://example.test:8443/moodle';
+        $this->set_basepath('/moodle/r.php');
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+        );
+        $batch = $batch->withUri(new Uri('https://example.test:8443' . $batch->getUri()));
+        $batch->getBody()->write(json_encode(['requests' => [
+            ['id' => '1', 'method' => 'GET', 'url' => $target],
+        ]], JSON_THROW_ON_ERROR));
+        $response = $this->get_app()->handle($batch);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame($status, $results[0]['status']);
+        $this->assertSame($status === 200 ? 1 : 0, $calls);
+    }
+
+    /**
+     * Safe and unsafe JSON child URLs.
+     *
+     * @return \Generator
+     */
+    public static function json_child_url_provider(): \Generator {
+        yield 'relative' => ['rest/v2/capture', 200];
+        yield 'absolute path' => ['/moodle/r.php/api/rest/v2/capture', 200];
+        yield 'same origin' => ['https://example.test:8443/moodle/r.php/api/rest/v2/capture', 200];
+        yield 'other host' => ['https://other.test:8443/moodle/r.php/api/rest/v2/capture', 400];
+        yield 'other port' => ['https://example.test/moodle/r.php/api/rest/v2/capture', 400];
+        yield 'network path' => ['//other.test/moodle/r.php/api/rest/v2/capture', 400];
+        yield 'userinfo' => ['https://user@example.test:8443/moodle/r.php/api/rest/v2/capture', 400];
+        yield 'nested batch' => ['/moodle/r.php/api/$batch', 400];
+        yield 'non-api route' => ['/moodle/r.php/admin/index.php', 400];
+        yield 'prefix bypass' => ['/moodle/r.php/api/rest/v2extra/capture', 400];
+        yield 'encoded traversal' => ['/moodle/r.php/api/rest/v2/%2e%2e/capture', 400];
+        yield 'double encoding' => ['/moodle/r.php/api/rest/v2/%252e%252e/capture', 400];
+        yield 'encoded slash' => ['/moodle/r.php/api/rest/v2/%2fcapture', 400];
+        yield 'fragment' => ['rest/v2/capture#fragment', 400];
+    }
+
+    /**
+     * Invalid envelopes cannot execute any children.
+     *
+     * @param array $batchbody
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_json_envelope_provider')]
+    public function test_invalid_json_envelope(array $batchbody): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $batch = $this->create_request('POST', '', prefix: route_loader_interface::ROUTE_BATCH_API);
+        $batch->getBody()->write(json_encode($batchbody, JSON_THROW_ON_ERROR));
+        $response = $this->get_app()->handle($batch);
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(0, $calls);
+    }
+
+    /**
+     * Invalid JSON batch envelopes.
+     *
+     * @return \Generator
+     */
+    public static function invalid_json_envelope_provider(): \Generator {
+        $request = ['id' => '1', 'method' => 'GET', 'url' => 'rest/v2/capture'];
+        yield 'missing requests' => [[]];
+        yield 'invalid request' => [['requests' => [$request, null]]];
+        yield 'duplicate id' => [['requests' => [$request, $request]]];
+        yield 'forward dependency' => [['requests' => [$request + ['dependsOn' => ['2']], ['id' => '2']]]];
+        yield 'unknown dependency' => [['requests' => [$request + ['dependsOn' => ['missing']]]]];
+        yield 'invalid dependency type' => [['requests' => [$request + ['dependsOn' => null]]]];
+        yield 'invalid group type' => [['requests' => [$request + ['atomicityGroup' => null]]]];
+        yield 'group and request name collision' => [['requests' => [$request + ['atomicityGroup' => '1']]]];
+        yield 'non-adjacent group' => [['requests' => [
+            $request + ['atomicityGroup' => 'group'],
+            ['id' => '2'],
+            ['id' => '3', 'atomicityGroup' => 'group'],
+        ]]];
+    }
+
+    /**
+     * JSON output is only returned when allowed by the Accept header.
+     *
+     * @param string $accept
+     * @param int $status
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('json_accept_provider')]
+    public function test_json_accept(string $accept, int $status): void {
+        self::mock_route_loader();
+        $response = $this->send_json_batch([], ['Accept' => $accept]);
+        $this->assertSame($status, $response->getStatusCode());
+    }
+
+    /**
+     * Accept headers for JSON batch responses.
+     *
+     * @return \Generator
+     */
+    public static function json_accept_provider(): \Generator {
+        yield 'no accept' => ['', 200];
+        yield 'json' => ['application/json', 200];
+        yield 'wildcard' => ['application/*', 200];
+        yield 'all' => ['*/*', 200];
+        yield 'unsupported' => ['multipart/mixed', 406];
+        yield 'excluded' => ['application/json;q=0, */*;q=1', 406];
+        yield 'accepted despite wildcard exclusion' => ['*/*;q=0, application/json;q=0.5', 200];
+    }
+
+    /**
+     * Invalid JSON itself is rejected without dispatching a request.
+     */
+    public function test_malformed_json_batch(): void {
+        self::mock_route_loader();
+        $batch = $this->create_request('POST', '', prefix: route_loader_interface::ROUTE_BATCH_API);
+        $batch->getBody()->write('{"requests":[');
+        $response = $this->get_app()->handle($batch);
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('InvalidBatchRequest', json_decode((string) $response->getBody())->error->code);
+    }
+
+    /**
+     * Unrepresentable JSON numbers fail the child without aborting the batch.
+     */
+    public function test_unrepresentable_json_child_body(): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET', 'POST']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $batch = $this->create_request('POST', '', prefix: route_loader_interface::ROUTE_BATCH_API);
+        $batch->getBody()->write(
+            '{"requests":[{"id":"1","method":"POST","url":"rest/v2/capture",'
+            . '"headers":{"content-type":"application/json"},"body":1e400},'
+            . '{"id":"2","method":"GET","url":"rest/v2/capture"}]}',
+        );
+        $response = $this->get_app()->handle($batch);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame([400, 200], array_column($results, 'status'));
+        $this->assertSame(1, $calls);
+    }
+
+    /**
+     * The outer token is used for each JSON child and scoped by the normal API middleware.
+     *
+     * @param array $scopes
+     * @param int $status
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('outer_api_token_scopes_provider')]
+    public function test_json_outer_api_token_authentication(array $scopes, int $status): void {
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user();
+        $token = di::get(api_token_repository::class)->create_token('Batch test', 'correctsecret', $user->id, $scopes);
+        $bearer = rtrim(token_manager::TOKEN_PREFIX . base64_encode("{$token->get_id()}/correctsecret"), '=');
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $response = $this->send_json_batch([
+            ['id' => '1', 'method' => 'GET', 'url' => "rest/v2/{$user->id}/preferences"],
+            ['id' => '2', 'method' => 'GET', 'url' => "rest/v2/{$user->id}/preferences"],
+        ], ['Authorization' => "Bearer {$bearer}"]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame([$status, $status], array_column($results, 'status'));
+    }
+
+    /**
+     * A JSON child can use the current cookie-authenticated session.
+     */
+    public function test_json_cookie_session_authentication(): void {
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $response = $this->send_json_batch([
+            ['id' => '1', 'method' => 'GET', 'url' => "rest/v2/{$user->id}/preferences"],
+        ]);
+        $results = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR)['responses'];
+        $this->assertSame(200, $results[0]['status']);
+    }
+
+    /**
+     * Send a JSON batch through the router.
+     *
+     * @param array $requests
+     * @param array $headers
+     * @return ResponseInterface
+     */
+    protected function send_json_batch(array $requests, array $headers = []): ResponseInterface {
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: array_merge(['Content-Type' => 'application/json'], $headers),
+        );
+        $batch->getBody()->write(json_encode(['requests' => $requests], JSON_THROW_ON_ERROR));
+        return $this->get_app()->handle($batch);
+    }
+
+    /**
      * Ensure that a boundary can be extracted from a content type.
      *
      * @param string $contenttype
@@ -820,7 +1320,6 @@ final class bulk_route_test extends route_testcase {
      * @return \Generator
      */
     public static function invalid_bulk_http_content_types_provider(): \Generator {
-        yield 'application/json' => ['application/json'];
         yield 'application/http' => ['application/http'];
         yield 'application/x-www-form-urlencoded' => ['application/x-www-form-urlencoded'];
     }
