@@ -502,6 +502,67 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Unsupported atomic change sets are rejected without executing any of their requests.
+     *
+     * @param string $prefer
+     * @param bool $continues
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('continue_on_error_provider')]
+    public function test_atomic_change_set_is_rejected(string $prefer, bool $continues): void {
+        $methods = [];
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET', 'POST']),
+            callable: function ($request, $response) use (&$methods) {
+                $methods[] = $request->getMethod();
+                return $response;
+            },
+        );
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary', 'Prefer' => $prefer],
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 1);
+        $batch->getBody()->write("--boundary\r\nContent-Type: Multipart/Mixed; boundary=\"changeset\"\r\n\r\n");
+        $this->add_request_to_bulk_body($this->create_request('POST', '/capture'), 'changeset', $batch->getBody(), 2);
+        $this->add_request_to_bulk_body($this->create_request('POST', '/capture'), 'changeset', $batch->getBody(), 3);
+        $batch->getBody()->write("--changeset--\r\n");
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 4);
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame($continues ? ['GET', 'GET'] : ['GET'], $methods);
+        $this->assertStringContainsString(
+            "Content-Type: application/http\r\n\r\nHTTP/1.1 501 Not Implemented",
+            (string) $response->getBody(),
+        );
+        $this->assertStringContainsString('"code":"AtomicChangeSetNotSupported"', (string) $response->getBody());
+        $this->assertSame($continues, str_contains((string) $response->getBody(), 'Content-ID: 4'));
+    }
+
+    /**
+     * A change set with invalid MIME headers remains an invalid batch request.
+     */
+    public function test_atomic_change_set_with_missing_boundary(): void {
+        self::mock_route_loader();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $batch->getBody()->write("--boundary\r\nContent-Type: multipart/mixed\r\n\r\ninvalid\r\n--boundary--\r\n");
+
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString('HTTP/1.1 400 Bad Request', (string) $response->getBody());
+        $this->assertStringContainsString('"code":"InvalidBatchRequest"', (string) $response->getBody());
+    }
+
+    /**
      * A malformed request without a Content-ID is reported within the batch.
      */
     public function test_malformed_child_without_id_is_reported(): void {

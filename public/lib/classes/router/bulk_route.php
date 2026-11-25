@@ -100,32 +100,46 @@ class bulk_route {
         $contentids = [];
         foreach ($requestparts as $requestpart) {
             $contentid = null;
+            $requestresponse = null;
             try {
                 if ($requestpart === null) {
                     throw new \InvalidArgumentException('Invalid multipart body');
                 }
                 $partheaders = self::get_part_headers($requestpart);
                 $contentid = $partheaders['content-id'][0] ?? null;
-                $childrequest = self::get_request_from_part($requestpart);
                 if (
-                    $childrequest->hasHeader('Authorization')
-                    || $childrequest->hasHeader('Proxy-Authorization')
-                    || $childrequest->hasHeader('Cookie')
+                    count($partheaders['content-type'] ?? []) === 1
+                    && self::get_boundary_from_contenttype($partheaders['content-type'][0]) !== null
                 ) {
-                    throw new \InvalidArgumentException('Invalid authentication header');
-                }
-                if ($contentid !== null) {
-                    if ($contentid === '' || in_array($contentid, $contentids, true)) {
-                        throw new \InvalidArgumentException('Invalid request identifier');
+                    // A change set promises atomicity, so never dispatch its operations independently.
+                    $childrequest = null;
+                    $requestresponse = new Response(
+                        501,
+                        ['Content-Type' => 'application/json'],
+                        '{"error":{"code":"AtomicChangeSetNotSupported","message":"Atomic change sets are not supported."}}',
+                    );
+                } else {
+                    $childrequest = self::get_request_from_part($requestpart);
+                    if (
+                        $childrequest->hasHeader('Authorization')
+                        || $childrequest->hasHeader('Proxy-Authorization')
+                        || $childrequest->hasHeader('Cookie')
+                    ) {
+                        throw new \InvalidArgumentException('Invalid authentication header');
                     }
-                    $contentids[] = $contentid;
+                    if ($contentid !== null) {
+                        if ($contentid === '' || in_array($contentid, $contentids, true)) {
+                            throw new \InvalidArgumentException('Invalid request identifier');
+                        }
+                        $contentids[] = $contentid;
+                    }
                 }
             } catch (\InvalidArgumentException $exception) {
                 $childrequest = null;
             }
 
             if ($childrequest === null) {
-                $requestresponse = new Response(
+                $requestresponse ??= new Response(
                     400,
                     ['Content-Type' => 'application/json'],
                     '{"error":{"code":"InvalidBatchRequest","message":"Invalid batch request."}}',
