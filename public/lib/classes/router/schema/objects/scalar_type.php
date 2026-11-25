@@ -52,7 +52,14 @@ class scalar_type extends type_base {
         specification $api,
         ?string $path = null,
     ): ?\stdClass {
-        return $this->get_schema_from_type($this->type);
+        $data = $this->get_schema_from_type($this->type);
+
+        if (!$this->required) {
+            // This field is optional - add the `null` type to the schema.
+            $data->type = [$data->type, "null"];
+        }
+
+        return $data;
     }
 
     #[\Override]
