@@ -446,7 +446,7 @@ describe('@moodle/lms/core/fetch', () => {
             expect(req.url).toBe('https://example.com/rest/v2/mod_example/list');
         });
 
-        it('batches requests separately by Authorization header and includes the header in each sub-request', async() => {
+        it('batches requests by Authorization and sends credentials only on the outer request', async() => {
             (globalThis as any).M.cfg.batchFetchRequests = true;
             const batcher = new Fetch();
             const requests = [
@@ -475,12 +475,13 @@ describe('@moodle/lms/core/fetch', () => {
             expect(mockFetch).toHaveBeenCalledTimes(3);
             const authHeadersByBatch = await Promise.all(mockFetch.mock.calls.map(async([req]) => {
                 const body = await req.text();
-                return [...body.matchAll(/^authorization: (.+)$/gim)].map(([, value]) => value);
+                expect(body).not.toMatch(/^authorization:/im);
+                return req.headers.get('Authorization');
             }));
             expect(authHeadersByBatch).toEqual([
-                [],
-                ['Bearer token-one', 'Bearer token-one'],
-                ['Bearer token-two', 'Bearer token-two'],
+                null,
+                'Bearer token-one',
+                'Bearer token-two',
             ]);
         });
 

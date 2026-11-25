@@ -89,11 +89,21 @@ class bulk_route {
         $body = (string) $request->getBody();
         $requestparts = $this->get_requests_from_body($body, $boundary);
         $requests = array_map([self::class, 'get_request_from_part'], $requestparts);
-        if (!$this->have_consistent_authentication_context($requests)) {
-            return $response->withStatus(400);
+        foreach ($requests as $childrequest) {
+            if (
+                $childrequest->hasHeader('Authorization')
+                || $childrequest->hasHeader('Proxy-Authorization')
+                || $childrequest->hasHeader('Cookie')
+            ) {
+                return $response->withStatus(400);
+            }
         }
 
         foreach ($requests as $childrequest) {
+            if ($request->hasHeader('Authorization')) {
+                $childrequest = $childrequest->withHeader('Authorization', $request->getHeader('Authorization'));
+            }
+
             // Ensure that we clean up before handling each sub-request.
             $this->reset_environment();
 
@@ -130,39 +140,10 @@ class bulk_route {
      * Reset the environment between pages.
      */
     protected function reset_environment(): void {
+        // Reset the page, renderer and course globals; this does not undo other side effects.
         \core\setup::setup_page();
         \core\setup::setup_output();
         \core\setup::setup_course_global();
-    }
-
-    /**
-     * Ensure all requests in a batch use the same explicit authentication context.
-     *
-     * Cookie authentication uses the outer HTTP request's session context. Explicit Authorization headers must
-     * either be absent from every sub-request or have the same value on every sub-request.
-     *
-     * @param ServerRequestInterface[] $requests
-     * @return bool
-     */
-    protected function have_consistent_authentication_context(array $requests): bool {
-        if (!$requests) {
-            return true;
-        }
-
-        $firstrequest = reset($requests);
-        $hasauthorization = $firstrequest->hasHeader('Authorization');
-        $authorization = trim($firstrequest->getHeaderLine('Authorization'));
-
-        foreach ($requests as $request) {
-            if ($request->hasHeader('Authorization') !== $hasauthorization) {
-                return false;
-            }
-            if ($hasauthorization && trim($request->getHeaderLine('Authorization')) !== $authorization) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**

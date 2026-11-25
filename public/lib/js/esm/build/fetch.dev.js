@@ -566,7 +566,7 @@ class Fetch {
 `
       ];
       request.headers.forEach((value, name) => {
-        if (name.toLowerCase() !== "content-type" && name.toLowerCase() !== "content-id") {
+        if (name.toLowerCase() !== "content-type" && name.toLowerCase() !== "content-id" && name.toLowerCase() !== "authorization") {
           thisBody.push(`${name}: ${value}\r
 `);
         }
@@ -590,14 +590,17 @@ class Fetch {
       getBoundaryMarker(true)
       // No epilogue here. Our API does support one if we need to add one later.
     ];
+    const headers = new Headers({ "Content-Type": `multipart/mixed;boundary=${boundary}` });
+    const authorization = requestMap.values().next().value?.request.headers.get("Authorization");
+    if (authorization !== null && authorization !== void 0) {
+      headers.set("Authorization", authorization);
+    }
     return new Request(
       `${config.apibase}/$batch`,
       {
         body: body.join(""),
         method: "POST",
-        headers: {
-          "Content-Type": `multipart/mixed;boundary=${boundary}`
-        },
+        headers,
         signal: getGlobalAbortSignal()
       }
     );

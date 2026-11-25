@@ -16,6 +16,8 @@
 
 namespace core\router;
 
+use core\api\repository\api_token_repository;
+use core\api\token_manager;
 use core\di;
 use core\tests\route_testcase;
 use GuzzleHttp\Psr7\Response;
@@ -221,13 +223,13 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
-     * Ensure a batch cannot mix explicit authentication contexts.
+     * Ensure child requests cannot contain authentication headers.
      *
      * @param array $firstheaders
      * @param array $secondheaders
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('mixed_authentication_context_provider')]
-    public function test_mixed_authentication_contexts_are_rejected(
+    #[\PHPUnit\Framework\Attributes\DataProvider('child_authentication_headers_provider')]
+    public function test_child_authentication_headers_are_rejected(
         array $firstheaders,
         array $secondheaders,
     ): void {
@@ -264,11 +266,11 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
-     * Data provider for mixed authentication context cases.
+     * Data provider for child authentication header cases.
      *
      * @return \Generator
      */
-    public static function mixed_authentication_context_provider(): \Generator {
+    public static function child_authentication_headers_provider(): \Generator {
         yield 'authenticated and cookie-authenticated' => [
             ['Authorization' => 'Bearer token-one'],
             [],
@@ -277,6 +279,97 @@ final class bulk_route_test extends route_testcase {
             ['Authorization' => 'Bearer token-one'],
             ['Authorization' => 'Bearer token-two'],
         ];
+        yield 'same bearer credentials' => [
+            ['Authorization' => 'Bearer token-one'],
+            ['Authorization' => 'Bearer token-one'],
+        ];
+        yield 'cookie header' => [
+            ['Cookie' => 'MoodleSession=example'],
+            [],
+        ];
+    }
+
+    /**
+     * Outer API credentials are authenticated independently for each routed request.
+     *
+     * @param array $scopes
+     * @param int $status
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('outer_api_token_scopes_provider')]
+    public function test_outer_api_token_authentication(array $scopes, int $status): void {
+        global $USER;
+
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user();
+        $token = di::get(api_token_repository::class)->create_token(
+            'Batch test',
+            'correctsecret',
+            $user->id,
+            $scopes,
+        );
+        $bearer = rtrim(token_manager::TOKEN_PREFIX . base64_encode("{$token->get_id()}/correctsecret"), '=');
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: [
+                'Content-Type' => 'multipart/mixed; boundary=boundary',
+                'Authorization' => "Bearer {$bearer}",
+                'Prefer' => 'continue-on-error',
+            ],
+        );
+        for ($i = 1; $i <= 2; $i++) {
+            $this->add_request_to_bulk_body(
+                $this->create_request('GET', "/{$user->id}/preferences"),
+                'boundary',
+                $batch->getBody(),
+                $i,
+            );
+        }
+        $batch->getBody()->write("--boundary--\r\n");
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame(2, substr_count((string) $response->getBody(), "HTTP/1.1 {$status}"));
+        if ($status === 200) {
+            $this->assertEquals($user->id, $USER->id);
+        }
+    }
+
+    /**
+     * @return \Generator
+     */
+    public static function outer_api_token_scopes_provider(): \Generator {
+        yield 'allowed scope' => [['core_user:user:read:self'], 200];
+        yield 'missing scope' => [[], 403];
+    }
+
+    /**
+     * Cookie-authenticated child requests use the current session.
+     */
+    public function test_cookie_session_authentication(): void {
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $this->add_request_to_bulk_body(
+            $this->create_request('GET', "/{$user->id}/preferences"),
+            'boundary',
+            $batch->getBody(),
+            1,
+        );
+        $batch->getBody()->write("--boundary--\r\n");
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString('HTTP/1.1 200', (string) $response->getBody());
     }
 
     /**
