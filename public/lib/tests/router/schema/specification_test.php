@@ -157,6 +157,16 @@ final class specification_test extends route_testcase {
         $this->assertObjectHasProperty('components', $schema);
         $this->assertObjectHasProperty('security', $schema);
         $this->assertObjectHasProperty('externalDocs', $schema);
+        $this->assertEquals((object) [
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'API Key',
+        ], $schema->components->securitySchemes->api_key);
+        $this->assertEquals((object) [
+            'type' => 'apiKey',
+            'name' => 'MoodleSession',
+            'in' => parameter::IN_COOKIE,
+        ], $schema->components->securitySchemes->cookie);
 
         // Calculated parameters should only be set once.
         $schema = $spec->get_schema();
@@ -473,9 +483,13 @@ final class specification_test extends route_testcase {
             scopesets: $scopesets,
         );
 
-        $this->assertCount(2, $requestschema->get->security);
-        $this->assertSame(['oauth2' => $scopesets[0]->requiredscopes], $requestschema->get->security[0]);
-        $this->assertSame(['oauth2' => $scopesets[1]->requiredscopes], $requestschema->get->security[1]);
+        $this->assertCount(3, $requestschema->get->security);
+
+        $this->assertEquals([
+            ['oauth2' => $scopesets[0]->requiredscopes],
+            ['oauth2' => $scopesets[1]->requiredscopes],
+            ['api_key' => []],
+        ], $requestschema->get->security);
 
         $this->assertStringContainsString('Required OAuth scopes:', $requestschema->get->description);
         $this->assertStringContainsString('fake_oauth2scope:resource:read', $requestschema->get->description);

@@ -85,9 +85,9 @@ class specification implements
                     // We define the oauth schema in the finalise method, but we declare it here to ensure ordering.
                     'oauth2' => (object) [],
                     'api_key' => (object) [
-                        'type' => 'apiKey',
-                        'name' => 'api_key',
-                        'in' => parameter::IN_HEADER,
+                        'type' => 'http',
+                        'scheme' => 'bearer',
+                        'bearerFormat' => 'API Key',
                     ],
                     'cookie' => (object) [
                         'type' => 'apiKey',
@@ -540,10 +540,19 @@ class specification implements
             // Note: Swagger UI currently does not display the scopes that a route requires,
             // so we include them in the description.
             $data->description .= "\n\n" . get_string('openapi_required_scope_description', 'admin') . "\n";
+            $security = $data->security ?? [];
             foreach ($scopesets as $scopeset) {
-                $data->security[] = ['oauth2' => $scopeset->requiredscopes];
+                $security[] = ['oauth2' => $scopeset->requiredscopes];
                 $data->description .= "- " . get_string('openapi_required_scope_allof', 'admin') . "\n";
                 $data->description .= "  - " . implode("\n  - ", $scopeset->requiredscopes) . "\n";
+            }
+
+            // Also define the api_key security requirement for this route.
+            // This is applied identically to the oauth2 security requirement but without explicit mention of scopes.
+            $security[] = ['api_key' => []];
+
+            if ($security) {
+                $data->security = $security;
             }
         }
 
