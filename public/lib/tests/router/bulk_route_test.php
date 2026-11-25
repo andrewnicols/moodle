@@ -346,6 +346,51 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Multipart batches stop on errors unless explicitly requested to continue.
+     *
+     * @param string $prefer
+     * @param bool $continues
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('continue_on_error_provider')]
+    public function test_continue_on_error(string $prefer, bool $continues): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary', 'Prefer' => $prefer],
+        );
+        foreach (['/missing', '/capture'] as $index => $path) {
+            $this->add_request_to_bulk_body($this->create_request('GET', $path), 'boundary', $batch->getBody(), $index + 1);
+        }
+        $batch->getBody()->write("--boundary--\r\n");
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame($continues ? 1 : 0, $calls);
+        $this->assertSame($continues, str_contains((string) $response->getBody(), 'Content-ID: 2'));
+    }
+
+    /**
+     * @return \Generator
+     */
+    public static function continue_on_error_provider(): \Generator {
+        yield 'default' => ['', false];
+        yield '4.01 implicit true' => ['continue-on-error', true];
+        yield '4.0 implicit true' => ['odata.continue-on-error', true];
+        yield 'explicit true' => ['respond-async, continue-on-error=true', true];
+        yield 'explicit false' => ['odata.continue-on-error=false', false];
+    }
+
+    /**
      * Cookie-authenticated child requests use the current session.
      */
     public function test_cookie_session_authentication(): void {

@@ -590,7 +590,10 @@ class Fetch {
       getBoundaryMarker(true)
       // No epilogue here. Our API does support one if we need to add one later.
     ];
-    const headers = new Headers({ "Content-Type": `multipart/mixed;boundary=${boundary}` });
+    const headers = new Headers({
+      "Content-Type": `multipart/mixed;boundary=${boundary}`,
+      Prefer: "odata.continue-on-error"
+    });
     const authorization = requestMap.values().next().value?.request.headers.get("Authorization");
     if (authorization !== null && authorization !== void 0) {
       headers.set("Authorization", authorization);

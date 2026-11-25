@@ -89,6 +89,7 @@ class bulk_route {
         $body = (string) $request->getBody();
         $requestparts = $this->get_requests_from_body($body, $boundary);
         $requests = array_map([self::class, 'get_request_from_part'], $requestparts);
+        $continueonerror = self::continue_on_error($request->getHeaderLine('Prefer'));
         foreach ($requests as $childrequest) {
             if (
                 $childrequest->hasHeader('Authorization')
@@ -130,6 +131,10 @@ class bulk_route {
 
             // Every response part is separated by two new-lines.
             $response->getBody()->write("\r\n\r\n");
+
+            if ($requestresponse->getStatusCode() >= 400 && !$continueonerror) {
+                break;
+            }
         }
 
         $response->getBody()->write("--{$responseboundary}--");
@@ -144,6 +149,25 @@ class bulk_route {
         \core\setup::setup_page();
         \core\setup::setup_output();
         \core\setup::setup_course_global();
+    }
+
+    /**
+     * Whether the client requested processing to continue after an error.
+     *
+     * @param string $prefer The Prefer header; multipart stops on errors unless continuation is requested
+     * @return bool
+     */
+    protected static function continue_on_error(string $prefer): bool {
+        foreach (explode(',', $prefer) as $preference) {
+            if (preg_match(
+                '/^\s*(?:odata\.)?continue-on-error\s*(?:=\s*(true|false))?\s*(?:;.*)?$/i',
+                $preference,
+                $matches,
+            )) {
+                return !isset($matches[1]) || strtolower($matches[1]) === 'true';
+            }
+        }
+        return false;
     }
 
     /**

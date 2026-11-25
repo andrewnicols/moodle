@@ -513,6 +513,7 @@ describe('@moodle/lms/core/fetch', () => {
             expect(batchRequest.method).toBe('POST');
             expect(batchRequest.url).toBe('https://example.com/$batch');
             expect(batchRequest.headers.get('Content-Type')).toMatch(/^multipart\/mixed;boundary=/);
+            expect(batchRequest.headers.get('Prefer')).toBe('odata.continue-on-error');
 
             const firstResponse = await first;
             expect(await firstResponse.json()).toEqual({items: []});

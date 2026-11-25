@@ -68,7 +68,7 @@ import{getGlobalAbortSignal as m}from"./abort";import R from"@moodle/lms/core/co
 `,await a.text(),`\r
 `]:[...p,`\r
 `]})),o=[];for(const{request:i}of e.values())o.push(`# Requesting ${i.method} ${i.url}\r
-`);const c=[...o,...n.map(i=>i.join("")),s(!0)],l=new Headers({"Content-Type":`multipart/mixed;boundary=${t}`}),u=e.values().next().value?.request.headers.get("Authorization");return u!=null&&l.set("Authorization",u),new Request(`${R.apibase}/$batch`,{body:c.join(""),method:"POST",headers:l,signal:m()})}#d(e){const[,t,...s]=e.split(`\r
+`);const c=[...o,...n.map(i=>i.join("")),s(!0)],l=new Headers({"Content-Type":`multipart/mixed;boundary=${t}`,Prefer:"odata.continue-on-error"}),u=e.values().next().value?.request.headers.get("Authorization");return u!=null&&l.set("Authorization",u),new Request(`${R.apibase}/$batch`,{body:c.join(""),method:"POST",headers:l,signal:m()})}#d(e){const[,t,...s]=e.split(`\r
 \r
 `).map(p=>p.trim()),r=s.length>0?s.join(`\r
 \r
