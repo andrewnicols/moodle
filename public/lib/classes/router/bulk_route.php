@@ -198,11 +198,13 @@ class bulk_route {
      */
     protected static function continue_on_error(string $prefer): bool {
         foreach (explode(',', $prefer) as $preference) {
-            if (preg_match(
-                '/^\s*(?:odata\.)?continue-on-error\s*(?:=\s*(true|false))?\s*(?:;.*)?$/i',
-                $preference,
-                $matches,
-            )) {
+            if (
+                preg_match(
+                    '/^\s*(?:odata\.)?continue-on-error\s*(?:=\s*(true|false))?\s*(?:;.*)?$/i',
+                    $preference,
+                    $matches,
+                )
+            ) {
                 return !isset($matches[1]) || strtolower($matches[1]) === 'true';
             }
         }

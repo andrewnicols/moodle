@@ -74,9 +74,11 @@ final class bulk_route_test extends route_testcase {
 
     /**
      * Ensure that requests with a non-multipart/mixed content type are rejected.
+     *
+     * @param string $contenttype
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalid_bulk_http_content_types_provider')]
-    public function test_invalid_content_type($contenttype): void {
+    public function test_invalid_content_type(string $contenttype): void {
         self::mock_route_loader();
 
         $response = $this->process_request(
@@ -487,6 +489,8 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Data generator for the continue on error tests.
+     *
      * @return \Generator
      */
     public static function continue_on_error_provider(): \Generator {
@@ -567,6 +571,8 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Data provider for the malformed child preference tests.
+     *
      * @return \Generator
      */
     public static function malformed_child_preference_provider(): \Generator {
@@ -617,6 +623,9 @@ final class bulk_route_test extends route_testcase {
 
     /**
      * Outer API credentials are authenticated independently for each routed request.
+     *
+     * @param array[] $scopes
+     * @param int $status
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('outer_api_token_scopes_provider')]
     public function test_outer_api_token_authentication(array $scopes, int $status): void {
@@ -666,6 +675,8 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Generator for the outer API token scopes tests.
+     *
      * @return \Generator
      */
     public static function outer_api_token_scopes_provider(): \Generator {
@@ -704,7 +715,7 @@ final class bulk_route_test extends route_testcase {
      * Ensure that a boundary can be extracted from a content type.
      *
      * @param string $contenttype
-     * @param string $boundary
+     * @param null|string $boundary
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('boundary_from_contenttype_provider')]
     public function test_get_boundary_from_contenttype(
@@ -846,7 +857,7 @@ final class bulk_route_test extends route_testcase {
     /**
      * Get the protocol version and response code from a response header.
      *
-     * @param string $methodandpath
+     * @param string $protocolandresponse
      * @return string[]
      */
     protected static function get_protocol_and_response_code(string $protocolandresponse): array {
