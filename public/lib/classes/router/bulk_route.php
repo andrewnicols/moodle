@@ -21,6 +21,8 @@ use core\uuid;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -129,6 +131,12 @@ class bulk_route {
                     '{"error":{"code":"InvalidBatchRequest","message":"Invalid batch request."}}',
                 );
             } else {
+                if (Uri::isRelativePathReference($childrequest->getUri())) {
+                    $childrequest = $childrequest->withUri(
+                        UriResolver::resolve($request->getUri(), $childrequest->getUri()),
+                        true,
+                    );
+                }
                 if ($request->hasHeader('Authorization')) {
                     $childrequest = $childrequest->withHeader('Authorization', $request->getHeader('Authorization'));
                 }

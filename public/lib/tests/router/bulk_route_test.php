@@ -21,6 +21,8 @@ use core\api\token_manager;
 use core\di;
 use core\tests\route_testcase;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -350,10 +352,10 @@ final class bulk_route_test extends route_testcase {
             prefix: route_loader_interface::ROUTE_BATCH_API,
             headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
         );
-        $child = $this->create_request(
+        $child = new ServerRequest(
             'POST',
-            '/capture?name=hello%20world&items%5B%5D=one&items%5B%5D=two',
-            headers: ['Content-Type' => 'text/plain'],
+            'rest/v2/capture?name=hello%20world&items%5B%5D=one&items%5B%5D=two',
+            ['Content-Type' => 'text/plain'],
         );
         $child->getBody()->write("  body\r\n\r\n");
         $this->add_request_to_bulk_body($child, 'boundary', $batch->getBody(), 42);
@@ -367,6 +369,86 @@ final class bulk_route_test extends route_testcase {
             "Content-Type: application/http\r\nContent-ID: 42\r\n\r\nHTTP/1.1 200",
             (string) $response->getBody(),
         );
+    }
+
+    /**
+     * Child URLs are resolved against the batch URL without changing absolute request targets.
+     *
+     * @param string $basepath
+     * @param string $target
+     * @param string $expecteduri
+     * @param string $host
+     * @param string $expectedhost
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('child_request_url_provider')]
+    public function test_child_request_url(
+        string $basepath,
+        string $target,
+        string $expecteduri,
+        string $host,
+        string $expectedhost,
+    ): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $wwwrootpath = str_ends_with($basepath, '/r.php') ? substr($basepath, 0, -6) : $basepath;
+        $CFG->wwwroot = 'https://example.test:8443' . $wwwrootpath;
+        $this->set_basepath($basepath);
+        $captured = null;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$captured) {
+                $captured = $request;
+                return $response;
+            },
+        );
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $batch = $batch->withUri(new Uri('https://example.test:8443' . $batch->getUri() . '?outer=ignored'));
+        $headers = $host === '' ? [] : ['Host' => $host];
+        $child = new ServerRequest('GET', $target . '?name=hello%20world&items%5B%5D=one', $headers);
+        $this->add_request_to_bulk_body($child, 'boundary', $batch->getBody(), 1);
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString("Content-ID: 1\r\n\r\nHTTP/1.1 200", (string) $response->getBody());
+        $this->assertSame($expecteduri . '?name=hello%20world&items%5B%5D=one', (string) $captured->getUri());
+        $this->assertSame(['name' => 'hello world', 'items' => ['one']], $captured->getQueryParams());
+        $this->assertSame($expectedhost, $captured->getHeaderLine('Host'));
+    }
+
+    /**
+     * Request URL forms and expected resolution.
+     *
+     * @return \Generator
+     */
+    public static function child_request_url_provider(): \Generator {
+        yield 'site root' => ['', 'rest/v2/capture', 'https://example.test:8443/api/rest/v2/capture', '', 'example.test:8443'];
+        yield 'subdirectory' => [
+            '/moodle', 'rest/v2/capture', 'https://example.test:8443/moodle/api/rest/v2/capture', '', 'example.test:8443',
+        ];
+        yield 'r.php' => [
+            '/moodle/r.php', 'rest/v2/capture', 'https://example.test:8443/moodle/r.php/api/rest/v2/capture',
+            '', 'example.test:8443',
+        ];
+        yield 'dot segments' => [
+            '/moodle', '../api/rest/./v2/capture', 'https://example.test:8443/moodle/api/rest/v2/capture',
+            'child.example', 'child.example',
+        ];
+        yield 'absolute path and host' => [
+            '/moodle', '/moodle/api/rest/v2/capture', '/moodle/api/rest/v2/capture',
+            'child.example:8080', 'child.example:8080',
+        ];
+        yield 'absolute URI' => [
+            '/moodle', 'https://example.test:8443/moodle/api/rest/v2/capture',
+            'https://example.test:8443/moodle/api/rest/v2/capture', 'example.test:8443', 'example.test:8443',
+        ];
     }
 
     /**
@@ -561,12 +643,16 @@ final class bulk_route_test extends route_testcase {
                 'Prefer' => 'continue-on-error',
             ],
         );
-        for ($i = 1; $i <= 2; $i++) {
+        $children = [
+            $this->create_request('GET', "/{$user->id}/preferences"),
+            new ServerRequest('GET', "rest/v2/{$user->id}/preferences"),
+        ];
+        foreach ($children as $index => $child) {
             $this->add_request_to_bulk_body(
-                $this->create_request('GET', "/{$user->id}/preferences"),
+                $child,
                 'boundary',
                 $batch->getBody(),
-                $i,
+                $index + 1,
             );
         }
         $batch->getBody()->write("--boundary--\r\n");
