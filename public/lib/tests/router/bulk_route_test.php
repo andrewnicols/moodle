@@ -280,6 +280,17 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
+     * Query parameters in a child request are available to the router.
+     */
+    public function test_child_query_parameters(): void {
+        $request = bulk_route::get_request_from_part(
+            "Content-Type: application/http\r\n\r\n"
+                . "GET /api/rest/v2/test?name=hello%20world&items%5B%5D=one&items%5B%5D=two HTTP/1.1",
+        );
+        $this->assertSame(['name' => 'hello world', 'items' => ['one', 'two']], $request->getQueryParams());
+    }
+
+    /**
      * Ensure that a boundary can be extracted from a content type.
      *
      * @param string $contenttype

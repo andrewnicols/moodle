@@ -254,13 +254,15 @@ class bulk_route {
         }
 
         // The first line of the request header is the Request type and URI.
-        return new ServerRequest(
+        $request = new ServerRequest(
             $method,
             $uri,
             $parsedheaders,
             $body,
             $protocol,
         );
+        parse_str($request->getUri()->getQuery(), $queryparams);
+        return $request->withQueryParams($queryparams);
     }
 
     /**
