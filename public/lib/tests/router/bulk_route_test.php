@@ -74,7 +74,7 @@ final class bulk_route_test extends route_testcase {
      * Ensure that requests with a non-multipart/mixed content type are rejected.
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalid_bulk_http_content_types_provider')]
-    public function test_json_content_type($contenttype): void {
+    public function test_invalid_content_type($contenttype): void {
         self::mock_route_loader();
 
         $response = $this->process_request(
@@ -84,11 +84,12 @@ final class bulk_route_test extends route_testcase {
             headers: [
                 'Content-Type' => $contenttype,
             ],
+            contenttype: null,
         );
 
         $this->assert_valid_response(
             $response,
-            415, // Method Not Allowed.
+            415, // Unsupported Media Type.
         );
     }
 
@@ -262,7 +263,8 @@ final class bulk_route_test extends route_testcase {
 
         $response = $app->handle($request);
 
-        $this->assert_valid_response($response, 400);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString('HTTP/1.1 400', (string) $response->getBody());
     }
 
     /**
@@ -290,10 +292,249 @@ final class bulk_route_test extends route_testcase {
     }
 
     /**
-     * Outer API credentials are authenticated independently for each routed request.
+     * An invalid child cannot override batch credentials, even when processing continues.
+     */
+    public function test_rejected_child_credentials_do_not_affect_later_requests(): void {
+        $authorizations = [];
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$authorizations) {
+                $authorizations[] = $request->getHeaderLine('Authorization');
+                return $response;
+            },
+        );
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: [
+                'Content-Type' => 'multipart/mixed; boundary=boundary',
+                'Authorization' => 'Bearer outer',
+                'Prefer' => 'continue-on-error',
+            ],
+        );
+        $this->add_request_to_bulk_body(
+            $this->create_request('GET', '/capture', headers: ['Authorization' => 'Bearer other']),
+            'boundary',
+            $batch->getBody(),
+            1,
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 2);
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString("Content-ID: 1\r\n\r\nHTTP/1.1 400", (string) $response->getBody());
+        $this->assertStringContainsString("Content-ID: 2\r\n\r\nHTTP/1.1 200", (string) $response->getBody());
+        $this->assertSame(['Bearer outer'], $authorizations);
+    }
+
+    /**
+     * Child requests retain their query parameters and body, and IDs are MIME headers.
+     */
+    public function test_child_request_data_and_content_id(): void {
+        $captured = null;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['POST']),
+            callable: function ($request, $response) use (&$captured) {
+                $captured = $request;
+                return $response;
+            },
+        );
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $child = $this->create_request(
+            'POST',
+            '/capture?name=hello%20world&items%5B%5D=one&items%5B%5D=two',
+            headers: ['Content-Type' => 'text/plain'],
+        );
+        $child->getBody()->write("  body\r\n\r\n");
+        $this->add_request_to_bulk_body($child, 'boundary', $batch->getBody(), 42);
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame(['name' => 'hello world', 'items' => ['one', 'two']], $captured->getQueryParams());
+        $this->assertSame("  body\r\n\r\n", (string) $captured->getBody());
+        $this->assertStringContainsString(
+            "Content-Type: application/http\r\nContent-ID: 42\r\n\r\nHTTP/1.1 200",
+            (string) $response->getBody(),
+        );
+    }
+
+    /**
+     * Multipart batches stop on errors unless explicitly requested to continue.
      *
-     * @param array $scopes
-     * @param int $status
+     * @param string $prefer
+     * @param bool $continues
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('continue_on_error_provider')]
+    public function test_continue_on_error(string $prefer, bool $continues): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary', 'Prefer' => $prefer],
+        );
+        foreach (['/missing', '/capture'] as $index => $path) {
+            $this->add_request_to_bulk_body($this->create_request('GET', $path), 'boundary', $batch->getBody(), $index + 1);
+        }
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame($continues ? 1 : 0, $calls);
+        $this->assertSame($continues, str_contains((string) $response->getBody(), 'Content-ID: 2'));
+    }
+
+    /**
+     * @return \Generator
+     */
+    public static function continue_on_error_provider(): \Generator {
+        yield 'default' => ['', false];
+        yield '4.01 implicit true' => ['continue-on-error', true];
+        yield '4.0 implicit true' => ['odata.continue-on-error', true];
+        yield 'explicit true' => ['respond-async, continue-on-error=true', true];
+        yield 'explicit false' => ['odata.continue-on-error=false', false];
+    }
+
+    /**
+     * A malformed request without a Content-ID is reported within the batch.
+     */
+    public function test_malformed_child_without_id_is_reported(): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 1);
+        $batch->getBody()->write("--boundary\r\nContent-Type: application/http\r\n\r\ninvalid\r\n\r\n\r\n");
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertSame(1, $calls);
+        $this->assertStringContainsString("Content-Type: application/http\r\n\r\nHTTP/1.1 400", (string) $response->getBody());
+    }
+
+    /**
+     * A malformed individual request is reported inside an accepted batch.
+     *
+     * @param string $prefer
+     * @param int $expectedcalls
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('malformed_child_preference_provider')]
+    public function test_malformed_child_is_a_batch_response(string $prefer, int $expectedcalls): void {
+        $calls = 0;
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+            callable: function ($request, $response) use (&$calls) {
+                $calls++;
+                return $response;
+            },
+        );
+        $app = $this->get_app();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary', 'Prefer' => $prefer],
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 1);
+        $batch->getBody()->write(
+            "--boundary\r\nContent-Type: application/http\r\nContent-ID: 2\r\n\r\ninvalid\r\n\r\n\r\n",
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 3);
+        $batch->getBody()->write("--boundary--\r\n");
+
+        $response = $app->handle($batch);
+        $this->assert_valid_response($response, 200);
+        $this->assertSame($expectedcalls, $calls);
+        $this->assertStringContainsString("Content-ID: 2\r\n\r\nHTTP/1.1 400", (string) $response->getBody());
+        $this->assertSame($expectedcalls === 2, str_contains((string) $response->getBody(), 'Content-ID: 3'));
+        $this->assertStringContainsString('"code":"InvalidBatchRequest"', (string) $response->getBody());
+    }
+
+    /**
+     * @return \Generator
+     */
+    public static function malformed_child_preference_provider(): \Generator {
+        yield 'stop on error' => ['', 1];
+        yield 'continue on error' => ['continue-on-error', 2];
+    }
+
+    /**
+     * A missing closing delimiter is reported inside the batch.
+     */
+    public function test_missing_closing_boundary(): void {
+        self::mock_route_loader();
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 1);
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString('HTTP/1.1 400', (string) $response->getBody());
+    }
+
+    /**
+     * Duplicate request identifiers cannot be used to correlate responses.
+     */
+    public function test_duplicate_content_ids_are_rejected(): void {
+        $this->mock_route_from_route_attribute(
+            route_loader_interface::ROUTE_GROUP_API,
+            new route(path: '/capture', method: ['GET']),
+        );
+        $batch = $this->create_request(
+            'POST',
+            '',
+            prefix: route_loader_interface::ROUTE_BATCH_API,
+            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary'],
+        );
+        for ($i = 0; $i < 2; $i++) {
+            $this->add_request_to_bulk_body($this->create_request('GET', '/capture'), 'boundary', $batch->getBody(), 1);
+        }
+        $batch->getBody()->write("--boundary--\r\n");
+        $response = $this->get_app()->handle($batch);
+        $this->assert_valid_response($response);
+        $this->assertStringContainsString('HTTP/1.1 200', (string) $response->getBody());
+        $this->assertStringContainsString('HTTP/1.1 400', (string) $response->getBody());
+    }
+
+    /**
+     * Outer API credentials are authenticated independently for each routed request.
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('outer_api_token_scopes_provider')]
     public function test_outer_api_token_authentication(array $scopes, int $status): void {
@@ -329,6 +570,7 @@ final class bulk_route_test extends route_testcase {
             );
         }
         $batch->getBody()->write("--boundary--\r\n");
+
         $response = $app->handle($batch);
         $this->assert_valid_response($response);
         $this->assertSame(2, substr_count((string) $response->getBody(), "HTTP/1.1 {$status}"));
@@ -343,51 +585,6 @@ final class bulk_route_test extends route_testcase {
     public static function outer_api_token_scopes_provider(): \Generator {
         yield 'allowed scope' => [['core_user:user:read:self'], 200];
         yield 'missing scope' => [[], 403];
-    }
-
-    /**
-     * Multipart batches stop on errors unless explicitly requested to continue.
-     *
-     * @param string $prefer
-     * @param bool $continues
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('continue_on_error_provider')]
-    public function test_continue_on_error(string $prefer, bool $continues): void {
-        $calls = 0;
-        $this->mock_route_from_route_attribute(
-            route_loader_interface::ROUTE_GROUP_API,
-            new route(path: '/capture', method: ['GET']),
-            callable: function ($request, $response) use (&$calls) {
-                $calls++;
-                return $response;
-            },
-        );
-        $app = $this->get_app();
-        $batch = $this->create_request(
-            'POST',
-            '',
-            prefix: route_loader_interface::ROUTE_BATCH_API,
-            headers: ['Content-Type' => 'multipart/mixed; boundary=boundary', 'Prefer' => $prefer],
-        );
-        foreach (['/missing', '/capture'] as $index => $path) {
-            $this->add_request_to_bulk_body($this->create_request('GET', $path), 'boundary', $batch->getBody(), $index + 1);
-        }
-        $batch->getBody()->write("--boundary--\r\n");
-        $response = $app->handle($batch);
-        $this->assert_valid_response($response);
-        $this->assertSame($continues ? 1 : 0, $calls);
-        $this->assertSame($continues, str_contains((string) $response->getBody(), 'Content-ID: 2'));
-    }
-
-    /**
-     * @return \Generator
-     */
-    public static function continue_on_error_provider(): \Generator {
-        yield 'default' => ['', false];
-        yield '4.01 implicit true' => ['continue-on-error', true];
-        yield '4.0 implicit true' => ['odata.continue-on-error', true];
-        yield 'explicit true' => ['respond-async, continue-on-error=true', true];
-        yield 'explicit false' => ['odata.continue-on-error=false', false];
     }
 
     /**
@@ -415,17 +612,6 @@ final class bulk_route_test extends route_testcase {
         $response = $app->handle($batch);
         $this->assert_valid_response($response);
         $this->assertStringContainsString('HTTP/1.1 200', (string) $response->getBody());
-    }
-
-    /**
-     * Query parameters in a child request are available to the router.
-     */
-    public function test_child_query_parameters(): void {
-        $request = bulk_route::get_request_from_part(
-            "Content-Type: application/http\r\n\r\n"
-                . "GET /api/rest/v2/test?name=hello%20world&items%5B%5D=one&items%5B%5D=two HTTP/1.1",
-        );
-        $this->assertSame(['name' => 'hello world', 'items' => ['one', 'two']], $request->getQueryParams());
     }
 
     /**
@@ -463,6 +649,10 @@ final class bulk_route_test extends route_testcase {
         yield 'Wrong mimetype' => [
             'multipart/other; boundary=6f6e21d4-6323-47f0-a4f0-ca0e46ea05be',
             null,
+        ];
+        yield 'Quoted boundary and additional parameter' => [
+            'Multipart/Mixed; charset=utf-8; boundary="boundary"; other=value',
+            'boundary',
         ];
     }
 
@@ -504,15 +694,15 @@ final class bulk_route_test extends route_testcase {
     ): void {
         $body->write("--{$boundary}\r\n");
         $body->write("Content-Type: application/http\r\n");
+        $body->write("Content-ID: {$contentid}\r\n");
         $body->write("\r\n");
-        $body->write($request->getMethod() . " " . $request->getUri() . "\r\n");
+        $body->write($request->getMethod() . " " . $request->getUri() . " HTTP/1.1\r\n");
         foreach ($request->getHeaders() as $name => $values) {
             $body->write("{$name}: " . implode(", ", $values) . "\r\n");
         }
-        $body->write("Content-ID: {$contentid}\r\n");
-
+        $body->write("\r\n");
         $body->write((string) $request->getBody());
-        $body->write("\r\n\r\n");
+        $body->write("\r\n");
     }
 
     /**

@@ -18,6 +18,8 @@ namespace core\router;
 
 use core\router;
 use core\uuid;
+use GuzzleHttp\Psr7\Message;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -82,40 +84,70 @@ class bulk_route {
             return $response->withStatus(400);
         }
 
-        // Generate the response, which is in the form of a multipart/mixed response.
         $responseboundary = uuid::generate();
         $response = $response->withHeader('Content-Type', "multipart/mixed; boundary={$responseboundary}");
-
-        $body = (string) $request->getBody();
-        $requestparts = $this->get_requests_from_body($body, $boundary);
-        $requests = array_map([self::class, 'get_request_from_part'], $requestparts);
-        $continueonerror = self::continue_on_error($request->getHeaderLine('Prefer'));
-        foreach ($requests as $childrequest) {
-            if (
-                $childrequest->hasHeader('Authorization')
-                || $childrequest->hasHeader('Proxy-Authorization')
-                || $childrequest->hasHeader('Cookie')
-            ) {
-                return $response->withStatus(400);
-            }
+        // A valid boundary accepts the batch even if the body contains malformed parts.
+        // Such failures are reported in individual responses.
+        try {
+            $requestparts = $this->get_requests_from_body((string) $request->getBody(), $boundary);
+        } catch (\InvalidArgumentException $exception) {
+            $requestparts = [null];
         }
 
-        foreach ($requests as $childrequest) {
-            if ($request->hasHeader('Authorization')) {
-                $childrequest = $childrequest->withHeader('Authorization', $request->getHeader('Authorization'));
+        $continueonerror = self::continue_on_error($request->getHeaderLine('Prefer'));
+        $contentids = [];
+        foreach ($requestparts as $requestpart) {
+            $contentid = null;
+            try {
+                if ($requestpart === null) {
+                    throw new \InvalidArgumentException('Invalid multipart body');
+                }
+                $partheaders = self::get_part_headers($requestpart);
+                $contentid = $partheaders['content-id'][0] ?? null;
+                $childrequest = self::get_request_from_part($requestpart);
+                if (
+                    $childrequest->hasHeader('Authorization')
+                    || $childrequest->hasHeader('Proxy-Authorization')
+                    || $childrequest->hasHeader('Cookie')
+                ) {
+                    throw new \InvalidArgumentException('Invalid authentication header');
+                }
+                if ($contentid !== null) {
+                    if ($contentid === '' || in_array($contentid, $contentids, true)) {
+                        throw new \InvalidArgumentException('Invalid request identifier');
+                    }
+                    $contentids[] = $contentid;
+                }
+            } catch (\InvalidArgumentException $exception) {
+                $childrequest = null;
             }
 
-            // Ensure that we clean up before handling each sub-request.
-            $this->reset_environment();
+            if ($childrequest === null) {
+                $requestresponse = new Response(
+                    400,
+                    ['Content-Type' => 'application/json'],
+                    '{"error":{"code":"InvalidBatchRequest","message":"Invalid batch request."}}',
+                );
+            } else {
+                if ($request->hasHeader('Authorization')) {
+                    $childrequest = $childrequest->withHeader('Authorization', $request->getHeader('Authorization'));
+                }
 
-            // Pass each sub-request through the Router.
-            $requestresponse = $this->router->handle_request($childrequest);
-            $requestresponse = $requestresponse->withHeader('Content-ID', $childrequest->getHeaderLine('Content-ID'));
+                // Ensure that we clean up before handling each sub-request.
+                $this->reset_environment();
+
+                // Pass each sub-request through the Router.
+                $requestresponse = $this->router->handle_request($childrequest);
+            }
 
             // Write the response to the body of the combined response.
             // Note: The response is written within an application/http and may have its own headers and status.
             $response->getBody()->write("--{$responseboundary}\r\n");
-            $response->getBody()->write("Content-Type: application/http\r\n\r\n");
+            $response->getBody()->write("Content-Type: application/http\r\n");
+            if ($contentid !== null && $contentid !== '') {
+                $response->getBody()->write("Content-ID: {$contentid}\r\n");
+            }
+            $response->getBody()->write("\r\n");
             $response->getBody()->write(sprintf(
                 "HTTP/1.1 %s %s\r\n",
                 $requestresponse->getStatusCode(),
@@ -129,8 +161,7 @@ class bulk_route {
             $data = (string) $requestresponse->getBody();
             $response->getBody()->write($data);
 
-            // Every response part is separated by two new-lines.
-            $response->getBody()->write("\r\n\r\n");
+            $response->getBody()->write("\r\n");
 
             if ($requestresponse->getStatusCode() >= 400 && !$continueonerror) {
                 break;
@@ -178,24 +209,24 @@ class bulk_route {
      * @return string[]
      */
     protected function get_requests_from_body(string $requestbody, string $boundary): array {
-        // Get the body and split by boundary.
-        // The body is processed per RFC2046 Section 5.1.1.
-        // The body MAY contain both a preamble and an epilogue, which are not part of the request and *must* be ignored.
-
-        $marker = "--{$boundary}";
-
-        // Strip off any preamble.
-        $firstboundaryposition = strpos($requestbody, $marker) + strlen($marker);
-        $requestbody = trim(substr($requestbody, $firstboundaryposition));
-
-        // And any epilogue.
-        $lastboundaryposition = strrpos($requestbody, "{$marker}--");
-        $requestbody = trim(substr($requestbody, 0, $lastboundaryposition));
-
-        // Split the request body into parts.
-        $requestparts = array_filter(explode("--{$boundary}\r\n", $requestbody));
-
-        return $requestparts;
+        // Delimiters must occupy complete MIME lines; ignore preamble and epilogue.
+        $pattern = '/(?:\A|\r\n)--' . preg_quote($boundary, '/') . '(--)?[ \t]*(?:\r\n|\z)/';
+        preg_match_all($pattern, $requestbody, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+        $parts = [];
+        $start = null;
+        foreach ($matches as $match) {
+            if ($start !== null) {
+                $parts[] = substr($requestbody, $start, $match[0][1] - $start);
+            }
+            if (($match[1][0] ?? '') === '--') {
+                if ($start === null || !$parts) {
+                    throw new \InvalidArgumentException('Invalid multipart body');
+                }
+                return $parts;
+            }
+            $start = $match[0][1] + strlen($match[0][0]);
+        }
+        throw new \InvalidArgumentException('Missing multipart boundary');
     }
 
     /**
@@ -205,14 +236,18 @@ class bulk_route {
      * @return null|string
      */
     public static function get_boundary_from_contenttype(string $contenttype): ?string {
-        // The Boundary is required and must be in the form `Content-Type=multipart/mixed;boundary=[boundary]`.
-        preg_match('@multipart/mixed; *boundary=(?<boundary>.*)$@', $contenttype, $matches);
-
-        if (!isset($matches['boundary'])) {
+        if (!preg_match('/^\s*multipart\/mixed\s*;/i', $contenttype)) {
             return null;
         }
-
-        return $matches['boundary'];
+        if (!preg_match('/;\s*boundary\s*=\s*(?:"([^"]+)"|([^;\s]+))\s*(?=;|$)/i', $contenttype, $matches)) {
+            return null;
+        }
+        $boundary = $matches[1] !== '' ? $matches[1] : $matches[2];
+        // A MIME boundary has at most 70 permitted characters and cannot end in a space.
+        if (!preg_match("/\\A[0-9A-Za-z'()+_,.\\/:=? -]{1,70}\\z/D", $boundary) || str_ends_with($boundary, ' ')) {
+            return null;
+        }
+        return $boundary;
     }
 
     /**
@@ -222,72 +257,46 @@ class bulk_route {
      * @return ServerRequestInterface
      */
     public static function get_request_from_part(string $requestpart): ServerRequestInterface {
-        // Each part is split into:
-        // - Headers to describe the request
-        // - Two new-lines.
-        // - The request header.
-        // - Two new-lines.
-        // - The request body.
-        $parts = explode("\r\n\r\n", $requestpart, 3);
-
-        // The multipart header should contain:
-        // A Content-Type with value 'application/header'.
-        // An optional Content-ID.
-        if (count($parts) === 2) {
-            [
-                $partheader,
-                $requestheader,
-            ] = $parts;
-            $body = null;
-        } else if (count($parts) > 2) {
-            [
-                $partheader,
-                $requestheader,
-                $body,
-            ] = $parts;
-        } else {
-            throw new \InvalidArgumentException("Invalid request");
+        $parts = explode("\r\n\r\n", $requestpart, 2);
+        if (count($parts) !== 2) {
+            throw new \InvalidArgumentException('Invalid MIME part');
         }
-
-        $requestheaders = explode("\r\n", $requestheader);
-        [$method, $uri, $protocol] = self::get_method_and_uri(array_shift($requestheaders));
-
-        $parsedheaders = [];
-        foreach ($requestheaders as $header) {
-            [$name, $value] = explode(':', $header, 2);
-            $parsedheaders[$name] = $value;
+        $partheaders = self::get_part_headers($requestpart);
+        if (
+            count($partheaders['content-type'] ?? []) !== 1
+            || strtolower(trim($partheaders['content-type'][0])) !== 'application/http'
+            || count($partheaders['content-id'] ?? []) > 1
+        ) {
+            throw new \InvalidArgumentException('Invalid MIME headers');
         }
-
-        // The first line of the request header is the Request type and URI.
-        $request = new ServerRequest(
-            $method,
-            $uri,
-            $parsedheaders,
-            $body,
-            $protocol,
-        );
+        // Content-ID belongs to the MIME part, not the embedded HTTP request headers.
+        $contentid = $partheaders['content-id'][0] ?? null;
+        $http = Message::parseMessage($parts[1]);
+        if (!preg_match('/^(\S+)\s+(\S+)\s+HTTP\/(\d+\.\d+)$/', $http['start-line'], $matches)) {
+            throw new \InvalidArgumentException('Invalid request line');
+        }
+        $request = new ServerRequest($matches[1], $matches[2], $http['headers'], $http['body'], $matches[3]);
         parse_str($request->getUri()->getQuery(), $queryparams);
-        return $request->withQueryParams($queryparams);
+        return $request->withQueryParams($queryparams)->withAttribute('batch_content_id', $contentid);
     }
 
     /**
-     * Get the method and URI from a request header.
+     * Read the MIME headers of a request part.
      *
-     * @param string $methodandpath
-     * @return string[]
+     * @param string $requestpart
+     * @return array
      */
-    protected static function get_method_and_uri(string $methodandpath): array {
-        $methodandpath = array_map('trim', explode(' ', $methodandpath));
-        $method = array_shift($methodandpath);
-        $uri = array_shift($methodandpath);
-        if (count($methodandpath)) {
-            $protocol = array_shift($methodandpath);
-        } else {
-            $protocol = 'HTTP/1.1';
+    protected static function get_part_headers(string $requestpart): array {
+        $parts = explode("\r\n\r\n", $requestpart, 2);
+        if (count($parts) !== 2) {
+            throw new \InvalidArgumentException('Invalid MIME part');
         }
-
-        $protocol = str_replace('HTTP/', '', $protocol);
-
-        return [$method, $uri, $protocol];
+        $part = Message::parseMessage("HTTP/1.1 200 OK\r\n{$parts[0]}\r\n\r\n");
+        $partheaders = [];
+        foreach ($part['headers'] as $name => $values) {
+            $name = strtolower($name);
+            $partheaders[$name] = array_merge($partheaders[$name] ?? [], $values);
+        }
+        return $partheaders;
     }
 }

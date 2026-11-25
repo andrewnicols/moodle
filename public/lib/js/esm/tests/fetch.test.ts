@@ -398,10 +398,10 @@ describe('@moodle/lms/core/fetch', () => {
                 const lines = [
                     `--${boundary}`,
                     'Content-Type: application/http',
+                    `Content-ID: ${id}`,
                     '',
                     `HTTP/1.1 ${status} ${statusText}`,
                     `Content-Type: ${contentType}`,
-                    `Content-ID: ${id}`,
                     ...headers,
                     '',
                 ];
@@ -514,6 +514,8 @@ describe('@moodle/lms/core/fetch', () => {
             expect(batchRequest.url).toBe('https://example.com/$batch');
             expect(batchRequest.headers.get('Content-Type')).toMatch(/^multipart\/mixed;boundary=/);
             expect(batchRequest.headers.get('Prefer')).toBe('odata.continue-on-error');
+            const batchBody = await batchRequest.text();
+            expect(batchBody).toMatch(/Content-Type: application\/http\r\nContent-ID: .+\r\n\r\nGET .+ HTTP\/1\.1\r\n/);
 
             const firstResponse = await first;
             expect(await firstResponse.json()).toEqual({items: []});
@@ -521,6 +523,24 @@ describe('@moodle/lms/core/fetch', () => {
             const secondResponse = await second;
             expect(secondResponse.status).toBe(201);
             expect(await secondResponse.json()).toEqual({id: 1});
+        });
+
+        it('preserves whitespace and blank lines in a batched response body', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+            const first = batcher.performGet('mod_example', 'one');
+            const second = batcher.performGet('mod_example', 'two');
+            mockFetch.mockImplementation(async(req: MockRequest) => new MockResponse(
+                buildBatchResponseBody('resp-boundary', getRequestIds(req.body).map(id => ({
+                    id,
+                    body: '  data\r\n\r\n',
+                }))),
+                {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+            ));
+
+            await batcher.execute();
+            expect(await (await first).text()).toBe('  data\r\n\r\n');
+            expect(await (await second).text()).toBe('  data\r\n\r\n');
         });
 
         describe('requests with a cache key', () => {

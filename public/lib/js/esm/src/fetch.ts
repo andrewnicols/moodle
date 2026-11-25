@@ -525,8 +525,7 @@ export default class Fetch {
         const responseMap = new Map<string, Response>();
 
         for (const responseData of responses) {
-            const subResponse = this.#getResponseFromText(responseData);
-            const id = subResponse.headers.get('Content-ID') ?? '';
+            const {id, response: subResponse} = this.#getResponseFromText(responseData);
             responseMap.set(id, subResponse);
         }
 
@@ -731,24 +730,19 @@ export default class Fetch {
         const boundary = this.#getGuid();
         const getBoundaryMarker = (finalDelimiter = false): string => `--${boundary}${finalDelimiter ? '--' : ''}\r\n`;
 
-        const getRequestHeader = (): string[] => ([
+        const getRequestHeader = (id: string): string[] => ([
             getBoundaryMarker(),
-            'Content-Type: application/http\r\n\r\n',
+            'Content-Type: application/http\r\n',
+            `Content-ID: ${id}\r\n\r\n`,
         ]);
 
         const requestBodies = await Promise.all([...requestMap].map(async ([id, {request}]) => {
             const thisBody = [
-                ...getRequestHeader(),
-                `${request.method} ${request.url}\r\n`,
-                `Content-Type: ${request.headers.get('Content-Type')}\r\n`,
-                `Content-ID: ${id}\r\n`,
+                ...getRequestHeader(id),
+                `${request.method} ${request.url} HTTP/1.1\r\n`,
             ];
             request.headers.forEach((value, name) => {
-                if (
-                    name.toLowerCase() !== 'content-type'
-                    && name.toLowerCase() !== 'content-id'
-                    && name.toLowerCase() !== 'authorization'
-                ) {
+                if (name.toLowerCase() !== 'authorization' && name.toLowerCase() !== 'content-id') {
                     thisBody.push(`${name}: ${value}\r\n`);
                 }
             });
@@ -757,7 +751,7 @@ export default class Fetch {
                 return [...thisBody, '\r\n', await request.text(), '\r\n'];
             }
 
-            return [...thisBody, '\r\n'];
+            return [...thisBody, '\r\n\r\n'];
         }));
 
         const prologue: string[] = [];
@@ -796,27 +790,32 @@ export default class Fetch {
     }
 
     /**
-     * Parse a single sub-response's raw text and return a {@link Response} object for it.
+     * Parse a single sub-response's raw text and its MIME Content-ID.
      *
      * @param text The raw text of the sub-response, as extracted from the batch response body.
-     * @returns The parsed {@link Response}.
+     * @returns The Content-ID and parsed {@link Response}.
      */
-    #getResponseFromText(text: string): Response {
+    #getResponseFromText(text: string): {id: string; response: Response} {
         // Each sub-response part is in the format:
         //
         //   Content-Type: application/http
+        //   Content-ID: id
         //
         //   HTTP/1.1 200 OK
         //   Content-Type: application/json
-        //   Content-ID: id
         //
         //   {body} (optional)
         //
-        // The leading "Content-Type: application/http" envelope line is discarded, and any remaining
-        // sections (there may be more than one if the body itself contains blank lines) are rejoined
-        // to reconstruct the body.
-        const [, headerText, ...bodyParts] = text.split('\r\n\r\n').map(part => part.trim());
-        const body = bodyParts.length > 0 ? bodyParts.join('\r\n\r\n').trim() : null;
+        const partEnd = text.indexOf('\r\n\r\n');
+        const partHeaderText = text.slice(0, partEnd);
+        const message = text.slice(partEnd + 4);
+        const headerEnd = message.indexOf('\r\n\r\n');
+        const headerText = message.slice(0, headerEnd);
+        const bodyText = message.slice(headerEnd + 4).replace(/\r\n$/u, '');
+        const body = bodyText === '' ? null : bodyText;
+        const id = partHeaderText.split('\r\n')
+            .find(header => /^content-id:/iu.test(header))
+            ?.slice('content-id:'.length).trim() ?? '';
 
         const headers = headerText.split('\r\n');
 
@@ -834,11 +833,14 @@ export default class Fetch {
                 return [header.slice(0, index).trim(), header.slice(index + 1).trim()];
             });
 
-        return new Response(body, {
-            status: Number(status),
-            statusText,
-            headers: new Headers(headerList),
-        });
+        return {
+            id,
+            response: new Response(body, {
+                status: Number(status),
+                statusText,
+                headers: new Headers(headerList),
+            }),
+        };
     }
 
     /**

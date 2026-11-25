@@ -377,8 +377,7 @@ class Fetch {
     const responses = await this.#processBatchResponse(response);
     const responseMap = /* @__PURE__ */ new Map();
     for (const responseData of responses) {
-      const subResponse = this.#getResponseFromText(responseData);
-      const id = subResponse.headers.get("Content-ID") ?? "";
+      const { id, response: subResponse } = this.#getResponseFromText(responseData);
       responseMap.set(id, subResponse);
     }
     for (const [key, requestWrapper] of requestMap) {
@@ -551,22 +550,21 @@ class Fetch {
     const boundary = this.#getGuid();
     const getBoundaryMarker = /* @__PURE__ */ __name((finalDelimiter = false) => `--${boundary}${finalDelimiter ? "--" : ""}\r
 `, "getBoundaryMarker");
-    const getRequestHeader = /* @__PURE__ */ __name(() => [
+    const getRequestHeader = /* @__PURE__ */ __name((id) => [
       getBoundaryMarker(),
-      "Content-Type: application/http\r\n\r\n"
+      "Content-Type: application/http\r\n",
+      `Content-ID: ${id}\r
+\r
+`
     ], "getRequestHeader");
     const requestBodies = await Promise.all([...requestMap].map(async ([id, { request }]) => {
       const thisBody = [
-        ...getRequestHeader(),
-        `${request.method} ${request.url}\r
-`,
-        `Content-Type: ${request.headers.get("Content-Type")}\r
-`,
-        `Content-ID: ${id}\r
+        ...getRequestHeader(id),
+        `${request.method} ${request.url} HTTP/1.1\r
 `
       ];
       request.headers.forEach((value, name) => {
-        if (name.toLowerCase() !== "content-type" && name.toLowerCase() !== "content-id" && name.toLowerCase() !== "authorization") {
+        if (name.toLowerCase() !== "authorization" && name.toLowerCase() !== "content-id") {
           thisBody.push(`${name}: ${value}\r
 `);
         }
@@ -574,7 +572,7 @@ class Fetch {
       if (request.body !== null) {
         return [...thisBody, "\r\n", await request.text(), "\r\n"];
       }
-      return [...thisBody, "\r\n"];
+      return [...thisBody, "\r\n\r\n"];
     }));
     const prologue = [];
     for (const { request } of requestMap.values()) {
@@ -609,14 +607,20 @@ class Fetch {
     );
   }
   /**
-   * Parse a single sub-response's raw text and return a {@link Response} object for it.
+   * Parse a single sub-response's raw text and its MIME Content-ID.
    *
    * @param text The raw text of the sub-response, as extracted from the batch response body.
-   * @returns The parsed {@link Response}.
+   * @returns The Content-ID and parsed {@link Response}.
    */
   #getResponseFromText(text) {
-    const [, headerText, ...bodyParts] = text.split("\r\n\r\n").map((part) => part.trim());
-    const body = bodyParts.length > 0 ? bodyParts.join("\r\n\r\n").trim() : null;
+    const partEnd = text.indexOf("\r\n\r\n");
+    const partHeaderText = text.slice(0, partEnd);
+    const message = text.slice(partEnd + 4);
+    const headerEnd = message.indexOf("\r\n\r\n");
+    const headerText = message.slice(0, headerEnd);
+    const bodyText = message.slice(headerEnd + 4).replace(/\r\n$/u, "");
+    const body = bodyText === "" ? null : bodyText;
+    const id = partHeaderText.split("\r\n").find((header) => /^content-id:/iu.test(header))?.slice("content-id:".length).trim() ?? "";
     const headers = headerText.split("\r\n");
     const statusLine = headers.shift() ?? "";
     const statusRegexp = /HTTP\/(?<protocol>[^ ]*) (?<status>\d{3}) (?<statusText>.*)$/u;
@@ -626,11 +630,14 @@ class Fetch {
       const index = header.indexOf(":");
       return [header.slice(0, index).trim(), header.slice(index + 1).trim()];
     });
-    return new Response(body, {
-      status: Number(status),
-      statusText,
-      headers: new Headers(headerList)
-    });
+    return {
+      id,
+      response: new Response(body, {
+        status: Number(status),
+        statusText,
+        headers: new Headers(headerList)
+      })
+    };
   }
   /**
    * Process the raw batch {@link Response} into a list of per-request response text, or a parsed JSON object.
