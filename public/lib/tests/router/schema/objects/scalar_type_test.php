@@ -46,6 +46,25 @@ final class scalar_type_test extends route_testcase {
         $this->assertObjectHasProperty('$ref', $reference);
     }
 
+    public function test_optional_schema_includes_null_type(): void {
+        $object = new scalar_type(
+            type: param::INT,
+        );
+
+        $schema = $object->get_openapi_description(new specification());
+        $this->assertEquals(['integer', 'null'], $schema->type);
+    }
+
+    public function test_required_schema_does_not_include_null_type(): void {
+        $object = new scalar_type(
+            type: param::INT,
+            required: true,
+        );
+
+        $schema = $object->get_openapi_description(new specification());
+        $this->assertEquals('integer', $schema->type);
+    }
+
     public function test_validation(): void {
         $object = new scalar_type(
             type: param::ALPHA,
