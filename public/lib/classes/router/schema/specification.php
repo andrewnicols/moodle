@@ -85,9 +85,9 @@ class specification implements
                     // We define the oauth schema in the finalise method, but we declare it here to ensure ordering.
                     'oauth2' => (object) [],
                     'api_key' => (object) [
-                        'type' => 'apiKey',
-                        'name' => 'api_key',
-                        'in' => parameter::IN_HEADER,
+                        'type' => 'http',
+                        'scheme' => 'bearer',
+                        'bearerFormat' => 'API Key',
                     ],
                     'cookie' => (object) [
                         'type' => 'apiKey',
@@ -496,6 +496,7 @@ class specification implements
             'tags' => [$component, ...$route->tags],
             'parameters' => [],
             'responses' => [],
+            'security' => [],
         ];
 
         if ($route->get_request_body()) {
@@ -545,6 +546,10 @@ class specification implements
                 $data->description .= "- " . get_string('openapi_required_scope_allof', 'admin') . "\n";
                 $data->description .= "  - " . implode("\n  - ", $scopeset->requiredscopes) . "\n";
             }
+
+            // Also define the api_key security requirement for this route.
+            // This is applied identically to the oauth2 security requirement but without explicit mention of scopes.
+            $data->security[] = ['api_key' => []];
         }
 
         foreach ($this->get_common_request_responses() as $callable) {
