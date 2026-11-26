@@ -496,7 +496,6 @@ class specification implements
             'tags' => [$component, ...$route->tags],
             'parameters' => [],
             'responses' => [],
-            'security' => [],
         ];
 
         if ($route->get_request_body()) {
@@ -541,15 +540,20 @@ class specification implements
             // Note: Swagger UI currently does not display the scopes that a route requires,
             // so we include them in the description.
             $data->description .= "\n\n" . get_string('openapi_required_scope_description', 'admin') . "\n";
+            $security = [];
             foreach ($scopesets as $scopeset) {
-                $data->security[] = ['oauth2' => $scopeset->requiredscopes];
+                $security[] = ['oauth2' => $scopeset->requiredscopes];
                 $data->description .= "- " . get_string('openapi_required_scope_allof', 'admin') . "\n";
                 $data->description .= "  - " . implode("\n  - ", $scopeset->requiredscopes) . "\n";
             }
 
             // Also define the api_key security requirement for this route.
             // This is applied identically to the oauth2 security requirement but without explicit mention of scopes.
-            $data->security[] = ['api_key' => []];
+            $security[] = ['api_key' => []];
+
+            if ($security) {
+                $data->security = $security;
+            }
         }
 
         foreach ($this->get_common_request_responses() as $callable) {
