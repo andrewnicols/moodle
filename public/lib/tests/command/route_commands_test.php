@@ -17,7 +17,10 @@
 namespace core\command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use Slim\Factory\AppFactory;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Tests for the core:route:* commands.
@@ -84,7 +87,7 @@ final class route_commands_test extends \advanced_testcase {
         $tester = $this->get_testable_command('core:route:list');
         $tester->execute([]);
         // Pick the first route without any placeholders from the table so that it can be resolved.
-        $this->assertEquals(1, preg_match('/^\|\s+(\/[^\s{|]*)\s+\|\s+GET\b/m', $tester->getDisplay(), $matches));
+        $this->assertEquals(1, preg_match('/^\|[^|]*\|\s+(\/[^\s{|]*)\s+\|\s+GET\b/m', $tester->getDisplay(), $matches));
 
         $tester = $this->get_testable_command('core:route:show');
         $tester->execute(['uri' => $matches[1]]);
@@ -92,6 +95,92 @@ final class route_commands_test extends \advanced_testcase {
         $tester->assertCommandIsSuccessful();
         $this->assertStringContainsString('Route callable', $tester->getDisplay());
         $this->assertMatchesRegularExpression('/Route source\s+: .+\.php:\d+/', $tester->getDisplay());
+    }
+
+    public function test_route_metadata_in_list(): void {
+        $tester = $this->get_metadata_command_tester(route_list::class);
+        $tester->execute([]);
+
+        $tester->assertCommandIsSuccessful();
+        $this->assertMatchesRegularExpression(
+            '/\|\s+DEPRECATED\s+\|\s+\/deprecated\s+\|.*Deprecated title/',
+            $tester->getDisplay(),
+        );
+        $this->assertMatchesRegularExpression('/\|\s+DEPRECATED\s+\|\s+\/route-flag\s+\|/', $tester->getDisplay());
+        $this->assertMatchesRegularExpression('/\|\s+\|\s+\/ordinary\s+\|/', $tester->getDisplay());
+
+        $tester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+        $this->assertMatchesRegularExpression('/\|\s+DEPRECATED\s+\|\s+\/deprecated\s+\|/', $tester->getDisplay());
+        $this->assertMatchesRegularExpression('/\|\s+\|\s+\/ordinary\s+\|/', $tester->getDisplay());
+        $this->assertStringContainsString('Source', $tester->getDisplay());
+
+        $tester->execute([], ['decorated' => true]);
+        $this->assertStringContainsString("\033[33mDEPRECATED\033[39m", $tester->getDisplay());
+    }
+
+    public function test_route_metadata_in_show(): void {
+        $tester = $this->get_metadata_command_tester(route_show::class);
+        $tester->execute(['uri' => '/deprecated']);
+
+        $tester->assertCommandIsSuccessful();
+        $display = $tester->getDisplay();
+        $this->assertStringContainsString('Deprecated title', $display);
+        $this->assertMatchesRegularExpression('/Deprecated\s+: Yes/', $display);
+        $this->assertStringContainsString('Use replacement instead.', $display);
+        $this->assertStringContainsString('since 6.0', $display);
+        $this->assertMatchesRegularExpression('/Final deprecation\s+: Yes/', $display);
+        $this->assertMatchesRegularExpression('/Deprecation emitted\s*: No/', $display);
+
+        $tester->execute(['uri' => '/route-flag']);
+        $this->assertMatchesRegularExpression('/Deprecated\s+: Yes/', $tester->getDisplay());
+        $this->assertStringNotContainsString('Deprecation details', $tester->getDisplay());
+
+        $tester->execute(['uri' => '/ordinary']);
+        $this->assertMatchesRegularExpression('/Deprecated\s+: No/', $tester->getDisplay());
+        $this->assertStringNotContainsString('Route title', $tester->getDisplay());
+    }
+
+    public function test_class_deprecation_in_show(): void {
+        $tester = $this->get_metadata_command_tester(route_show::class);
+        $tester->execute(['uri' => '/class-deprecated']);
+        $this->assertMatchesRegularExpression('/Deprecated\s+: Yes/', $tester->getDisplay());
+        $this->assertStringContainsString('Use not_deprecated_class instead.', $tester->getDisplay());
+    }
+
+    /**
+     * Create a command with isolated routes to test metadata.
+     *
+     * @param string $commandclass The command to test
+     * @return CommandTester
+     */
+    private function get_metadata_command_tester(string $commandclass): CommandTester {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/tests/fixtures/deprecated_fixtures.php');
+
+        $app = AppFactory::create();
+        $app->get('/deprecated', [self::class, 'deprecated_handler']);
+        $app->get('/route-flag', [self::class, 'route_flag_handler']);
+        $app->get('/ordinary', static fn() => null);
+        $app->get('/class-deprecated', [\core\fixtures\deprecated_class::class, 'not_deprecated_method']);
+
+        $router = $this->createMock(\core\router::class);
+        $router->method('get_app')->willReturn($app);
+        return new CommandTester(new $commandclass($router));
+    }
+
+    /**
+     * Route with deprecation metadata.
+     */
+    #[\core\router\route(title: 'Deprecated title')]
+    #[\core\attribute\deprecated(replacement: 'replacement', since: '6.0', final: true, emit: false)]
+    public function deprecated_handler(): void {
+    }
+
+    /**
+     * Route deprecated in its route attribute.
+     */
+    #[\core\router\route(deprecated: true)]
+    public function route_flag_handler(): void {
     }
 
     public function test_cache_clear(): void {

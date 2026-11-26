@@ -99,13 +99,29 @@ class route_show extends Command {
 
         $route = $app->getRouteCollector()->lookupRoute($results->getRouteIdentifier());
         $callable = $route->getCallable();
+        $reflection = $this->get_route_reflection($callable);
+        $metadata = $this->get_route_metadata($reflection);
+        $deprecation = $this->get_route_deprecation($reflection);
 
         $output->writeln(sprintf('<info>Route for %s (%s)</info>', $uri, $method));
         $output->writeln('');
         $output->writeln(sprintf('%-19s: %s', 'Pattern', $route->getPattern()));
         $output->writeln(sprintf('%-19s: %s', 'Route methods', implode(', ', $route->getMethods())));
         $output->writeln(sprintf('%-19s: %s', 'Route callable', is_array($callable) ? implode('::', $callable) : 'Closure'));
-        $output->writeln(sprintf('%-19s: %s', 'Route source', $this->get_source_location($callable)));
+        $output->writeln(sprintf('%-19s: %s', 'Route source', $this->get_source_location($reflection)));
+        if ($metadata?->title) {
+            $output->writeln(sprintf('%-19s: %s', 'Route title', $metadata->title));
+        }
+        $output->writeln(sprintf(
+            '%-19s: %s',
+            'Deprecated',
+            $deprecation || ($metadata?->deprecated ?? false) ? 'Yes' : 'No',
+        ));
+        if ($deprecation) {
+            $output->writeln(sprintf('%-19s: %s', 'Deprecation details', \core\deprecation::get_deprecation_string($deprecation)));
+            $output->writeln(sprintf('%-19s: %s', 'Final deprecation', $deprecation->final ? 'Yes' : 'No'));
+            $output->writeln(sprintf('%-19s: %s', 'Deprecation emitted', $deprecation->emit ? 'Yes' : 'No'));
+        }
         $output->writeln(sprintf('%-19s: %s', 'Route identifier', $results->getRouteIdentifier()));
         $output->writeln(sprintf('%-19s: %s', 'Route name', $route->getName()));
         $output->writeln(sprintf('%-19s:', 'Route arguments'));

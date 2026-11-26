@@ -64,6 +64,8 @@ class route_list extends Command {
 
                 Provide a search term to only show routes whose pattern, methods, or callable contain it:
                   <info>php bin/moodle core:route:list course</info>
+
+                Deprecated routes are highlighted in the status column. Use -v to show source locations.
                 EOT);
     }
 
@@ -88,8 +90,14 @@ class route_list extends Command {
                 continue;
             }
 
+            $reflection = $this->get_route_reflection($callable);
+            $metadata = $this->get_route_metadata($reflection);
+            $deprecated = $this->get_route_deprecation($reflection) !== null || ($metadata?->deprecated ?? false);
+            array_unshift($row, $deprecated ? '<comment>DEPRECATED</comment>' : '');
+            $row[] = $metadata?->title ?? '';
+
             if ($showfile) {
-                $row[] = $this->get_source_location($callable);
+                $row[] = $this->get_source_location($reflection);
             }
 
             $rows[] = $row;
@@ -101,7 +109,9 @@ class route_list extends Command {
         }
 
         $table = new Table($output);
-        $table->setHeaders($showfile ? ['Pattern', 'Methods', 'Callable', 'Source'] : ['Pattern', 'Methods', 'Callable']);
+        $table->setHeaders($showfile
+            ? ['Status', 'Pattern', 'Methods', 'Callable', 'Title', 'Source']
+            : ['Status', 'Pattern', 'Methods', 'Callable', 'Title']);
         $table->setRows($rows);
         $table->render();
 

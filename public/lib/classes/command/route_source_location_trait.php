@@ -17,7 +17,7 @@
 namespace core\command;
 
 /**
- * Find where the handler for a route is defined.
+ * Inspect the handler for a route.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -25,19 +25,60 @@ namespace core\command;
  */
 trait route_source_location_trait {
     /**
-     * Get the file, and line of the method, which handles a route.
+     * Reflect a route handler when possible.
      *
      * @param mixed $callable The route callable
-     * @return string The path relative to the Moodle root with the line number, or an empty string if unknown
+     * @return \ReflectionFunctionAbstract|null
      */
-    protected function get_source_location(mixed $callable): string {
-        global $CFG;
-
+    protected function get_route_reflection(mixed $callable): ?\ReflectionFunctionAbstract {
         try {
-            $reflection = is_array($callable)
+            return is_array($callable)
                 ? new \ReflectionMethod(...$callable)
                 : new \ReflectionFunction(\Closure::fromCallable($callable));
-        } catch (\ReflectionException) {
+        } catch (\ReflectionException | \TypeError) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the route attribute for a handler.
+     *
+     * @param \ReflectionFunctionAbstract|null $reflection The reflected handler
+     * @return \core\router\route|null
+     */
+    protected function get_route_metadata(?\ReflectionFunctionAbstract $reflection): ?\core\router\route {
+        if (!$reflection instanceof \ReflectionMethod) {
+            return null;
+        }
+
+        $attributes = $reflection->getAttributes(\core\router\route::class, \ReflectionAttribute::IS_INSTANCEOF);
+        return $attributes ? $attributes[0]->newInstance() : null;
+    }
+
+    /**
+     * Get the deprecation attribute for a route handler.
+     *
+     * @param \ReflectionFunctionAbstract|null $reflection The reflected handler
+     * @return \core\attribute\deprecated|null
+     */
+    protected function get_route_deprecation(?\ReflectionFunctionAbstract $reflection): ?\core\attribute\deprecated {
+        if (!$reflection instanceof \ReflectionMethod) {
+            return null;
+        }
+
+        return \core\deprecation::from([$reflection->class, $reflection->name]);
+    }
+
+    /**
+     * Get the file, and line of the method, which handles a route.
+     *
+     * @param \ReflectionFunctionAbstract|null $reflection The reflected handler
+     * @return string The path relative to the Moodle root with the line number, or an empty string if unknown
+     */
+    protected function get_source_location(?\ReflectionFunctionAbstract $reflection): string {
+        global $CFG;
+
+        if (!$reflection) {
             return '';
         }
 
